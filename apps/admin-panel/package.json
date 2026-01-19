@@ -11,11 +11,29 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mantine/core": "^8.3.12",
+    "@mantine/form": "^8.3.12",
+    "@mantine/hooks": "^8.3.12",
+    "@mantine/notifications": "^8.3.12",
+    "@reduxjs/toolkit": "^2.11.2",
+    "@tabler/icons-react": "^3.36.1",
+    "axios": "^1.13.2",
+    "clsx": "^2.1.1",
+    "postcss": "^8.5.6",
+    "postcss-preset-mantine": "^1.18.0",
+    "postcss-simple-vars": "^7.0.1",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.12.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@repo/api-client": "*",
+    "@repo/schema": "*",
+    "@repo/typescript-config": "*",
+    "@repo/ui": "*",
+    "@repo/postcss-config": "*",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
@@ -24,9 +42,9 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
+    "tsc-alias": "^1.8.16",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.4",
-    "vite": "^7.2.4",
-    "@repo/typescript-config": "*"
+    "vite": "^7.2.4"
   }
 }

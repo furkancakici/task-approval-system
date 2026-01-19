@@ -1,5 +1,5 @@
 {
-  "name": "@repo/schema",
+  "name": "@repo/api-client",
   "version": "0.0.0",
   "private": true,
   "main": "./src/index.ts",
@@ -10,10 +10,11 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@repo/types": "*"
+    "axios": "^1.7.9"
   },
   "devDependencies": {
     "@repo/typescript-config": "*",
+    "@repo/eslint-config": "*",
     "typescript": "^5.7.2",
     "eslint": "^9.17.0"
   }

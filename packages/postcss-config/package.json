@@ -1,0 +1,10 @@
+{
+  "name": "@repo/postcss-config",
+  "version": "0.0.0",
+  "private": true,
+  "main": "index.cjs",
+  "dependencies": {
+    "postcss-preset-mantine": "^1.18.0",
+    "postcss-simple-vars": "^7.0.1"
+  }
+}
