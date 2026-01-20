@@ -6,6 +6,7 @@ import { store } from './store';
 import { Login } from './pages/Login';
 import { CreateTask } from './pages/CreateTask';
 import { MyTasks } from './pages/MyTasks';
+import { Dashboard } from './pages/Dashboard';
 import { UserLayout } from './components/Layout/UserLayout';
 
 function App() {
@@ -16,7 +17,7 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route element={<UserLayout />}>
-              <Route path="/dashboard" element={<Navigate to="/tasks" replace />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/tasks" element={<MyTasks />} />
               <Route path="/tasks/create" element={<CreateTask />} />
             </Route>

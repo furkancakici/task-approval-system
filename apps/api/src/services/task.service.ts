@@ -10,6 +10,9 @@ export const taskService = {
     if (status) where.status = status;
     if (priority) where.priority = priority;
     if (category) where.category = category;
+    if (filters.search) {
+        where.title = { contains: filters.search, mode: 'insensitive' };
+    }
 
     // Access Control
     if (user.type !== 'admin') {

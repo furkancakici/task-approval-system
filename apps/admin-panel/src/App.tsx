@@ -6,6 +6,7 @@ import { Login } from './pages/Login';
 import { Dashboard } from './pages/Dashboard';
 import { Users } from './pages/Users';
 import { PendingTasks } from './pages/PendingTasks';
+import { AllTasks } from './pages/AllTasks';
 import { AdminLayout } from './components/Layout/AdminLayout';
 
 function App() {
@@ -19,7 +20,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/users" element={<Users />} />
             <Route path="/tasks/pending" element={<PendingTasks />} />
-            <Route path="/tasks/all" element={<div>All Tasks Content</div>} />
+            <Route path="/tasks/all" element={<AllTasks />} />
           </Route>
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
