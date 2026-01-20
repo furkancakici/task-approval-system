@@ -10,7 +10,10 @@ const app = express();
 const port = process.env.PORT || 4000;
 
 app.use(helmet());
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:3001', 'http://localhost:3002'],
+  credentials: true,
+}));
 app.use(morgan("dev"));
 app.use(express.json());
 

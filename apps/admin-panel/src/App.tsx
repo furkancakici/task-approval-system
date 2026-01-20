@@ -3,6 +3,9 @@ import { Provider } from 'react-redux';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { store } from './store';
 import { Login } from './pages/Login';
+import { Dashboard } from './pages/Dashboard';
+import { Users } from './pages/Users';
+import { AdminLayout } from './components/Layout/AdminLayout';
 
 function App() {
   return (
@@ -10,10 +13,14 @@ function App() {
       <UiProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/dashboard" element={<div>Dashboard Placeholder</div>} />
-            <Route path="*" element={<Navigate to="/login" replace />} />
-          </Routes>
+          <Route path="/login" element={<Login />} />
+          <Route element={<AdminLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/users" element={<Users />} />
+            <Route path="/tasks" element={<div>Tasks Content</div>} />
+          </Route>
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
         </BrowserRouter>
       </UiProvider>
     </Provider>

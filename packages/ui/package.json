@@ -14,9 +14,9 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@mantine/core": "^7.16.0",
-    "@mantine/hooks": "^7.16.0",
-    "@mantine/notifications": "^7.16.0",
+    "@mantine/core": "^8.3.12",
+    "@mantine/hooks": "^8.3.12",
+    "@mantine/notifications": "^8.3.12",
     "@tabler/icons-react": "^3.28.1",
     "clsx": "^2.1.1",
     "react": "^19.2.0",
