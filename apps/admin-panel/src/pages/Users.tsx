@@ -16,7 +16,7 @@ export function Users() {
     dispatch(fetchUsers());
   }, [dispatch]);
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this user?')) {
       await dispatch(deleteUser(id));
     }

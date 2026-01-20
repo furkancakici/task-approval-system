@@ -2,10 +2,10 @@ import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { DashboardLayout } from '@repo/ui';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { logout } from '@/store/slices/authSlice';
-import { IconDashboard, IconUsers, IconListCheck } from '@tabler/icons-react';
+import { IconListCheck, IconPlus } from '@tabler/icons-react';
 import { Text } from '@mantine/core';
 
-export function AdminLayout() {
+export function UserLayout() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const location = useLocation();
@@ -18,28 +18,16 @@ export function AdminLayout() {
 
   const navLinks = [
     { 
-      label: 'Dashboard', 
-      icon: IconDashboard, 
-      active: location.pathname === '/dashboard',
-      onClick: () => navigate('/dashboard') 
-    },
-    { 
-      label: 'Users', 
-      icon: IconUsers, 
-      active: location.pathname === '/users',
-      onClick: () => navigate('/users') 
-    },
-    { 
-      label: 'Pending Tasks', 
+      label: 'My Tasks', 
       icon: IconListCheck, 
-      active: location.pathname === '/tasks/pending',
-      onClick: () => navigate('/tasks/pending') 
+      active: location.pathname === '/tasks',
+      onClick: () => navigate('/tasks') 
     },
     { 
-      label: 'All Tasks', 
-      icon: IconListCheck, 
-      active: location.pathname === '/tasks/all',
-      onClick: () => navigate('/tasks/all') 
+      label: 'Create Task', 
+      icon: IconPlus, 
+      active: location.pathname === '/tasks/create',
+      onClick: () => navigate('/tasks/create') 
     },
   ];
 
@@ -48,7 +36,7 @@ export function AdminLayout() {
       navLinks={navLinks}
       user={user ? { name: user.name, email: user.email } : null}
       onLogout={handleLogout}
-      logo={<Text fw={700} size="lg">Admin Panel</Text>}
+      logo={<Text fw={700} size="lg">User Panel</Text>}
     >
       <Outlet />
     </DashboardLayout>

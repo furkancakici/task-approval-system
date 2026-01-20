@@ -25,7 +25,7 @@ export const createUser = createAsyncThunk('users/createUser', async (userData: 
   return response.data;
 });
 
-export const deleteUser = createAsyncThunk('users/deleteUser', async (id: number) => {
+export const deleteUser = createAsyncThunk('users/deleteUser', async (id: string) => {
   await api.delete(`/users/${id}`);
   return id;
 });
@@ -58,7 +58,7 @@ const usersSlice = createSlice({
 
     // Delete User
     builder
-      .addCase(deleteUser.fulfilled, (state, action: PayloadAction<number>) => {
+      .addCase(deleteUser.fulfilled, (state, action: PayloadAction<string>) => {
         state.users = state.users.filter((user) => user.id !== action.payload);
       });
   },
