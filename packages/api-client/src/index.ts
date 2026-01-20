@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create a configured axios instance
 export const api = axios.create({
-  baseURL: 'http://localhost:4001', // Should be env variable in real app
+  baseURL: 'http://localhost:4000', // Should be env variable in real app
   headers: {
     'Content-Type': 'application/json',
   },
