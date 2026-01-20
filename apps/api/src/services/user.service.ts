@@ -22,7 +22,7 @@ export const userService = {
       select: { id: true, name: true, email: true, createdAt: true }
     });
     
-    return users;
+    return users.map(user => ({ ...user, role: UserRole.USER }));
   },
 
   async getUserById(id: string) {
@@ -30,12 +30,12 @@ export const userService = {
       where: { id },
       select: { id: true, name: true, email: true, createdAt: true }
     });
-    return user;
+    return user ? { ...user, role: UserRole.USER } : null;
   },
 
   async createUser(data: any) {
     const hashedPassword = await bcrypt.hash(data.password, 10);
-    return prisma.user.create({
+    const user = await prisma.user.create({
       data: {
         name: data.name,
         email: data.email,
@@ -50,6 +50,7 @@ export const userService = {
       },
       select: { id: true, name: true, email: true, createdAt: true }
     });
+    return { ...user, role: UserRole.USER };
   },
 
   async updateUser(id: string, data: any) {
@@ -60,11 +61,12 @@ export const userService = {
         updateData.password = await bcrypt.hash(data.password, 10);
     }
     
-    return prisma.user.update({
+    const user = await prisma.user.update({
       where: { id },
       data: updateData,
       select: { id: true, name: true, email: true, createdAt: true }
     });
+    return { ...user, role: UserRole.USER };
   },
 
   async deleteUser(id: string) {

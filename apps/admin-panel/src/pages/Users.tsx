@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
-import { Title, Group, Button, Table, ActionIcon, Badge, Paper } from '@mantine/core';
+import { Title, Group, Button, Table, ActionIcon, Badge, Paper, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import { modals } from '@mantine/modals';
+import { notifications } from '@mantine/notifications';
 import { IconPlus, IconTrash } from '@tabler/icons-react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchUsers, deleteUser } from '@/store/slices/usersSlice';
@@ -16,10 +18,35 @@ export function Users() {
     dispatch(fetchUsers());
   }, [dispatch]);
 
-  const handleDelete = async (id: string) => {
-    if (confirm('Are you sure you want to delete this user?')) {
-      await dispatch(deleteUser(id));
-    }
+  const handleDelete = (id: string) => {
+    modals.openConfirmModal({
+      title: 'Delete User',
+      children: (
+        <Text size="sm">
+          Are you sure you want to delete this user? This action cannot be undone.
+        </Text>
+      ),
+      labels: { confirm: 'Delete', cancel: 'Cancel' },
+      confirmProps: { color: 'red' },
+      centered: true,
+      onCancel: () => console.log('Cancel'),
+      onConfirm: async () => {
+        try {
+          await dispatch(deleteUser(id)).unwrap();
+          notifications.show({
+            title: 'Success',
+            message: 'User deleted successfully',
+            color: 'green'
+          });
+        } catch (error) {
+          notifications.show({
+            title: 'Error',
+            message: 'Failed to delete user',
+            color: 'red'
+          });
+        }
+      },
+    });
   };
 
   const rows = users.map((user) => (
