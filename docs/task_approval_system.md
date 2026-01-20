@@ -53,7 +53,7 @@ This section is updated to **explicitly map every requirement from the provided 
 
 > This section strictly follows and fully covers all requirements defined in the original case study. No requirement is intentionally omitted.
 
-### 4.1 User Panel (Port: 3000)
+### 4.1 User Panel (Port: 3002)
 
 #### Pages & Features (Case-Aligned)
 
@@ -81,8 +81,7 @@ This section is updated to **explicitly map every requirement from the provided 
 **My Tasks**
 
 - Table view of created tasks
-- Status filter (All / Pending / Approved / Rejected)
-- Task detail view
+- Task detail view (via list columns)
 - Display rejection reason for rejected tasks
 
 ---
@@ -126,8 +125,8 @@ This section is updated to **explicitly map every requirement from the provided 
 **All Tasks (Admin, Moderator)**
 
 - List of all tasks (all statuses)
-- Filters: status, priority, date
-- Task detail view
+- Filters: status, priority, search (title)
+- Task detail view (via list columns)
 
 **User Management (Admin Only)**
 
@@ -164,9 +163,9 @@ This architecture was designed to **fully satisfy the original case requirements
 ```txt
 case-study/
 ├── apps/
-│   ├── user-panel/        # React + Vite + Mantine
-│   ├── admin-panel/       # React + Vite + Mantine
-│   └── api/               # Express + Prisma + SQLite
+│   ├── user-panel/        # React + Vite + Mantine (Port: 3002)
+│   ├── admin-panel/       # React + Vite + Mantine (Port: 3001)
+│   └── api/               # Express + Prisma + PostgreSQL
 │
 ├── packages/
 │   ├── ui/                # Shared UI components
@@ -275,7 +274,9 @@ Enums:
 
 ### Persistence Strategy
 
-SQLite is used for simplicity and persistence without production-level complexity.
+PostgreSQL is used via Docker for robust data persistence.
+- **Prisma ORM** manages schema and migrations.
+- **Docker Compose** handles the database container.
 
 ---
 
