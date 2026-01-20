@@ -13,6 +13,50 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: task-approval-api
+    ports:
+      - "4000:4000"
+    environment:
+      # Use the container_name of the postgres service
+      DATABASE_URL: "postgresql://postgres:password123@task-approval-postgres:5432/task-approval-db?schema=public"
+      JWT_SECRET: "super-secret-key"
+      PORT: 4000
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  admin-panel:
+    build:
+      context: .
+      dockerfile: apps/admin-panel/Dockerfile
+    container_name: task-approval-admin
+    ports:
+      - "3001:80"
+    restart: unless-stopped
+    depends_on:
+      - api
+
+  user-panel:
+    build:
+      context: .
+      dockerfile: apps/user-panel/Dockerfile
+    container_name: task-approval-user
+    ports:
+      - "3000:80"
+    restart: unless-stopped
+    depends_on:
+      - api
 
 volumes:
   postgres_data:
