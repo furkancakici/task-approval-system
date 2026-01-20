@@ -5,6 +5,7 @@ import morgan from "morgan";
 import authRoutes from '@/routes/auth';
 import taskRoutes from '@/routes/tasks';
 import userRoutes from '@/routes/users';
+import adminRoutes from '@/routes/admin';
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -24,6 +25,7 @@ app.get("/health", (req, res) => {
 app.use('/auth', authRoutes);
 app.use('/tasks', taskRoutes);
 app.use('/users', userRoutes);
+app.use('/admin', adminRoutes);
 
 app.listen(port, () => {
   console.log(`API running on http://localhost:${port}`);

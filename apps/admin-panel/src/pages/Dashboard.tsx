@@ -1,6 +1,8 @@
-import { SimpleGrid, Paper, Text, Group, Box, Title } from '@mantine/core';
+import { useEffect } from 'react';
+import { SimpleGrid, Paper, Text, Group, Box, Title, ThemeIcon, Loader, Center } from '@mantine/core';
 import { IconUser, IconListCheck, IconChecks } from '@tabler/icons-react';
-import { useAppSelector } from '@/store/hooks';
+import { useAppSelector, useAppDispatch } from '@/store/hooks';
+import { fetchAdminStats } from '@/store/slices/statsSlice';
 
 interface StatProps {
   label: string;
@@ -29,27 +31,36 @@ function StatCard({ label, value, icon: Icon, color }: StatProps) {
   );
 }
 
-import { ThemeIcon } from '@mantine/core';
-
 export function Dashboard() {
+  const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
+  const { stats, loading } = useAppSelector((state) => state.stats);
 
-  // Mock data - will be replaced with real data from API
-  const stats = [
-    { label: 'Total Users', value: '12', icon: IconUser, color: 'blue' },
-    { label: 'Pending Tasks', value: '5', icon: IconListCheck, color: 'yellow' },
-    { label: 'Completed Tasks', value: '24', icon: IconChecks, color: 'teal' },
-  ];
+  useEffect(() => {
+    dispatch(fetchAdminStats());
+  }, [dispatch]);
+
+  const statsData = stats ? [
+    { label: 'Total Users', value: stats.totalUsers.toString(), icon: IconUser, color: 'blue' },
+    { label: 'Pending Tasks', value: stats.pendingTasks.toString(), icon: IconListCheck, color: 'yellow' },
+    { label: 'Completed Tasks', value: stats.completedTasks.toString(), icon: IconChecks, color: 'teal' },
+  ] : [];
 
   return (
     <Box>
       <Title order={2} mb="xl">Welcome back, {user?.name || 'Admin'}!</Title>
       
-      <SimpleGrid cols={{ base: 1, sm: 3 }}>
-        {stats.map((stat) => (
-          <StatCard key={stat.label} {...stat} />
-        ))}
-      </SimpleGrid>
+      {loading ? (
+        <Center h={200}>
+          <Loader size="lg" />
+        </Center>
+      ) : (
+        <SimpleGrid cols={{ base: 1, sm: 3 }}>
+          {statsData.map((stat) => (
+            <StatCard key={stat.label} {...stat} />
+          ))}
+        </SimpleGrid>
+      )}
 
       <Paper withBorder p="md" radius="md" mt="xl">
         <Title order={3} mb="md" size="h4">Recent Activity</Title>
