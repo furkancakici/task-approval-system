@@ -11,7 +11,7 @@ const port = process.env.PORT || 4000;
 
 app.use(helmet());
 app.use(cors({
-  origin: ['http://localhost:3001', 'http://localhost:3002'],
+  origin: ['http://localhost:3000', 'http://localhost:3001'],
   credentials: true,
 }));
 app.use(morgan("dev"));
