@@ -1,5 +1,6 @@
 import React from 'react';
 import { MantineProvider } from '@mantine/core';
+import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
 import { theme } from './theme';
 import '@mantine/core/styles.css';
@@ -12,8 +13,10 @@ interface UiProviderProps {
 export function UiProvider({ children }: UiProviderProps) {
   return (
     <MantineProvider theme={theme}>
-      <Notifications />
-      {children}
+      <ModalsProvider>
+        <Notifications />
+        {children}
+      </ModalsProvider>
     </MantineProvider>
   );
 }

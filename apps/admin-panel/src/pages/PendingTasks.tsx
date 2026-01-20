@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Title, Table, Badge, Paper, Button, Group, ActionIcon, Tooltip } from '@mantine/core';
+import { Title, Table, Badge, Paper, Button, Group, ActionIcon, Tooltip, Text } from '@mantine/core';
+import { modals } from '@mantine/modals';
 import { IconCheck, IconX } from '@tabler/icons-react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchTasks, updateTaskStatus } from '@/store/slices/tasksSlice';
@@ -17,8 +18,19 @@ export function PendingTasks() {
     dispatch(fetchTasks({ status: TaskStatus.PENDING }));
   }, [dispatch]);
 
-  const handleApprove = async (id: string) => {
-    if (confirm('Are you sure you want to approve this task?')) {
+  const handleApprove = (id: string) => {
+    modals.openConfirmModal({
+      title: 'Please confirm your action',
+      children: (
+        <Text size="sm">
+          Are you sure you want to approve this task? This action cannot be undone.
+        </Text>
+      ),
+      labels: { confirm: 'Confirm', cancel: 'Cancel' },
+      confirmProps: { color: 'green' },
+      centered: true,
+      onCancel: () => console.log('Cancel'),
+      onConfirm: async () => {
         try {
             await dispatch(updateTaskStatus({
                 id,
@@ -36,7 +48,8 @@ export function PendingTasks() {
                 color: 'red'
             });
         }
-    }
+      },
+    });
   };
 
   const openRejectModal = (id: string) => {
