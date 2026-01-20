@@ -2,7 +2,7 @@ import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { DashboardLayout } from '@repo/ui';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { logout } from '@/store/slices/authSlice';
-import { IconListCheck, IconPlus } from '@tabler/icons-react';
+import { IconListCheck, IconPlus, IconLayoutDashboard } from '@tabler/icons-react';
 import { Text } from '@mantine/core';
 
 export function UserLayout() {
@@ -17,6 +17,12 @@ export function UserLayout() {
   };
 
   const navLinks = [
+    { 
+      label: 'Dashboard', 
+      icon: IconLayoutDashboard, 
+      active: location.pathname === '/dashboard',
+      onClick: () => navigate('/dashboard') 
+    },
     { 
       label: 'My Tasks', 
       icon: IconListCheck, 
