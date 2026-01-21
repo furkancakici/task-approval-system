@@ -17,7 +17,7 @@ const initialState: UsersState = {
   error: null,
 };
 
-export const fetchUsers = createAsyncThunk('users/fetchUsers', async (params?: { page?: number; limit?: number }) => {
+export const fetchUsers = createAsyncThunk('users/fetchUsers', async (params?: { page?: number; limit?: number; email?: string }) => {
   const response = await api.get('/users', { params });
   return response.data;
 });

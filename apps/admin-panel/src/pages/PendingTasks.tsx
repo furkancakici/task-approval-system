@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
-import { Title, Table, Badge, Paper, Button, Group, ActionIcon, Tooltip, Text, Box } from '@mantine/core';
+import { Title, Table, Badge, Paper, Button, Group, ActionIcon, Tooltip, Text, Box, TextInput, Select } from '@mantine/core';
 import { modals } from '@mantine/modals';
-import { IconCheck, IconX } from '@tabler/icons-react';
+import { IconCheck, IconSearch, IconX } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchTasks, updateTaskStatus } from '@/store/slices/tasksSlice';
-import { TaskStatus, TaskPriority, UserRole } from '@repo/types';
+import { TaskStatus, TaskPriority, TaskCategory, UserRole } from '@repo/types';
 import { RejectTaskModal } from '@/components/Tasks/RejectTaskModal';
 import { notifications } from '@mantine/notifications';
 import { TablePagination } from '@repo/ui';
+import { useDebouncedValue } from '@mantine/hooks';
 
 export function PendingTasks() {
   const { t } = useTranslation();
@@ -18,16 +19,50 @@ export function PendingTasks() {
   const [rejectModalOpen, setRejectModalOpen] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
 
+  // Filters
+  const [search, setSearch] = useState('');
+  const [priority, setPriority] = useState<string | null>(null);
+  const [category, setCategory] = useState<string | null>(null);
+  
+  const [debouncedSearch] = useDebouncedValue(search, 500);
+
   useEffect(() => {
-    dispatch(fetchTasks({ status: TaskStatus.PENDING, page: 1, limit: 10 }));
-  }, [dispatch]);
+    dispatch(fetchTasks({ 
+      status: TaskStatus.PENDING, 
+      search: debouncedSearch || undefined,
+      priority: priority as TaskPriority | undefined,
+      category: category as TaskCategory | undefined,
+      page: 1, 
+      limit: 10 
+    }));
+  }, [dispatch, debouncedSearch, priority, category]);
 
   const handlePageChange = (page: number) => {
-    dispatch(fetchTasks({ status: TaskStatus.PENDING, page, limit: meta?.limit || 10 }));
+    dispatch(fetchTasks({ 
+      status: TaskStatus.PENDING, 
+      search: debouncedSearch || undefined,
+      priority: priority as TaskPriority | undefined,
+      category: category as TaskCategory | undefined,
+      page, 
+      limit: meta?.limit || 10 
+    }));
   };
 
   const handleLimitChange = (limit: number) => {
-    dispatch(fetchTasks({ status: TaskStatus.PENDING, page: 1, limit }));
+    dispatch(fetchTasks({ 
+      status: TaskStatus.PENDING, 
+      search: debouncedSearch || undefined,
+      priority: priority as TaskPriority | undefined,
+      category: category as TaskCategory | undefined,
+      page: 1, 
+      limit 
+    }));
+  };
+
+  const clearFilters = () => {
+    setSearch('');
+    setPriority(null);
+    setCategory(null);
   };
 
   const handleApprove = (id: string) => {
@@ -54,7 +89,14 @@ export function PendingTasks() {
                 color: 'green'
             });
             // Refresh list
-            dispatch(fetchTasks({ status: TaskStatus.PENDING, page: meta?.page || 1, limit: meta?.limit || 10 }));
+            dispatch(fetchTasks({ 
+                status: TaskStatus.PENDING, 
+                search: debouncedSearch || undefined,
+                priority: priority as TaskPriority | undefined,
+                category: category as TaskCategory | undefined,
+                page: meta?.page || 1, 
+                limit: meta?.limit || 10 
+            }));
         } catch (error) {
             notifications.show({
                 title: t('common.error'),
@@ -126,6 +168,39 @@ export function PendingTasks() {
         <Box p="md" style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}>
           <Title order={3} size="h4">{t('tasks.pendingApprovals')}</Title>
         </Box>
+
+        <Box p="md" style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}>
+          <Group align="end">
+              <TextInput
+              label={t('common.actions')}
+              placeholder={t('tasks.searchPlaceholder')}
+              leftSection={<IconSearch size={16} />}
+              value={search}
+              onChange={(e) => setSearch(e.currentTarget.value)}
+              style={{ flex: 1 }}
+              />
+              <Select
+              label={t('common.priority')}
+              placeholder={t('tasks.filterPriority')}
+              data={Object.values(TaskPriority)}
+              value={priority}
+              onChange={setPriority}
+              clearable
+              />
+              <Select
+              label={t('common.category')}
+              placeholder={t('tasks.category')}
+              data={Object.values(TaskCategory)}
+              value={category}
+              onChange={setCategory}
+              clearable
+              />
+              <Button variant="light" color="gray" onClick={clearFilters} leftSection={<IconX size={16}/>}>
+                  {t('tasks.clearFilters')}
+              </Button>
+          </Group>
+        </Box>
+
         <Box style={{ overflowX: 'auto' }}>
           <Table striped highlightOnHover verticalSpacing="sm" horizontalSpacing="md">
             <Table.Thead>
@@ -137,16 +212,17 @@ export function PendingTasks() {
                 <Table.Th>{t('tasks.actions')}</Table.Th>
               </Table.Tr>
             </Table.Thead>
-            <Table.Tbody>{rows}</Table.Tbody>
+            <Table.Tbody>
+              {rows.length > 0 ? rows : (
+                <Table.Tr>
+                  <Table.Td colSpan={5} style={{ textAlign: 'center', color: 'gray', padding: 20 }}>
+                    {loading ? t('common.loading') : t('tasks.noPendingTasks')}
+                  </Table.Td>
+                </Table.Tr>
+              )}
+            </Table.Tbody>
           </Table>
         </Box>
-        {tasks.length === 0 && !loading && (
-          <Box p="xl" style={{ textAlign: 'center' }}>
-            <Text c="dimmed" size="sm">
-              {t('tasks.noPendingTasks')}
-            </Text>
-          </Box>
-        )}
         {meta && (
             <Box px="md" pb="md">
                 <TablePagination 
@@ -166,8 +242,15 @@ export function PendingTasks() {
         onClose={() => { 
             setRejectModalOpen(false); 
             setSelectedTaskId(null); 
-            // Refresh list on close if rejected (modal handles logic but we might want to refresh)
-            dispatch(fetchTasks({ status: TaskStatus.PENDING, page: meta?.page || 1, limit: meta?.limit || 10 }));
+            // Refresh list on close
+            dispatch(fetchTasks({ 
+                status: TaskStatus.PENDING, 
+                search: debouncedSearch || undefined,
+                priority: priority as TaskPriority | undefined,
+                category: category as TaskCategory | undefined,
+                page: meta?.page || 1, 
+                limit: meta?.limit || 10 
+            }));
         }}
         taskId={selectedTaskId}
       />

@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Title, Group, Button, Table, ActionIcon, Badge, Paper, Text, Box } from '@mantine/core';
+import { Title, Group, Button, Table, ActionIcon, Badge, Paper, Text, Box, TextInput } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
-import { useDisclosure } from '@mantine/hooks';
+import { useDisclosure, useDebouncedValue } from '@mantine/hooks';
 import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
-import { IconPlus, IconTrash } from '@tabler/icons-react';
+import { IconPlus, IconTrash, IconSearch, IconX } from '@tabler/icons-react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchUsers, deleteUser } from '@/store/slices/usersSlice';
 import { CreateUserModal } from '@/components/Users/CreateUserModal';
@@ -21,20 +21,40 @@ export function Users() {
   const { user } = useAppSelector((state) => state.auth);
   const navigate = useNavigate();
 
+  // Filters
+  const [search, setSearch] = useState('');
+  const [debouncedSearch] = useDebouncedValue(search, 500);
+
   useEffect(() => {
     if (user && user.role !== UserRole.ADMIN) {
       navigate('/dashboard');
       return;
     }
-    dispatch(fetchUsers({ page: 1, limit: 10 }));
-  }, [dispatch, user, navigate]);
+    dispatch(fetchUsers({ 
+      email: debouncedSearch || undefined,
+      page: 1, 
+      limit: 10 
+    }));
+  }, [dispatch, user, navigate, debouncedSearch]);
 
   const handlePageChange = (page: number) => {
-    dispatch(fetchUsers({ page, limit: meta?.limit || 10 }));
+    dispatch(fetchUsers({ 
+      email: debouncedSearch || undefined,
+      page, 
+      limit: meta?.limit || 10 
+    }));
   };
 
   const handleLimitChange = (limit: number) => {
-    dispatch(fetchUsers({ page: 1, limit }));
+    dispatch(fetchUsers({ 
+      email: debouncedSearch || undefined,
+      page: 1, 
+      limit 
+    }));
+  };
+
+  const clearFilters = () => {
+    setSearch('');
   };
 
   const handleDelete = (id: string) => {
@@ -57,13 +77,19 @@ export function Users() {
             message: 'User deleted successfully',
             color: 'green'
           });
-          // Refresh list if needed or rely on optimistic update. 
-          // Optimistic update handles the list removal, but we might want to ensure pagination sync if items drop below current page threshhold.
-          // For now, simple optimistic is fine, but re-fetching ensures count sync.
+          
           if (users.length === 1 && meta && meta.page > 1) {
-              dispatch(fetchUsers({ page: meta.page - 1, limit: meta.limit }));
+              dispatch(fetchUsers({ 
+                email: debouncedSearch || undefined,
+                page: meta.page - 1, 
+                limit: meta.limit 
+              }));
           } else {
-              dispatch(fetchUsers({ page: meta?.page || 1, limit: meta?.limit || 10 }));
+              dispatch(fetchUsers({ 
+                email: debouncedSearch || undefined,
+                page: meta?.page || 1, 
+                limit: meta?.limit || 10 
+              }));
           }
         } catch (error) {
           notifications.show({
@@ -106,6 +132,22 @@ export function Users() {
           </Group>
         </Box>
 
+        <Box p="md" style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}>
+          <Group align="end">
+              <TextInput
+              label={t('common.actions')}
+              placeholder={t('auth.email')}
+              leftSection={<IconSearch size={16} />}
+              value={search}
+              onChange={(e) => setSearch(e.currentTarget.value)}
+              style={{ flex: 1 }}
+              />
+              <Button variant="light" color="gray" onClick={clearFilters} leftSection={<IconX size={16}/>}>
+                  {t('tasks.clearFilters')}
+              </Button>
+          </Group>
+        </Box>
+
         <Box style={{ overflowX: 'auto' }}>
           <Table striped highlightOnHover verticalSpacing="sm" horizontalSpacing="md">
             <Table.Thead>
@@ -117,16 +159,17 @@ export function Users() {
                 <Table.Th>{t('common.actions')}</Table.Th>
               </Table.Tr>
             </Table.Thead>
-            <Table.Tbody>{rows}</Table.Tbody>
+            <Table.Tbody>
+              {rows.length > 0 ? rows : (
+                <Table.Tr>
+                  <Table.Td colSpan={5} style={{ textAlign: 'center', color: 'gray', padding: 20 }}>
+                    {loading ? t('common.loading') : t('tasks.noTasksFound')}
+                  </Table.Td>
+                </Table.Tr>
+              )}
+            </Table.Tbody>
           </Table>
         </Box>
-        {users.length === 0 && !loading && (
-          <Box p="xl" style={{ textAlign: 'center' }}>
-            <Text c="dimmed" size="sm">
-              {t('tasks.noTasksFound')}
-            </Text>
-          </Box>
-        )}
         {meta && (
             <Box px="md" pb="md">
                 <TablePagination 
@@ -143,7 +186,11 @@ export function Users() {
 
       <CreateUserModal opened={opened} onClose={() => {
         close();
-        dispatch(fetchUsers({ page: 1, limit: meta?.limit || 10 }));
+        dispatch(fetchUsers({ 
+            email: debouncedSearch || undefined,
+            page: 1, 
+            limit: meta?.limit || 10 
+        }));
       }} />
     </>
   );

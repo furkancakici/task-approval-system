@@ -1,27 +1,64 @@
-import { useEffect } from 'react';
-import { Title, Table, Badge, Paper, Tooltip, ActionIcon, Box, Text } from '@mantine/core';
+import { useEffect, useState } from 'react';
+import { Title, Table, Badge, Paper, Tooltip, ActionIcon, Box, Text, Group, TextInput, Select, Button } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
-import { IconInfoCircle } from '@tabler/icons-react';
+import { IconInfoCircle, IconSearch, IconX } from '@tabler/icons-react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchMyTasks } from '@/store/slices/tasksSlice';
-import { TaskStatus, TaskPriority } from '@repo/types';
+import { TaskStatus, TaskPriority, TaskCategory } from '@repo/types';
 import { TablePagination } from '@repo/ui';
+import { useDebouncedValue } from '@mantine/hooks';
 
 export function MyTasks() {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { tasks, loading, meta } = useAppSelector((state) => state.tasks);
 
+  // Filters
+  const [search, setSearch] = useState('');
+  const [status, setStatus] = useState<string | null>(null);
+  const [priority, setPriority] = useState<string | null>(null);
+  const [category, setCategory] = useState<string | null>(null);
+  
+  const [debouncedSearch] = useDebouncedValue(search, 500);
+
   useEffect(() => {
-    dispatch(fetchMyTasks({ page: 1, limit: 10 }));
-  }, [dispatch]);
+    dispatch(fetchMyTasks({ 
+      search: debouncedSearch || undefined,
+      status: status as TaskStatus | undefined,
+      priority: priority as TaskPriority | undefined,
+      category: category as TaskCategory | undefined,
+      page: 1, 
+      limit: 10 
+    }));
+  }, [dispatch, debouncedSearch, status, priority, category]);
 
   const handlePageChange = (page: number) => {
-    dispatch(fetchMyTasks({ page, limit: meta?.limit || 10 }));
+    dispatch(fetchMyTasks({ 
+      search: debouncedSearch || undefined,
+      status: status as TaskStatus | undefined,
+      priority: priority as TaskPriority | undefined,
+      category: category as TaskCategory | undefined,
+      page, 
+      limit: meta?.limit || 10 
+    }));
   };
 
   const handleLimitChange = (limit: number) => {
-    dispatch(fetchMyTasks({ page: 1, limit }));
+    dispatch(fetchMyTasks({ 
+      search: debouncedSearch || undefined,
+      status: status as TaskStatus | undefined,
+      priority: priority as TaskPriority | undefined,
+      category: category as TaskCategory | undefined,
+      page: 1, 
+      limit 
+    }));
+  };
+
+  const clearFilters = () => {
+    setSearch('');
+    setStatus(null);
+    setPriority(null);
+    setCategory(null);
   };
 
   const getStatusColor = (status: string) => {
@@ -55,10 +92,10 @@ export function MyTasks() {
       <Table.Td>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Badge color={getStatusColor(task.status)} variant="outline">
-            {task.status}
+            {t(`tasks.status_${task.status.toLowerCase()}`)}
           </Badge>
           {task.status === TaskStatus.REJECTED && task.rejectionReason && (
-            <Tooltip label={`Rejection Reason: ${task.rejectionReason}`} multiline w={220}>
+            <Tooltip label={`${t('tasks.rejectionReasonLabel')}: ${task.rejectionReason}`} multiline w={220}>
               <ActionIcon variant="subtle" color="red" size="sm">
                 <IconInfoCircle size={16} />
               </ActionIcon>
@@ -81,6 +118,46 @@ export function MyTasks() {
           <Title order={3} size="h4">{t('common.myTasks')}</Title>
         </Box>
 
+        <Box p="md" style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}>
+          <Group align="end">
+              <TextInput
+              label={t('common.actions')}
+              placeholder={t('tasks.searchPlaceholder')}
+              leftSection={<IconSearch size={16} />}
+              value={search}
+              onChange={(e) => setSearch(e.currentTarget.value)}
+              style={{ flex: 1 }}
+              />
+              <Select
+              label={t('common.status')}
+              placeholder={t('tasks.filterStatus')}
+              data={Object.values(TaskStatus).map(s => ({ value: s, label: t(`tasks.status_${s.toLowerCase()}`) }))}
+              value={status}
+              onChange={setStatus}
+              clearable
+              />
+              <Select
+              label={t('common.priority')}
+              placeholder={t('tasks.filterPriority')}
+              data={Object.values(TaskPriority)}
+              value={priority}
+              onChange={setPriority}
+              clearable
+              />
+              <Select
+              label={t('common.category')}
+              placeholder={t('tasks.category')}
+              data={Object.values(TaskCategory)}
+              value={category}
+              onChange={setCategory}
+              clearable
+              />
+              <Button variant="light" color="gray" onClick={clearFilters} leftSection={<IconX size={16}/>}>
+                  {t('tasks.clearFilters')}
+              </Button>
+          </Group>
+        </Box>
+
         <Box style={{ overflowX: 'auto' }}>
           <Table striped highlightOnHover verticalSpacing="sm" horizontalSpacing="md">
             <Table.Thead>
@@ -93,16 +170,17 @@ export function MyTasks() {
                 <Table.Th>{t('tasks.updatedAt')}</Table.Th>
               </Table.Tr>
             </Table.Thead>
-            <Table.Tbody>{rows}</Table.Tbody>
+            <Table.Tbody>
+              {rows.length > 0 ? rows : (
+                <Table.Tr>
+                  <Table.Td colSpan={6} style={{ textAlign: 'center', color: 'gray', padding: 20 }}>
+                    {loading ? t('common.loading') : t('tasks.noTasksFound')}
+                  </Table.Td>
+                </Table.Tr>
+              )}
+            </Table.Tbody>
           </Table>
         </Box>
-        {tasks.length === 0 && !loading && (
-          <Box p="xl" style={{ textAlign: 'center' }}>
-            <Text c="dimmed" size="sm">
-              {t('tasks.noTasksFound')}
-            </Text>
-          </Box>
-        )}
         {meta && (
             <Box px="md" pb="md">
                 <TablePagination 
