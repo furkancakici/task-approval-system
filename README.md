@@ -1,135 +1,156 @@
-# Turborepo starter
+# Task Approval System
 
-This Turborepo starter is maintained by the Turborepo core team.
+Görev onay sistemi - Çalışanların görev talebi oluşturduğu ve yöneticilerin bu talepleri onayladığı/reddettiği full-stack uygulama.
 
-## Using this example
+## 🚀 Hızlı Başlangıç
 
-Run the following command:
+### Geliştirme Modu (Hot Reload ile)
 
-```sh
-npx create-turbo@latest
+Kod değişikliklerinizi anında görmek için:
+
+```bash
+docker compose -f docker-compose.dev.yml up
 ```
 
-## What's inside?
+**İlk çalıştırma 2-3 dakika sürebilir** (npm install çalışacak). Sonrasında kod değişiklikleriniz otomatik yansıyacak!
 
-This Turborepo includes the following packages/apps:
+### Production Modu
 
-### Apps and Packages
+Optimize edilmiş production build için:
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+```bash
+docker compose up -d --build
 ```
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+## 📱 Uygulamaya Erişim
+
+- **User Panel:** http://localhost:3000
+- **Admin Panel:** http://localhost:3001
+- **API:** http://localhost:4000
+- **PostgreSQL:** localhost:5433
+
+## 👤 Test Kullanıcıları
+
+### User Panel
+- Email: `user1@test.com` / Şifre: `123456`
+- Email: `user2@test.com` / Şifre: `123456`
+
+### Admin Panel
+- Email: `admin@test.com` / Şifre: `admin123` (Admin)
+- Email: `moderator@test.com` / Şifre: `mod123` (Moderator)
+- Email: `viewer@test.com` / Şifre: `viewer123` (Viewer)
+
+## 🛠️ Teknoloji Stack
+
+### Frontend
+- React 19 + TypeScript
+- Redux Toolkit (State Management)
+- Mantine UI (Component Library)
+- Vite (Build Tool)
+- React Router (Routing)
+
+### Backend
+- Express.js + TypeScript
+- Prisma ORM
+- PostgreSQL
+- JWT Authentication
+
+### DevOps
+- Docker + Docker Compose
+- Turborepo (Monorepo)
+- Nginx (Production)
+
+## 📁 Proje Yapısı
 
 ```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
+task-approval-system/
+├── apps/
+│   ├── api/              # Express API
+│   ├── admin-panel/      # Admin Panel (React)
+│   └── user-panel/       # User Panel (React)
+├── packages/
+│   ├── ui/               # Shared UI Components
+│   ├── types/            # Shared TypeScript Types
+│   ├── schema/           # Shared Zod Schemas
+│   └── api-client/       # Shared Axios Client
+├── docker-compose.yml        # Production
+├── docker-compose.dev.yml    # Development (Hot Reload)
+└── DEVELOPMENT.md            # Detaylı Geliştirme Kılavuzu
 ```
 
-### Develop
+## 💡 Sık Kullanılan Komutlar
 
-To develop all apps and packages, run the following command:
+### Development
 
-```
-cd my-turborepo
+```bash
+# Servisleri başlat (hot reload)
+docker compose -f docker-compose.dev.yml up
 
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
+# Belirli bir servisi yeniden başlat
+docker compose -f docker-compose.dev.yml restart api
 
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
+# Logları görüntüle
+docker compose -f docker-compose.dev.yml logs -f
 
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
+# Servisleri durdur
+docker compose -f docker-compose.dev.yml down
 ```
 
-### Remote Caching
+### Production
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+```bash
+# Build ve başlat
+docker compose up -d --build
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+# Logları görüntüle
+docker compose logs -f
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
+# Servisleri durdur
+docker compose down
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+### Database
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+```bash
+# Migration çalıştır
+docker exec -it task-approval-api-dev sh -c "cd apps/api && npx prisma migrate dev"
 
+# Veritabanını seed et
+docker exec -it task-approval-api-dev sh -c "cd apps/api && npm run seed"
+
+# Veritabanını sıfırla
+docker exec -it task-approval-api-dev sh -c "cd apps/api && npx prisma migrate reset"
 ```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
 
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
+## 📖 Özellikler
+
+### User Panel
+- ✅ Dashboard (İstatistikler)
+- ✅ Görev Oluşturma
+- ✅ Görevlerimi Görüntüleme
+- ✅ Görev Durumu Takibi
+
+### Admin Panel
+- ✅ Dashboard (Admin İstatistikleri)
+- ✅ Bekleyen Görevler (Onay/Red)
+- ✅ Tüm Görevler (Filtreleme)
+- ✅ Kullanıcı Yönetimi (Sadece Admin)
+- ✅ Rol Bazlı Erişim Kontrolü
+
+## 🔧 Sorun Giderme
+
+**Hot reload çalışmıyor?**
+```bash
+docker compose -f docker-compose.dev.yml restart user-panel
 ```
 
-## Useful Links
+**Port zaten kullanımda?**
+```bash
+lsof -ti:3000 | xargs kill -9
+```
 
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+**Bağımlılıklar güncel değil?**
+```bash
+docker compose -f docker-compose.dev.yml down -v
+docker compose -f docker-compose.dev.yml up
+```
