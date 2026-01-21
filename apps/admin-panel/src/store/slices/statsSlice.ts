@@ -1,10 +1,22 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { api } from '@/lib/api';
 
+interface RecentActivity {
+  id: string;
+  title: string;
+  status: string;
+  createdAt: string;
+  user: {
+    name: string;
+    email: string;
+  };
+}
+
 interface AdminStats {
   totalUsers: number;
   pendingTasks: number;
   completedTasks: number;
+  recentActivity: RecentActivity[];
 }
 
 interface StatsState {

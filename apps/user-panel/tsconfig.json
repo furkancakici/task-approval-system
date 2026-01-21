@@ -3,7 +3,11 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@repo/ui": ["../../packages/ui/src/index.ts"],
+      "@repo/types": ["../../packages/types/src/index.ts"],
+      "@repo/schema": ["../../packages/schema/src/index.ts"],
+      "@repo/i18n": ["../../packages/i18n/src/index.ts"]
     }
   },
   "include": ["src", "vite.config.ts"],

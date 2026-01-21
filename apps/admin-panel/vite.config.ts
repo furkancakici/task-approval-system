@@ -14,6 +14,7 @@ export default defineConfig({
       "@repo/ui": path.resolve(__dirname, "../../packages/ui/src/index.ts"),
       "@repo/types": path.resolve(__dirname, "../../packages/types/src/index.ts"),
       "@repo/schema": path.resolve(__dirname, "../../packages/schema/src/index.ts"),
+      "@repo/i18n": path.resolve(__dirname, "../../packages/i18n/src/index.ts"),
     },
     dedupe: ['react', 'react-dom', '@mantine/core', '@mantine/hooks', '@mantine/modals', '@mantine/notifications'],
   },

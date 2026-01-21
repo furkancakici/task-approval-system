@@ -2,11 +2,13 @@ import { useEffect } from 'react';
 import { Title, SimpleGrid, Paper, Text, Group, Button, Table, Badge, LoadingOverlay } from '@mantine/core';
 import { IconCheck, IconClock, IconX, IconPlus, IconListCheck } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchMyTasks } from '@/store/slices/tasksSlice';
 import { TaskStatus, type Task } from '@repo/types';
 
 export function Dashboard() {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { tasks, loading } = useAppSelector((state) => state.tasks);
@@ -48,9 +50,9 @@ export function Dashboard() {
   return (
     <>
       <Group justify="space-between" mb="xl">
-        <Title order={2}>Dashboard</Title>
+        <Title order={2}>{t('common.dashboard')}</Title>
         <Button leftSection={<IconPlus size={18} />} onClick={() => navigate('/tasks/create')}>
-          Create Task
+          {t('common.createTask')}
         </Button>
       </Group>
 
@@ -58,7 +60,7 @@ export function Dashboard() {
         <Paper withBorder p="md" radius="md">
           <Group justify="space-between">
             <Text size="xs" color="dimmed" fw={700} tt="uppercase">
-              Pending Tasks
+              {t('dashboard.pendingTasks')}
             </Text>
             <IconClock size={22} color="orange" />
           </Group>
@@ -70,7 +72,7 @@ export function Dashboard() {
         <Paper withBorder p="md" radius="md">
           <Group justify="space-between">
             <Text size="xs" color="dimmed" fw={700} tt="uppercase">
-              Approved
+              {t('dashboard.completedTasks')} (OK)
             </Text>
             <IconCheck size={22} color="green" />
           </Group>
@@ -82,7 +84,7 @@ export function Dashboard() {
         <Paper withBorder p="md" radius="md">
           <Group justify="space-between">
             <Text size="xs" color="dimmed" fw={700} tt="uppercase">
-              Rejected
+              {t('common.status')} (X)
             </Text>
             <IconX size={22} color="red" />
           </Group>
@@ -95,24 +97,26 @@ export function Dashboard() {
       <Paper withBorder radius="md" p="md" pos="relative">
         <LoadingOverlay visible={loading} overlayProps={{ blur: 2 }} />
         <Group justify="space-between" mb="md">
-            <Text fw={600} size="lg">Recent Activity</Text>
+            <Text fw={600} size="lg">{t('dashboard.recentActivity')}</Text>
             <Button variant="subtle" size="xs" rightSection={<IconListCheck size={14} />} onClick={() => navigate('/tasks')}>
-                View All
+                {t('common.tasks')}
             </Button>
         </Group>
         
         <Table>
           <Table.Thead>
             <Table.Tr>
-              <Table.Th>Title</Table.Th>
-              <Table.Th>Status</Table.Th>
-              <Table.Th>Date</Table.Th>
+              <Table.Th>{t('tasks.title')}</Table.Th>
+              <Table.Th>{t('common.status')}</Table.Th>
+              <Table.Th>{t('common.createdAt')}</Table.Th>
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
              {rows.length > 0 ? rows : (
                  <Table.Tr>
-                     <Table.Td colSpan={3} align="center" c="dimmed">No recent tasks</Table.Td>
+                     <Table.Td colSpan={3} style={{ textAlign: 'center', color: 'gray', padding: 20 }}>
+                        {loading ? t('common.loading') : t('tasks.noTasksFound')}
+                     </Table.Td>
                  </Table.Tr>
              )}
           </Table.Tbody>

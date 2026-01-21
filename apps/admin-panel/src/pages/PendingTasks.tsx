@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Title, Table, Badge, Paper, Button, Group, ActionIcon, Tooltip, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { IconCheck, IconX } from '@tabler/icons-react';
+import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchTasks, updateTaskStatus } from '@/store/slices/tasksSlice';
 import { TaskStatus, TaskPriority, UserRole } from '@repo/types';
@@ -9,6 +10,7 @@ import { RejectTaskModal } from '@/components/Tasks/RejectTaskModal';
 import { notifications } from '@mantine/notifications';
 
 export function PendingTasks() {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { tasks, loading } = useAppSelector((state) => state.tasks);
   const { user } = useAppSelector((state) => state.auth);
@@ -21,13 +23,13 @@ export function PendingTasks() {
 
   const handleApprove = (id: string) => {
     modals.openConfirmModal({
-      title: 'Please confirm your action',
+      title: t('tasks.approveConfirmTitle'),
       children: (
         <Text size="sm">
-          Are you sure you want to approve this task? This action cannot be undone.
+          {t('tasks.approveConfirmMessage')}
         </Text>
       ),
-      labels: { confirm: 'Confirm', cancel: 'Cancel' },
+      labels: { confirm: t('common.save'), cancel: t('common.cancel') },
       confirmProps: { color: 'green' },
       centered: true,
       onCancel: () => console.log('Cancel'),
@@ -38,14 +40,14 @@ export function PendingTasks() {
                 data: { status: TaskStatus.APPROVED }
             })).unwrap();
             notifications.show({
-                title: 'Success',
-                message: 'Task approved successfully',
+                title: t('common.success'),
+                message: t('tasks.approveSuccess'),
                 color: 'green'
             });
         } catch (error) {
             notifications.show({
-                title: 'Error',
-                message: 'Failed to approve task',
+                title: t('common.error'),
+                message: t('tasks.approveError'),
                 color: 'red'
             });
         }
@@ -68,9 +70,6 @@ export function PendingTasks() {
     }
   };
 
-  // Filter only pending tasks just in case, though API should filter it.
-  // Actually, since we update the state locally, approved/rejected tasks might still be in the 'tasks' array 
-  // but with different status. We should filter them out for display.
   const pendingTasks = tasks.filter(t => t.status === TaskStatus.PENDING);
 
   const rows = pendingTasks.map((task) => (
@@ -85,7 +84,7 @@ export function PendingTasks() {
       <Table.Td>{new Date(task.createdAt).toLocaleDateString('tr-TR')}</Table.Td>
       <Table.Td>
         <Group gap="xs">
-          <Tooltip label={user?.role === UserRole.VIEWER ? 'Viewers cannot approve' : 'Approve'}>
+          <Tooltip label={user?.role === UserRole.VIEWER ? t('tasks.viewersCannotApprove') : t('tasks.approve')}>
             <ActionIcon 
                 color="green" 
                 variant="light" 
@@ -95,7 +94,7 @@ export function PendingTasks() {
               <IconCheck size={18} />
             </ActionIcon>
           </Tooltip>
-          <Tooltip label={user?.role === UserRole.VIEWER ? 'Viewers cannot reject' : 'Reject'}>
+          <Tooltip label={user?.role === UserRole.VIEWER ? t('tasks.viewersCannotReject') : t('tasks.reject')}>
             <ActionIcon 
                 color="red" 
                 variant="light" 
@@ -112,24 +111,24 @@ export function PendingTasks() {
 
   return (
     <>
-      <Title order={2} mb="xl">Pending Approvals</Title>
+      <Title order={2} mb="xl">{t('tasks.pendingApprovals')}</Title>
 
       <Paper withBorder radius="md">
         <Table striped highlightOnHover>
           <Table.Thead>
             <Table.Tr>
-              <Table.Th>Title</Table.Th>
-              <Table.Th>Category</Table.Th>
-              <Table.Th>Priority</Table.Th>
-              <Table.Th>Created At</Table.Th>
-              <Table.Th>Actions</Table.Th>
+              <Table.Th>{t('tasks.title')}</Table.Th>
+              <Table.Th>{t('tasks.category')}</Table.Th>
+              <Table.Th>{t('tasks.priority')}</Table.Th>
+              <Table.Th>{t('tasks.createdAt')}</Table.Th>
+              <Table.Th>{t('tasks.actions')}</Table.Th>
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>{rows}</Table.Tbody>
         </Table>
         {pendingTasks.length === 0 && !loading && (
           <div style={{ padding: '20px', textAlign: 'center', color: 'gray' }}>
-            No pending tasks found.
+            {t('tasks.noPendingTasks')}
           </div>
         )}
       </Paper>

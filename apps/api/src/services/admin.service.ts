@@ -17,10 +17,25 @@ export const adminService = {
       }
     });
 
+    // Get 5 most recent tasks
+    const recentActivity = await prisma.task.findMany({
+      take: 5,
+      orderBy: { createdAt: 'desc' },
+      include: {
+        user: {
+          select: {
+            name: true,
+            email: true
+          }
+        }
+      }
+    });
+
     return {
       totalUsers,
       pendingTasks,
-      completedTasks
+      completedTasks,
+      recentActivity
     };
   }
 };

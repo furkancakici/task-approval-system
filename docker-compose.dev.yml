@@ -39,6 +39,7 @@ services:
       - /app/packages/schema/node_modules
       - /app/packages/types/node_modules
       - /app/packages/ui/node_modules
+      - /app/packages/i18n/node_modules
     command: sh -c "npm install && cd apps/api && npx prisma generate && npx prisma db push --accept-data-loss && npm run seed && npm run dev"
     depends_on:
       postgres:
@@ -63,6 +64,7 @@ services:
       - /app/packages/schema/node_modules
       - /app/packages/types/node_modules
       - /app/packages/ui/node_modules
+      - /app/packages/i18n/node_modules
     command: sh -c "npm install && cd apps/admin-panel && npm run dev -- --host 0.0.0.0"
     depends_on:
       - api
@@ -86,6 +88,7 @@ services:
       - /app/packages/schema/node_modules
       - /app/packages/types/node_modules
       - /app/packages/ui/node_modules
+      - /app/packages/i18n/node_modules
     command: sh -c "npm install && cd apps/user-panel && npm run dev -- --host 0.0.0.0"
     depends_on:
       - api

@@ -2,6 +2,8 @@ import React from 'react';
 import { AppShell, Burger, Group, Text, ScrollArea, NavLink, Avatar, Menu, UnstyledButton, rem } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconLogout, IconChevronDown } from '@tabler/icons-react';
+import { ColorSchemeToggle } from '../components/ColorSchemeToggle';
+import { LanguagePicker } from '../components/LanguagePicker';
 
 export interface NavLinkItem {
   label: string;
@@ -21,9 +23,19 @@ interface DashboardLayoutProps {
     image?: string;
   } | null;
   onLogout: () => void;
+  currentLanguage?: string;
+  onLanguageChange?: (lang: string) => void;
 }
 
-export function DashboardLayout({ children, navLinks, logo, user, onLogout }: DashboardLayoutProps) {
+export function DashboardLayout({ 
+  children, 
+  navLinks, 
+  logo, 
+  user, 
+  onLogout,
+  currentLanguage,
+  onLanguageChange
+}: DashboardLayoutProps) {
   const [opened, { toggle }] = useDisclosure();
 
   const items = navLinks.map((item) => (
@@ -54,37 +66,47 @@ export function DashboardLayout({ children, navLinks, logo, user, onLogout }: Da
             {logo}
           </Group>
 
-          {user && (
-            <Menu shadow="md" width={200} position="bottom-end">
-              <Menu.Target>
-                <UnstyledButton>
-                  <Group gap={7}>
-                    <Avatar src={user.image} alt={user.name} radius="xl" size={30} />
-                    <div style={{ flex: 1 }}>
-                      <Text size="sm" fw={500}>{user.name}</Text>
-                      <Text c="dimmed" size="xs">{user.email}</Text>
-                    </div>
-                    <IconChevronDown style={{ width: rem(12), height: rem(12) }} stroke={1.5} />
-                  </Group>
-                </UnstyledButton>
-              </Menu.Target>
+          <Group>
+            {currentLanguage && onLanguageChange && (
+                <LanguagePicker 
+                    currentLanguage={currentLanguage} 
+                    onLanguageChange={onLanguageChange} 
+                />
+            )}
+            <ColorSchemeToggle />
 
-              <Menu.Dropdown>
-                <Menu.Item
-                  color="red"
-                  leftSection={<IconLogout style={{ width: rem(14), height: rem(14) }} />}
-                  onClick={onLogout}
-                >
-                  Logout
-                </Menu.Item>
-              </Menu.Dropdown>
-            </Menu>
-          )}
+            {user && (
+                <Menu shadow="md" width={200} position="bottom-end">
+                <Menu.Target>
+                    <UnstyledButton>
+                    <Group gap={7}>
+                        <Avatar src={user.image} alt={user.name} radius="xl" size={30} />
+                        <div style={{ flex: 1 }} className="hidden-mobile">
+                        <Text size="sm" fw={500}>{user.name}</Text>
+                        <Text c="dimmed" size="xs">{user.email}</Text>
+                        </div>
+                        <IconChevronDown style={{ width: rem(12), height: rem(12) }} stroke={1.5} />
+                    </Group>
+                    </UnstyledButton>
+                </Menu.Target>
+
+                <Menu.Dropdown>
+                    <Menu.Item
+                    color="red"
+                    leftSection={<IconLogout style={{ width: rem(14), height: rem(14) }} />}
+                    onClick={onLogout}
+                    >
+                    Logout
+                    </Menu.Item>
+                </Menu.Dropdown>
+                </Menu>
+            )}
+          </Group>
         </Group>
       </AppShell.Header>
 
       <AppShell.Navbar p="md">
-        <ScrollArea className="flex-1">
+        <ScrollArea>
           {items}
         </ScrollArea>
       </AppShell.Navbar>

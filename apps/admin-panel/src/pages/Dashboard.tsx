@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
-import { SimpleGrid, Paper, Text, Group, Box, Title, ThemeIcon, Loader, Center } from '@mantine/core';
+import { SimpleGrid, Paper, Text, Group, Box, Title, ThemeIcon, Loader, Center, Table, Badge } from '@mantine/core';
 import { IconUser, IconListCheck, IconChecks } from '@tabler/icons-react';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { fetchAdminStats } from '@/store/slices/statsSlice';
+import { useTranslation } from 'react-i18next';
 
 interface StatProps {
   label: string;
@@ -32,6 +33,7 @@ function StatCard({ label, value, icon: Icon, color }: StatProps) {
 }
 
 export function Dashboard() {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
   const { stats, loading } = useAppSelector((state) => state.stats);
@@ -41,14 +43,14 @@ export function Dashboard() {
   }, [dispatch]);
 
   const statsData = stats ? [
-    { label: 'Total Users', value: stats.totalUsers.toString(), icon: IconUser, color: 'blue' },
-    { label: 'Pending Tasks', value: stats.pendingTasks.toString(), icon: IconListCheck, color: 'yellow' },
-    { label: 'Completed Tasks', value: stats.completedTasks.toString(), icon: IconChecks, color: 'teal' },
+    { label: t('dashboard.totalUsers'), value: stats.totalUsers.toString(), icon: IconUser, color: 'blue' },
+    { label: t('dashboard.pendingTasks'), value: stats.pendingTasks.toString(), icon: IconListCheck, color: 'yellow' },
+    { label: t('dashboard.completedTasks'), value: stats.completedTasks.toString(), icon: IconChecks, color: 'teal' },
   ] : [];
 
   return (
     <Box>
-      <Title order={2} mb="xl">Welcome back, {user?.name || 'Admin'}!</Title>
+      <Title order={2} mb="xl">{t('dashboard.welcome', { name: user?.name || 'Admin' })}</Title>
       
       {loading ? (
         <Center h={200}>
@@ -63,10 +65,53 @@ export function Dashboard() {
       )}
 
       <Paper withBorder p="md" radius="md" mt="xl">
-        <Title order={3} mb="md" size="h4">Recent Activity</Title>
-        <Text c="dimmed" size="sm">
-          No recent activity to show.
-        </Text>
+        <Title order={3} mb="md" size="h4">{t('dashboard.recentActivity')}</Title>
+        {stats?.recentActivity && stats.recentActivity.length > 0 ? (
+          <Box style={{ overflowX: 'auto' }}>
+            <Table highlightOnHover>
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th>{t('tasks.title')}</Table.Th>
+                  <Table.Th>{t('common.users')}</Table.Th>
+                  <Table.Th>{t('common.status')}</Table.Th>
+                  <Table.Th>{t('common.createdAt')}</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>
+                {stats.recentActivity.map((activity) => (
+                  <Table.Tr key={activity.id}>
+                    <Table.Td>
+                      <Text size="sm" fw={500}>{activity.title}</Text>
+                    </Table.Td>
+                    <Table.Td>
+                      <Text size="sm">{activity.user.name}</Text>
+                    </Table.Td>
+                    <Table.Td>
+                      <Badge 
+                        variant="light" 
+                        color={
+                          activity.status === 'pending' ? 'yellow' : 
+                          activity.status === 'approved' ? 'green' : 'red'
+                        }
+                      >
+                        {t(`tasks.status_${activity.status}`)}
+                      </Badge>
+                    </Table.Td>
+                    <Table.Td>
+                      <Text size="xs" c="dimmed">
+                        {new Date(activity.createdAt).toLocaleDateString('tr-TR')}
+                      </Text>
+                    </Table.Td>
+                  </Table.Tr>
+                ))}
+              </Table.Tbody>
+            </Table>
+          </Box>
+        ) : (
+          <Text c="dimmed" size="sm">
+            {loading ? t('common.loading') : t('tasks.noPendingTasks')}
+          </Text>
+        )}
       </Paper>
     </Box>
   );

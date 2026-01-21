@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@repo/i18n": "*",
     "@repo/postcss-config": "*",
     "@repo/schema": "*",
     "@repo/typescript-config": "*",
