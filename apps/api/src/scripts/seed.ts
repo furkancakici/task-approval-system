@@ -18,6 +18,7 @@ async function main() {
       email: 'user1@test.com',
       password,
       name: 'Test Employee 1',
+      role: UserRole.USER,
     },
   });
 
@@ -26,6 +27,7 @@ async function main() {
       email: 'user2@test.com',
       password,
       name: 'Test Employee 2',
+      role: UserRole.USER,
     },
   });
 

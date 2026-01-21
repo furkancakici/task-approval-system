@@ -31,7 +31,7 @@ export function Dashboard() {
       case TaskStatus.APPROVED: return 'green';
       case TaskStatus.REJECTED: return 'red';
       case TaskStatus.PENDING: return 'yellow';
-      default: return 'gray';
+      default: return 'teal';
     }
   };
 
@@ -40,7 +40,7 @@ export function Dashboard() {
       <Table.Td>{task.title}</Table.Td>
       <Table.Td>
         <Badge color={getStatusColor(task.status)} size="sm" variant="outline">
-          {task.status}
+          {t(`enums.status.${task.status}`)}
         </Badge>
       </Table.Td>
       <Table.Td>{new Date(task.createdAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })}</Table.Td>

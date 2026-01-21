@@ -108,6 +108,31 @@ const resources = {
         passwordMin: 'Password must be at least 6 characters',
         rejectionReasonRequired: 'Rejection reason is required when status is REJECTED',
         rejectionReasonMin: 'Reason must be at least 5 characters long',
+      },
+      enums: {
+        status: {
+          pending: 'Pending',
+          approved: 'Approved',
+          rejected: 'Rejected',
+        },
+        priority: {
+          low: 'Low',
+          normal: 'Normal',
+          high: 'High',
+          urgent: 'Urgent',
+        },
+        category: {
+          'Technical Support': 'Technical Support',
+          'Leave Request': 'Leave Request',
+          'Purchase': 'Purchase',
+          'Other': 'Other',
+        },
+        role: {
+          Admin: 'Admin',
+          User: 'User',
+          Moderator: 'Moderator',
+          Viewer: 'Viewer',
+        }
       }
     }
   },
@@ -216,6 +241,31 @@ const resources = {
         passwordMin: 'Şifre en az 6 karakter olmalıdır',
         rejectionReasonRequired: 'Durum REDDEDİLDİ olduğunda red nedeni zorunludur',
         rejectionReasonMin: 'Neden en az 5 karakter olmalıdır',
+      },
+      enums: {
+        status: {
+          pending: 'Bekliyor',
+          approved: 'Onaylandı',
+          rejected: 'Reddedildi',
+        },
+        priority: {
+          low: 'Düşük',
+          normal: 'Normal',
+          high: 'Yüksek',
+          urgent: 'Acil',
+        },
+        category: {
+          'Technical Support': 'Teknik Destek',
+          'Leave Request': 'İzin Talebi',
+          'Purchase': 'Satın Alma',
+          'Other': 'Diğer',
+        },
+        role: {
+          Admin: 'Admin',
+          User: 'Kullanıcı',
+          Moderator: 'Moderatör',
+          Viewer: 'İzleyici',
+        }
       }
     }
   }

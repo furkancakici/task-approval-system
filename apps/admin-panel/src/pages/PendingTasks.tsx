@@ -113,13 +113,23 @@ export function PendingTasks() {
     setRejectModalOpen(true);
   };
 
+  const getCategoryColor = (category: string) => {
+    switch (category) {
+      case TaskCategory.TECHNICAL_SUPPORT: return 'blue';
+      case TaskCategory.LEAVE_REQUEST: return 'orange';
+      case TaskCategory.PURCHASE: return 'grape';
+      case TaskCategory.OTHER: return 'teal';
+      default: return 'teal';
+    }
+  };
+
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case TaskPriority.URGENT: return 'red';
       case TaskPriority.HIGH: return 'orange';
       case TaskPriority.NORMAL: return 'blue';
-      case TaskPriority.LOW: return 'gray';
-      default: return 'gray';
+      case TaskPriority.LOW: return 'teal';
+      default: return 'teal';
     }
   };
 
@@ -128,10 +138,14 @@ export function PendingTasks() {
   const rows = tasks.map((task) => (
     <Table.Tr key={task.id}>
       <Table.Td>{task.title}</Table.Td>
-      <Table.Td>{task.category}</Table.Td>
+      <Table.Td>
+        <Badge color={getCategoryColor(task.category as TaskCategory)} variant="dot">
+          {t(`enums.category.${task.category}`)}
+        </Badge>
+      </Table.Td>
       <Table.Td>
         <Badge color={getPriorityColor(task.priority)} variant="light">
-          {task.priority}
+          {t(`enums.priority.${task.priority}`)}
         </Badge>
       </Table.Td>
       <Table.Td>{new Date(task.createdAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })}</Table.Td>
@@ -182,7 +196,7 @@ export function PendingTasks() {
               <Select
               label={t('common.priority')}
               placeholder={t('tasks.filterPriority')}
-              data={Object.values(TaskPriority)}
+              data={Object.values(TaskPriority).map(p => ({ value: p, label: t(`enums.priority.${p}`) }))}
               value={priority}
               onChange={setPriority}
               clearable
@@ -190,7 +204,7 @@ export function PendingTasks() {
               <Select
               label={t('common.category')}
               placeholder={t('tasks.category')}
-              data={Object.values(TaskCategory)}
+              data={Object.values(TaskCategory).map(c => ({ value: c, label: t(`enums.category.${c}`) }))}
               value={category}
               onChange={setCategory}
               clearable

@@ -76,8 +76,8 @@ export function CreateUserModal({ opened, onClose }: CreateUserModalProps) {
         <Select
           label={t('users.roleLabel')}
           data={[
-            { value: UserRole.ADMIN, label: 'Admin' },
-            { value: UserRole.USER, label: 'User' },
+            { value: UserRole.ADMIN, label: t(`enums.role.${UserRole.ADMIN}`) },
+            { value: UserRole.USER, label: t(`enums.role.${UserRole.USER}`) },
           ]}
           withAsterisk
           mb="xl"

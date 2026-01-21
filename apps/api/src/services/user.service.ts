@@ -16,7 +16,7 @@ export const userService = {
     const [users, total] = await Promise.all([
         prisma.user.findMany({
             where,
-            select: { id: true, name: true, email: true, createdAt: true },
+            select: { id: true, name: true, email: true, role: true, createdAt: true },
             skip,
             take,
             orderBy: { createdAt: 'desc' }
@@ -25,7 +25,7 @@ export const userService = {
     ]);
     
     return {
-        data: users.map(user => ({ ...user, role: UserRole.USER })),
+        data: users,
         meta: {
             page: Number(page),
             limit: Number(limit),
@@ -38,9 +38,9 @@ export const userService = {
   async getUserById(id: string) {
     const user = await prisma.user.findUnique({
       where: { id },
-      select: { id: true, name: true, email: true, createdAt: true }
+      select: { id: true, name: true, email: true, role: true, createdAt: true }
     });
-    return user ? { ...user, role: UserRole.USER } : null;
+    return user;
   },
 
   async createUser(data: any) {
@@ -50,17 +50,11 @@ export const userService = {
         name: data.name,
         email: data.email,
         password: hashedPassword,
-        // Role is not on User table currently based on previous schema viewing (it was on AdminUser).
-        // Let's check schema/types if 'role' exists on User. 
-        // Re-reading auth.ts: User has {id, name, email, type:'employee'}. AdminUser has {role}.
-        // If the requirement is to manage Users (Employees), they might not have a 'role' field in DB yet, 
-        // or they are just simplified users.
-        // CHECK REQUIRED: Does User model have 'role'?
-        // Assuming it acts as standard employee for now.
+        role: data.role || UserRole.USER,
       },
-      select: { id: true, name: true, email: true, createdAt: true }
+      select: { id: true, name: true, email: true, role: true, createdAt: true }
     });
-    return { ...user, role: UserRole.USER };
+    return user;
   },
 
   async updateUser(id: string, data: any) {
@@ -70,13 +64,14 @@ export const userService = {
     if (data.password) {
         updateData.password = await bcrypt.hash(data.password, 10);
     }
+    if (data.role) updateData.role = data.role;
     
     const user = await prisma.user.update({
       where: { id },
       data: updateData,
-      select: { id: true, name: true, email: true, createdAt: true }
+      select: { id: true, name: true, email: true, role: true, createdAt: true }
     });
-    return { ...user, role: UserRole.USER };
+    return user;
   },
 
   async deleteUser(id: string) {

@@ -130,6 +130,9 @@ docker exec -it task-approval-api-dev sh -c "cd apps/api && npm run seed"
 
 # Veritabanını sıfırla
 docker exec -it task-approval-api-dev sh -c "cd apps/api && npx prisma migrate reset"
+
+# Veritabanını sıfırla
+npx prisma db push --force-reset
 ```
 
 ## 📖 Özellikler

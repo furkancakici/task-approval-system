@@ -72,13 +72,13 @@ export function CreateTask() {
           <Group grow mt="md">
             <Select
               label={t('tasks.priority')}
-              data={Object.values(TaskPriority)}
+              data={Object.values(TaskPriority).map(p => ({ value: p, label: t(`enums.priority.${p}`) }))}
               withAsterisk
               {...form.getInputProps('priority')}
             />
             <Select
               label={t('tasks.category')}
-              data={Object.values(TaskCategory)}
+              data={Object.values(TaskCategory).map(c => ({ value: c, label: t(`enums.category.${c}`) }))}
               withAsterisk
               {...form.getInputProps('category')}
             />

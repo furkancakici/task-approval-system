@@ -107,8 +107,8 @@ export function Users() {
       <Table.Td>{user.name}</Table.Td>
       <Table.Td>{user.email}</Table.Td>
       <Table.Td>
-        <Badge color={user.role === UserRole.ADMIN ? 'blue' : 'gray'}>
-          {user.role}
+        <Badge color={user.role === UserRole.ADMIN ? 'blue' : 'teal'}>
+          {t(`enums.role.${user.role}`)}
         </Badge>
       </Table.Td>
       <Table.Td>{new Date(user.createdAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })}</Table.Td>

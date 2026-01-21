@@ -12,8 +12,8 @@ export const authService = {
     if (user) {
       const isValid = await bcrypt.compare(password, user.password);
       if (isValid) {
-        const token = jwt.sign({ id: user.id, email: user.email, type: 'employee' }, JWT_SECRET, { expiresIn: '1d' });
-        return { token, user: { id: user.id, name: user.name, email: user.email, type: 'employee' } };
+        const token = jwt.sign({ id: user.id, email: user.email, role: user.role, type: 'employee' }, JWT_SECRET, { expiresIn: '1d' });
+        return { token, user: { id: user.id, name: user.name, email: user.email, role: user.role, type: 'employee' } };
       }
     }
 
