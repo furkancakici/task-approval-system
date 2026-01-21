@@ -78,6 +78,13 @@ async function main() {
     const priority = priorities[i % priorities.length] || TaskPriority.NORMAL;
     const category = categories[i % categories.length] || TaskCategory.OTHER;
 
+    const createdAt = new Date(Date.now() - Math.floor(Math.random() * 1000000000));
+    const isProcessed = status !== TaskStatus.PENDING;
+    // Set updatedAt to a random time between createdAt and now if processed
+    const updatedAt = isProcessed 
+      ? new Date(createdAt.getTime() + Math.random() * (Date.now() - createdAt.getTime()))
+      : createdAt;
+
     await prisma.task.create({
       data: {
         title: `Test Task ${i + 1}`,
@@ -87,7 +94,8 @@ async function main() {
         status: status,
         userId: user.id,
         rejectionReason: status === TaskStatus.REJECTED ? 'Insufficient details provided.' : null,
-        createdAt: new Date(Date.now() - Math.floor(Math.random() * 1000000000)), // Random past date
+        createdAt,
+        updatedAt,
       },
     });
   }

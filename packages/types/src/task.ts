@@ -9,5 +9,6 @@ export interface Task {
   status: TaskStatus | string;
   createdBy: string; // User ID or Name
   createdAt: string;
+  updatedAt: string;
   rejectionReason?: string;
 }

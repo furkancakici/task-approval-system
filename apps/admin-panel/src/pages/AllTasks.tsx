@@ -84,7 +84,7 @@ export function AllTasks() {
     <Table.Tr key={task.id}>
       <Table.Td>{task.title}</Table.Td>
       <Table.Td>
-        <Badge color={getStatusColor(task.status)} variant="dot">
+        <Badge color={getStatusColor(task.status)} variant="outline">
             {t(`tasks.status_${task.status.toLowerCase()}`)}
         </Badge>
       </Table.Td>
@@ -95,6 +95,11 @@ export function AllTasks() {
         </Badge>
       </Table.Td>
       <Table.Td>{new Date(task.createdAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })}</Table.Td>
+      <Table.Td>
+        {task.status !== TaskStatus.PENDING 
+          ? new Date(task.updatedAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })
+          : '-'}
+      </Table.Td>
       <Table.Td>{(task as any).user?.name || 'Unknown'}</Table.Td>
     </Table.Tr>
   ));
@@ -145,6 +150,7 @@ export function AllTasks() {
                 <Table.Th>{t('tasks.category')}</Table.Th>
                 <Table.Th>{t('tasks.priority')}</Table.Th>
                 <Table.Th>{t('tasks.createdAt')}</Table.Th>
+                <Table.Th>{t('tasks.updatedAt')}</Table.Th>
                 <Table.Th>{t('tasks.creator')}</Table.Th>
               </Table.Tr>
             </Table.Thead>

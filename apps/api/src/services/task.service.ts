@@ -31,7 +31,7 @@ export const taskService = {
                     select: { id: true, name: true, email: true }
                 }
             },
-            orderBy: { createdAt: 'desc' },
+            orderBy: status === TaskStatus.PENDING ? { createdAt: 'desc' as const } : { updatedAt: 'desc' as const },
             skip,
             take
         }),

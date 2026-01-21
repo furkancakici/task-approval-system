@@ -54,7 +54,7 @@ export function MyTasks() {
       </Table.Td>
       <Table.Td>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Badge color={getStatusColor(task.status)} variant="filled">
+          <Badge color={getStatusColor(task.status)} variant="outline">
             {task.status}
           </Badge>
           {task.status === TaskStatus.REJECTED && task.rejectionReason && (
@@ -67,6 +67,11 @@ export function MyTasks() {
         </div>
       </Table.Td>
       <Table.Td>{new Date(task.createdAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })}</Table.Td>
+      <Table.Td>
+        {task.status !== TaskStatus.PENDING 
+          ? new Date(task.updatedAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })
+          : '-'}
+      </Table.Td>
     </Table.Tr>
   ));
 
@@ -85,6 +90,7 @@ export function MyTasks() {
                 <Table.Th>{t('tasks.priority')}</Table.Th>
                 <Table.Th>{t('common.status')}</Table.Th>
                 <Table.Th>{t('tasks.createdAt')}</Table.Th>
+                <Table.Th>{t('tasks.updatedAt')}</Table.Th>
               </Table.Tr>
             </Table.Thead>
             <Table.Tbody>{rows}</Table.Tbody>

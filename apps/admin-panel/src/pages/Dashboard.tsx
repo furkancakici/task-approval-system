@@ -90,7 +90,7 @@ export function Dashboard() {
                     </Table.Td>
                     <Table.Td>
                       <Badge 
-                        variant="light" 
+                        variant="outline" 
                         color={
                           activity.status === 'pending' ? 'yellow' : 
                           activity.status === 'approved' ? 'green' : 'red'

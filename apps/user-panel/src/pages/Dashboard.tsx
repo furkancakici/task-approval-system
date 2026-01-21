@@ -39,7 +39,7 @@ export function Dashboard() {
     <Table.Tr key={task.id}>
       <Table.Td>{task.title}</Table.Td>
       <Table.Td>
-        <Badge color={getStatusColor(task.status)} size="sm" variant="filled">
+        <Badge color={getStatusColor(task.status)} size="sm" variant="outline">
           {task.status}
         </Badge>
       </Table.Td>
