@@ -52,23 +52,29 @@ docker compose up -d --build
 
 ## 🛠️ Teknoloji Stack
 
-### Frontend
-- React 19 + TypeScript
-- Redux Toolkit (State Management)
-- Mantine UI (Component Library)
-- Vite (Build Tool)
-- React Router (Routing)
+### Çekirdek Yapı
+- **Monorepo:** [Turborepo](https://turbo.build/) ile yönetilen modüler yapı.
+- **Dil:** Uygulamanın tamamında **TypeScript** kullanılmaktadır.
+- **Konteynerleştirme:** Docker & Docker Compose.
 
-### Backend
-- Express.js + TypeScript
-- Prisma ORM
-- PostgreSQL
-- JWT Authentication
+### Frontend (User & Admin Panel)
+- **Framework:** [React 19](https://react.dev/) (Vite ile).
+- **Routing:** [React Router 7](https://reactrouter.com/) (Modern **Data API** / `createBrowserRouter` yapısı).
+- **UI & Styling:** [Mantine UI](https://mantine.dev/) (V6+v7 hibrit/geçişli modern bileşenler), PostCSS.
+- **State Management:** [Redux Toolkit](https://redux-toolkit.js.org/).
+- **Form Yönetimi:** Mantine Form + Zod Entegrasyonu.
+- **i18n:** [i18next](https://www.i18next.com/) ile çoklu dil desteği.
 
-### DevOps
-- Docker + Docker Compose
-- Turborepo (Monorepo)
-- Nginx (Production)
+### Backend (API)
+- **Runtime:** [Node.js](https://nodejs.org/) + [Express.js](https://expressjs.com/).
+- **ORM:** [Prisma](https://www.prisma.io/) (PostgreSQL ile).
+- **Güvenlik:** JWT tabanlı kimlik doğrulama, bcrypt şifreleme.
+- **Doğrulama:** Zod (Shared schemas).
+
+### DevOps & Diğer
+- **Proxy:** Nginx (Production ortamında frontend servislerini yönlendirmek için).
+- **Linting:** ESLint & Prettier.
+- **Icons:** Tabler Icons.
 
 ## 📁 Proje Yapısı
 
@@ -79,14 +85,28 @@ task-approval-system/
 │   ├── admin-panel/      # Admin Panel (React)
 │   └── user-panel/       # User Panel (React)
 ├── packages/
-│   ├── ui/               # Shared UI Components
-│   ├── types/            # Shared TypeScript Types
-│   ├── schema/           # Shared Zod Schemas
-│   └── api-client/       # Shared Axios Client
+│   ├── ui/               # Ortak UI bileşenleri, tema ayarları ve Mantine sağlayıcıları.
+│   ├── types/            # Frontend ve Backend arasında paylaşılan TypeScript arayüzleri.
+│   ├── schema/           # Form doğrulama ve API istekleri için paylaşılan Zod şemaları.
+│   ├── i18n/             # Çoklu dil (TR/EN) çevirileri ve i18next konfigürasyonu.
+│   ├── postcss-config/   # Ortak CSS/PostCSS yapılandırmaları.
+│   └── typescript-config/# Katı (strict) TypeScript kuralları ve base config'ler.
 ├── docker-compose.yml        # Production
 ├── docker-compose.dev.yml    # Development (Hot Reload)
 └── DEVELOPMENT.md            # Detaylı Geliştirme Kılavuzu
 ```
+
+## 🏎️ Monorepo ve Turborepo Mimarisi
+
+Bu proje, ölçeklenebilirlik ve kod paylaşımını maksimize etmek için **Monorepo** mimarisiyle tasarlanmıştır. Bu yapıyı yönetmek için **Turborepo** kullanılmaktadır.
+
+### Neden Turborepo Kullandık?
+
+1.  **Shared UI & Logic:** Admin Panel ve User Panel uygulamaları tamamen aynı UI yapısına, tema ayarlarına ve ortak bileşenlere sahiptir. `@repo/ui` paketi sayesinde her iki uygulama da aynı görsel dili konuşur.
+2.  **Hızlı Geliştirme:** Paylaşılan TypeScript tipleri (`@repo/types`) ve Zod şemaları (`@repo/schema`) sayesinde frontend ve backend arasındaki uyum otomatik olarak sağlanır.
+3.  **Performans (Caching):** Turborepo'nun akıllı build sistemi sayesinde sadece değişen dosyalar rebuild edilir, bu da CI/CD süreçlerini ve yerel geliştirme ortamını hızlandırır.
+4.  **Bileşen Tabanlı Bakım:** Ortak bir UI bileşeni güncellendiğinde, her iki uygulama da bu güncellemeyi anında alır, böylece tutarlılık korunur.
+
 
 ## 💡 Sık Kullanılan Komutlar
 
