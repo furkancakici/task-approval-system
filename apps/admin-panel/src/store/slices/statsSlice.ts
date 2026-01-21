@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { api } from '@repo/api-client';
+import { api } from '@/lib/api';
 
 interface AdminStats {
   totalUsers: number;

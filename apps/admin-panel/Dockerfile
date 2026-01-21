@@ -9,6 +9,10 @@ FROM node:20-alpine AS installer
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
+# Accept build arg for API URL
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+
 COPY .gitignore .gitignore
 COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/package-lock.json ./package-lock.json

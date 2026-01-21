@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
-import { api } from '@repo/api-client';
+import { api } from '@/lib/api';
 import { UserRole } from '@repo/types';
 
 interface User {

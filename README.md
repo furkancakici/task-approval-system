@@ -4,7 +4,17 @@ Görev onay sistemi - Çalışanların görev talebi oluşturduğu ve yöneticil
 
 ## 🚀 Hızlı Başlangıç
 
-### Geliştirme Modu (Hot Reload ile)
+### 1. Environment Kurulumu
+
+Önce `.env` dosyasını oluşturun:
+
+```bash
+cp .env.example .env
+```
+
+Gerekirse `.env` dosyasındaki değerleri düzenleyin (varsayılan değerler çoğu durumda yeterlidir).
+
+### 2. Geliştirme Modu (Hot Reload ile)
 
 Kod değişikliklerinizi anında görmek için:
 

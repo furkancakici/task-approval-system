@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
-import { api } from '@repo/api-client';
+import { api } from '@/lib/api';
 import type { Task, TaskStatus } from '@repo/types';
 import type { TaskQueryInput, UpdateTaskInput } from '@repo/schema';
 
