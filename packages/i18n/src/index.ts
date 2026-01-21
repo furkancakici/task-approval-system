@@ -203,6 +203,7 @@ i18n
   .init({
     resources,
     fallbackLng: 'tr',
+    lng: 'tr',
     interpolation: {
       escapeValue: false,
     }

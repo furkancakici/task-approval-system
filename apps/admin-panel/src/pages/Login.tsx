@@ -11,7 +11,7 @@ import type { AppDispatch } from '@/store';
 import { useAppSelector } from '@/store/hooks';
 
 export function Login() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { status, error } = useAppSelector((state) => state.auth);
@@ -36,6 +36,8 @@ export function Login() {
     <AuthLayout 
       title={t('auth.adminLoginTitle')} 
       subtitle={t('auth.adminLoginSubtitle')}
+      currentLanguage={i18n.language}
+      onLanguageChange={(lang) => i18n.changeLanguage(lang)}
     >
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <TextInput

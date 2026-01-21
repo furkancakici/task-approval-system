@@ -38,7 +38,7 @@ export function DashboardLayout({
   onLanguageChange
 }: DashboardLayoutProps) {
   const { t } = useTranslation();
-  const [opened, { toggle }] = useDisclosure();
+  const [opened, { toggle, close }] = useDisclosure();
 
   const items = navLinks.map((item) => (
     <NavLink
@@ -46,7 +46,10 @@ export function DashboardLayout({
       label={item.label}
       leftSection={<item.icon size="1rem" stroke={1.5} />}
       active={item.active}
-      onClick={item.onClick}
+      onClick={() => {
+        item.onClick?.();
+        close();
+      }}
       variant="light"
     />
   ));

@@ -1,22 +1,30 @@
 import React from 'react';
-import { Container, Paper, Title, Text, Center } from '@mantine/core';
+import { Container, Paper, Title, Text, Group } from '@mantine/core';
+import { ColorSchemeToggle } from '../components/ColorSchemeToggle';
+import { LanguagePicker } from '../components/LanguagePicker';
 
 interface AuthLayoutProps {
   children: React.ReactNode;
   title: string;
   subtitle?: string;
+  currentLanguage?: string;
+  onLanguageChange?: (lang: string) => void;
 }
 
-  // minHeight: '100vh', 
-  //     display: 'flex', 
-  //     alignItems: 'center', 
-  //     justifyContent: 'center',
-  //     backgroundColor: 'var(--mantine-color-gray-0)' 
-
-export function AuthLayout({ children, title, subtitle }: AuthLayoutProps) {
+export function AuthLayout({ children, title, subtitle, currentLanguage, onLanguageChange }: AuthLayoutProps) {
   return (
-    <Container fluid>
-      <Container size={420} my={40}>
+    <Container fluid style={{ position: 'relative', minHeight: '100vh' }}>
+      <Group justify="flex-end" p="md" style={{ position: 'absolute', top: 0, right: 0, width: '100%', zIndex: 100 }}>
+        {currentLanguage && onLanguageChange && (
+            <LanguagePicker 
+                currentLanguage={currentLanguage} 
+                onLanguageChange={onLanguageChange} 
+            />
+        )}
+        <ColorSchemeToggle />
+      </Group>
+
+      <Container size={420} pt={100} pb={40}>
         <Title ta="center" className="font-bold text-2xl">
           {title}
         </Title>

@@ -12,7 +12,7 @@ interface UiProviderProps {
 
 export function UiProvider({ children }: UiProviderProps) {
   return (
-    <MantineProvider theme={theme} defaultColorScheme="auto">
+    <MantineProvider theme={theme} defaultColorScheme="dark">
       <ModalsProvider>
         <Notifications />
         {children}
