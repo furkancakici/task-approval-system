@@ -137,20 +137,37 @@ npx prisma db push --force-reset
 
 ## 📖 Özellikler
 
-### User Panel
-- ✅ Dashboard (İstatistikler)
-- ✅ Görev Oluşturma
-- ✅ Görevlerimi Görüntüleme
-- ✅ Görev Durumu Takibi
+### 🌍 Uluslararasılaştırma (i18n) & UI
+- ✅ **Tam i18n Desteği**: Uygulamanın tamamı Türkçe ve İngilizce dillerini destekler (Dashboard, Tablolar, Formlar, Bildirimler).
+- ✅ **Dinamik Dil Geçişi**: Kullanıcı arayüzünde diller arası anlık geçiş yapılabilir.
+- ✅ **Gelişmiş Tema**: Mantine UI ile modern karanlık mod (Dark Mode) desteği.
+- ✅ **Zengin Görselleştirme**: 
+    - Kategoriler için özel **Dot-Variant Badge** tasarımı.
+    - Öncelik ve durumlar için renk kodlu badge'ler (Teal, Green, Red, Yellow, Orange, Blue, Grape).
 
-### Admin Panel
-- ✅ Dashboard (Admin İstatistikleri)
-- ✅ Bekleyen Görevler (Onay/Red)
-- ✅ Tüm Görevler (Filtreleme)
-- ✅ Kullanıcı Yönetimi (Sadece Admin)
-- ✅ Rol Bazlı Erişim Kontrolü
+### 📋 Görev Yönetimi (Task Management)
+- ✅ **Dashboard**: Kullanıcı ve Admin bazlı istatistik özetleri.
+- ✅ **Gelişmiş Filtreleme**: Görevleri başlık, durum, öncelik ve kategoriye göre filtreleme/arama.
+- ✅ **Sayfalama (Pagination)**: Tüm tablolar sunucu taraflı (server-side) sayfalama desteğine sahiptir.
+- ✅ **Görev Süreç Takibi**: Görevlerin oluşturulma ve onaylanma/reddedilme tarihlerinin (Processed At) takibi.
+- ✅ **Geri Bildirim**: Reddedilen görevler için neden belirtme ve görüntüleme (Tooltip desteği).
+
+### 👤 Kullanıcı ve Yetkilendirme
+- ✅ **Rol Bazlı Yetkilendirme (RBAC)**:
+    - **Admin**: Tam yetki, kullanıcı yönetimi, görev onaylama/reddetme.
+    - **Moderator**: Görev onaylama/reddetme yetkisi.
+    - **Viewer**: Sadece görüntüleme yetkisi.
+    - **User (Employee)**: Görev oluşturma ve kendi görevlerini takip etme.
+- ✅ **Kullanıcı Yönetimi**: Adminler için yeni çalışan ekleme (localized role selection) ve yönetme.
+- ✅ **Otomatik Doğrulama**: Zod ve Shared Schema ile hem frontend hem de backend tarafında güçlü veri doğrulama ve i18n hata mesajları.
 
 ## 🔧 Sorun Giderme
+
+**Veritabanı bağlantı hatası?**
+Veritabanı konteynerının sağlıklı olduğundan emin olun: `docker ps`. Eğer port çakışması varsa `.env` dosyasındaki `5433` portunu kontrol edin.
+
+**Şema değişiklikleri yansımıyor?**
+`npx prisma generate` ve `npx prisma db push` komutlarını `apps/api` dizininde çalıştırın.
 
 **Hot reload çalışmıyor?**
 ```bash
@@ -159,7 +176,7 @@ docker compose -f docker-compose.dev.yml restart user-panel
 
 **Port zaten kullanımda?**
 ```bash
-lsof -ti:3000 | xargs kill -9
+lsof -ti:3000 | xargs kill -9 # Mac/Linux için
 ```
 
 **Bağımlılıklar güncel değil?**
@@ -167,3 +184,4 @@ lsof -ti:3000 | xargs kill -9
 docker compose -f docker-compose.dev.yml down -v
 docker compose -f docker-compose.dev.yml up
 ```
+
