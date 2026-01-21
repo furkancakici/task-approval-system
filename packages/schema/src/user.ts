@@ -18,6 +18,8 @@ export const UpdateUserSchema = z.object({
 export const UserQuerySchema = z.object({
   role: z.nativeEnum(UserRole).optional(),
   email: z.string().optional(),
+  page: z.coerce.number().optional(),
+  limit: z.coerce.number().optional(),
 });
 
 export type CreateUserInput = z.infer<typeof CreateUserSchema>;

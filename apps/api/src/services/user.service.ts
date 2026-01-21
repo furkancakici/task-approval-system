@@ -4,25 +4,35 @@ import { UserRole } from '@repo/types';
 
 export const userService = {
   async getUsers(filters: any) {
-    const { role, email } = filters;
+    const { role, email, page = 1, limit = 10 } = filters;
+    const skip = (Number(page) - 1) * Number(limit);
+    const take = Number(limit);
+
     const where: any = {};
 
     if (role) where.role = role;
     if (email) where.email = { contains: email, mode: 'insensitive' };
 
-    // Fetch both tables and combine? Or just focus on 'users' (Employees) and 'admin_users' (Admins)?
-    // The requirement implies managing "Users". Usually this refers to the Employee users in this context, 
-    // but an Admin might want to manage other Admins too.
-    // Let's assume for now this manages the 'User' table (Employees).
-    // If we need to manage Admins, we might need a separate endpoint or a unified view.
-    // Given the context of "User Management Page", it's likely for managing Employees.
-
-    const users = await prisma.user.findMany({
-      where,
-      select: { id: true, name: true, email: true, createdAt: true }
-    });
+    const [users, total] = await Promise.all([
+        prisma.user.findMany({
+            where,
+            select: { id: true, name: true, email: true, createdAt: true },
+            skip,
+            take,
+            orderBy: { createdAt: 'desc' }
+        }),
+        prisma.user.count({ where })
+    ]);
     
-    return users.map(user => ({ ...user, role: UserRole.USER }));
+    return {
+        data: users.map(user => ({ ...user, role: UserRole.USER })),
+        meta: {
+            page: Number(page),
+            limit: Number(limit),
+            total,
+            totalPages: Math.ceil(total / Number(limit))
+        }
+    };
   },
 
   async getUserById(id: string) {

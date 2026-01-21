@@ -3,7 +3,10 @@ import { TaskStatus, TaskPriority, TaskCategory, UserRole } from '@repo/types';
 
 export const taskService = {
   async getTasks(filters: any, user: any) {
-    const { status, priority, category } = filters;
+    const { status, priority, category, page = 1, limit = 10 } = filters;
+    const skip = (Number(page) - 1) * Number(limit);
+    const take = Number(limit);
+
     const where: any = {};
     
     // Filters
@@ -20,15 +23,30 @@ export const taskService = {
         where.userId = user.id;
     } 
 
-    return prisma.task.findMany({
-      where,
-      include: {
-        user: {
-          select: { id: true, name: true, email: true }
+    const [data, total] = await Promise.all([
+        prisma.task.findMany({
+            where,
+            include: {
+                user: {
+                    select: { id: true, name: true, email: true }
+                }
+            },
+            orderBy: { createdAt: 'desc' },
+            skip,
+            take
+        }),
+        prisma.task.count({ where })
+    ]);
+
+    return {
+        data,
+        meta: {
+            page: Number(page),
+            limit: Number(limit),
+            total,
+            totalPages: Math.ceil(total / Number(limit))
         }
-      },
-      orderBy: { createdAt: 'desc' }
-    });
+    };
   },
 
   async getTaskById(id: string, user: any) {

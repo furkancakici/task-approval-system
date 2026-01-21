@@ -6,11 +6,12 @@ import { fetchTasks } from '@/store/slices/tasksSlice';
 import { TaskStatus, TaskPriority, TaskCategory, type Task } from '@repo/types';
 import { IconSearch, IconX } from '@tabler/icons-react';
 import { useDebouncedValue } from '@mantine/hooks';
+import { TablePagination } from '@repo/ui';
 
 export function AllTasks() {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const { tasks, loading } = useAppSelector((state) => state.tasks);
+  const { tasks, loading, meta } = useAppSelector((state) => state.tasks);
   
   // Filters
   const [search, setSearch] = useState('');
@@ -26,8 +27,32 @@ export function AllTasks() {
       status: status as TaskStatus | undefined,
       priority: priority as TaskPriority | undefined,
       category: category as TaskCategory | undefined,
+      page: 1,
+      limit: 10
     }));
   }, [dispatch, debouncedSearch, status, priority, category]);
+
+  const handlePageChange = (page: number) => {
+    dispatch(fetchTasks({
+      search: debouncedSearch || undefined,
+      status: status as TaskStatus | undefined,
+      priority: priority as TaskPriority | undefined,
+      category: category as TaskCategory | undefined,
+      page,
+      limit: meta?.limit || 10
+    }));
+  };
+
+  const handleLimitChange = (limit: number) => {
+    dispatch(fetchTasks({
+      search: debouncedSearch || undefined,
+      status: status as TaskStatus | undefined,
+      priority: priority as TaskPriority | undefined,
+      category: category as TaskCategory | undefined,
+      page: 1,
+      limit
+    }));
+  };
 
   const clearFilters = () => {
     setSearch('');
@@ -134,6 +159,18 @@ export function AllTasks() {
             </Table.Tbody>
           </Table>
         </Box>
+        {meta && (
+            <Box px="md" pb="md">
+                <TablePagination 
+                    total={meta.total} 
+                    totalPages={meta.totalPages} 
+                    page={meta.page} 
+                    onChange={handlePageChange}
+                    limit={meta.limit}
+                    onLimitChange={handleLimitChange}
+                />
+            </Box>
+        )}
       </Paper>
   );
 }

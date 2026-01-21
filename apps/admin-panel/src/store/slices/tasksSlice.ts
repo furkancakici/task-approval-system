@@ -1,21 +1,23 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
 import { api } from '@/lib/api';
-import type { Task, TaskStatus } from '@repo/types';
+import type { Task, PaginatedResponse, PaginationMeta } from '@repo/types';
 import type { TaskQueryInput, UpdateTaskInput } from '@repo/schema';
 
 interface TasksState {
   tasks: Task[];
+  meta: PaginationMeta | null;
   loading: boolean;
   error: string | null;
 }
 
 const initialState: TasksState = {
   tasks: [],
+  meta: null,
   loading: false,
   error: null,
 };
 
-export const fetchTasks = createAsyncThunk('tasks/fetchTasks', async (query: TaskQueryInput) => {
+export const fetchTasks = createAsyncThunk('tasks/fetchTasks', async (query: TaskQueryInput & { page?: number; limit?: number }) => {
   const response = await api.get('/tasks', { params: query });
   return response.data;
 });
@@ -39,9 +41,10 @@ const tasksSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchTasks.fulfilled, (state, action: PayloadAction<Task[]>) => {
+      .addCase(fetchTasks.fulfilled, (state, action: PayloadAction<PaginatedResponse<Task>>) => {
         state.loading = false;
-        state.tasks = action.payload;
+        state.tasks = action.payload.data;
+        state.meta = action.payload.meta;
       })
       .addCase(fetchTasks.rejected, (state, action) => {
         state.loading = false;

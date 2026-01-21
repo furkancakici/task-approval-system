@@ -30,6 +30,8 @@ export const TaskQuerySchema = z.object({
   priority: z.nativeEnum(TaskPriority).optional(),
   category: z.nativeEnum(TaskCategory).optional(),
   search: z.string().optional(),
+  page: z.coerce.number().optional(),
+  limit: z.coerce.number().optional(),
 });
 
 export type CreateTaskInput = z.infer<typeof CreateTaskSchema>;

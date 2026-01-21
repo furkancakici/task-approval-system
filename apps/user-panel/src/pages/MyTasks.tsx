@@ -5,15 +5,24 @@ import { IconInfoCircle } from '@tabler/icons-react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchMyTasks } from '@/store/slices/tasksSlice';
 import { TaskStatus, TaskPriority } from '@repo/types';
+import { TablePagination } from '@repo/ui';
 
 export function MyTasks() {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const { tasks, loading } = useAppSelector((state) => state.tasks);
+  const { tasks, loading, meta } = useAppSelector((state) => state.tasks);
 
   useEffect(() => {
-    dispatch(fetchMyTasks());
+    dispatch(fetchMyTasks({ page: 1, limit: 10 }));
   }, [dispatch]);
+
+  const handlePageChange = (page: number) => {
+    dispatch(fetchMyTasks({ page, limit: meta?.limit || 10 }));
+  };
+
+  const handleLimitChange = (limit: number) => {
+    dispatch(fetchMyTasks({ page: 1, limit }));
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -87,6 +96,18 @@ export function MyTasks() {
               {t('tasks.noTasksFound')}
             </Text>
           </Box>
+        )}
+        {meta && (
+            <Box px="md" pb="md">
+                <TablePagination 
+                    total={meta.total} 
+                    totalPages={meta.totalPages} 
+                    page={meta.page} 
+                    onChange={handlePageChange}
+                    limit={meta.limit}
+                    onLimitChange={handleLimitChange}
+                />
+            </Box>
         )}
       </Paper>
   );

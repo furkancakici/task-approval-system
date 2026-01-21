@@ -10,11 +10,12 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchUsers, deleteUser } from '@/store/slices/usersSlice';
 import { CreateUserModal } from '@/components/Users/CreateUserModal';
 import { UserRole } from '@repo/types';
+import { TablePagination } from '@repo/ui';
 
 export function Users() {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const { users, loading } = useAppSelector((state) => state.users);
+  const { users, loading, meta } = useAppSelector((state) => state.users);
   const [opened, { open, close }] = useDisclosure(false);
 
   const { user } = useAppSelector((state) => state.auth);
@@ -25,8 +26,16 @@ export function Users() {
       navigate('/dashboard');
       return;
     }
-    dispatch(fetchUsers());
+    dispatch(fetchUsers({ page: 1, limit: 10 }));
   }, [dispatch, user, navigate]);
+
+  const handlePageChange = (page: number) => {
+    dispatch(fetchUsers({ page, limit: meta?.limit || 10 }));
+  };
+
+  const handleLimitChange = (limit: number) => {
+    dispatch(fetchUsers({ page: 1, limit }));
+  };
 
   const handleDelete = (id: string) => {
     modals.openConfirmModal({
@@ -48,6 +57,14 @@ export function Users() {
             message: 'User deleted successfully',
             color: 'green'
           });
+          // Refresh list if needed or rely on optimistic update. 
+          // Optimistic update handles the list removal, but we might want to ensure pagination sync if items drop below current page threshhold.
+          // For now, simple optimistic is fine, but re-fetching ensures count sync.
+          if (users.length === 1 && meta && meta.page > 1) {
+              dispatch(fetchUsers({ page: meta.page - 1, limit: meta.limit }));
+          } else {
+              dispatch(fetchUsers({ page: meta?.page || 1, limit: meta?.limit || 10 }));
+          }
         } catch (error) {
           notifications.show({
             title: 'Error',
@@ -110,9 +127,24 @@ export function Users() {
             </Text>
           </Box>
         )}
+        {meta && (
+            <Box px="md" pb="md">
+                <TablePagination 
+                    total={meta.total} 
+                    totalPages={meta.totalPages} 
+                    page={meta.page} 
+                    onChange={handlePageChange}
+                    limit={meta.limit}
+                    onLimitChange={handleLimitChange}
+                />
+            </Box>
+        )}
       </Paper>
 
-      <CreateUserModal opened={opened} onClose={close} />
+      <CreateUserModal opened={opened} onClose={() => {
+        close();
+        dispatch(fetchUsers({ page: 1, limit: meta?.limit || 10 }));
+      }} />
     </>
   );
 }
