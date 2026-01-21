@@ -55,7 +55,7 @@ export function MyTasks() {
           )}
         </div>
       </Table.Td>
-      <Table.Td>{new Date(task.createdAt).toLocaleDateString()}</Table.Td>
+      <Table.Td>{new Date(task.createdAt).toLocaleDateString('tr-TR')}</Table.Td>
     </Table.Tr>
   ));
 

@@ -67,7 +67,7 @@ export function AllTasks() {
           {task.priority}
         </Badge>
       </Table.Td>
-      <Table.Td>{new Date(task.createdAt).toLocaleDateString()}</Table.Td>
+      <Table.Td>{new Date(task.createdAt).toLocaleDateString('tr-TR')}</Table.Td>
       <Table.Td>{(task as any).user?.name || 'Unknown'}</Table.Td>
     </Table.Tr>
   ));

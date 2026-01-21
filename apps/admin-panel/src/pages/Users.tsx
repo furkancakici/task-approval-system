@@ -67,7 +67,7 @@ export function Users() {
           {user.role}
         </Badge>
       </Table.Td>
-      <Table.Td>{new Date(user.createdAt).toLocaleDateString()}</Table.Td>
+      <Table.Td>{new Date(user.createdAt).toLocaleDateString('tr-TR')}</Table.Td>
       <Table.Td>
         <ActionIcon color="red" variant="subtle" onClick={() => handleDelete(user.id)}>
           <IconTrash size={16} />

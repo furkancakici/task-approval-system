@@ -82,7 +82,7 @@ export function PendingTasks() {
           {task.priority}
         </Badge>
       </Table.Td>
-      <Table.Td>{new Date(task.createdAt).toLocaleDateString()}</Table.Td>
+      <Table.Td>{new Date(task.createdAt).toLocaleDateString('tr-TR')}</Table.Td>
       <Table.Td>
         <Group gap="xs">
           <Tooltip label={user?.role === UserRole.VIEWER ? 'Viewers cannot approve' : 'Approve'}>
