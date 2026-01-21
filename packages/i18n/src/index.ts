@@ -27,6 +27,7 @@ const resources = {
         loading: 'Loading...',
         success: 'Success',
         error: 'Error',
+        required: 'This field is required',
         tr: 'Turkish',
         en: 'English',
       },
@@ -98,6 +99,15 @@ const resources = {
         roleLabel: 'Role',
         createUserSuccess: 'User created successfully',
         createUserError: 'Failed to create user',
+      },
+      validation: {
+        titleMin: 'Title must be at least 3 characters',
+        descriptionMin: 'Description must be at least 10 characters',
+        nameMin: 'Name must be at least 2 characters',
+        emailInvalid: 'Invalid email address',
+        passwordMin: 'Password must be at least 6 characters',
+        rejectionReasonRequired: 'Rejection reason is required when status is REJECTED',
+        rejectionReasonMin: 'Reason must be at least 5 characters long',
       }
     }
   },
@@ -125,6 +135,7 @@ const resources = {
         loading: 'Yükleniyor...',
         success: 'Başarılı',
         error: 'Hata',
+        required: 'Bu alan zorunludur',
         tr: 'Türkçe',
         en: 'İngilizce',
       },
@@ -196,6 +207,15 @@ const resources = {
         roleLabel: 'Rol',
         createUserSuccess: 'Kullanıcı başarıyla oluşturuldu',
         createUserError: 'Kullanıcı oluşturulurken hata oluştu',
+      },
+      validation: {
+        titleMin: 'Başlık en az 3 karakter olmalıdır',
+        descriptionMin: 'Açıklama en az 10 karakter olmalıdır',
+        nameMin: 'İsim en az 2 karakter olmalıdır',
+        emailInvalid: 'Geçersiz e-posta adresi',
+        passwordMin: 'Şifre en az 6 karakter olmalıdır',
+        rejectionReasonRequired: 'Durum REDDEDİLDİ olduğunda red nedeni zorunludur',
+        rejectionReasonMin: 'Neden en az 5 karakter olmalıdır',
       }
     }
   }

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import i18n from '@repo/i18n';
 
 // Using any for schema to avoid strict type mismatch between monorepo packages
 export const zodResolver = (schema: any) => (values: any) => {
@@ -14,7 +15,8 @@ export const zodResolver = (schema: any) => (values: any) => {
   (result.error as any).errors.forEach((error: any) => {
     const path = error.path.join('.');
     if (!errors[path]) {
-      errors[path] = error.message;
+      // Translate the message if it's a key
+      errors[path] = i18n.t(error.message);
     }
   });
 

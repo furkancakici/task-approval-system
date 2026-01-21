@@ -2,16 +2,16 @@ import { z } from 'zod';
 import { UserRole } from '@repo/types';
 
 export const CreateUserSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
+  name: z.string().min(2, 'validation.nameMin'),
+  email: z.string().email('validation.emailInvalid'),
+  password: z.string().min(6, 'validation.passwordMin'),
   role: z.nativeEnum(UserRole),
 });
 
 export const UpdateUserSchema = z.object({
-  name: z.string().min(2).optional(),
-  email: z.string().email().optional(),
-  password: z.string().min(6).optional(),
+  name: z.string().min(2, 'validation.nameMin').optional(),
+  email: z.string().email('validation.emailInvalid').optional(),
+  password: z.string().min(6, 'validation.passwordMin').optional(),
   role: z.nativeEnum(UserRole).optional(),
 });
 
