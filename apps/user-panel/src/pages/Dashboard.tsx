@@ -117,8 +117,8 @@ export function Dashboard() {
             <Table.Tbody>
                {rows.length > 0 ? rows : (
                    <Table.Tr>
-                       <Table.Td colSpan={3} style={{ textAlign: 'center', color: 'gray', padding: 20 }}>
-                          {loading ? t('common.loading') : t('tasks.noTasksFound')}
+                       <Table.Td colSpan={3} style={{ textAlign: 'center', color: 'gray', padding: 40 }}>
+                          {!loading && t('tasks.noTasksFound')}
                        </Table.Td>
                    </Table.Tr>
                )}

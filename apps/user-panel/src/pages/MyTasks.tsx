@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Title, Table, Badge, Paper, Tooltip, ActionIcon, Box, Text, Group, TextInput, Select, Button } from '@mantine/core';
+import { Title, Table, Badge, Paper, Tooltip, ActionIcon, Box, Text, Group, TextInput, Select, Button, LoadingOverlay } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { IconInfoCircle, IconSearch, IconX } from '@tabler/icons-react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
@@ -172,7 +172,8 @@ export function MyTasks() {
           </Group>
         </Box>
 
-        <Box style={{ overflowX: 'auto' }}>
+        <Box style={{ overflowX: 'auto', position: 'relative', minHeight: tasks.length === 0 ? 200 : 'auto' }}>
+          <LoadingOverlay visible={loading} overlayProps={{ blur: 2 }} />
           <Table striped highlightOnHover verticalSpacing="sm" horizontalSpacing="md">
             <Table.Thead>
               <Table.Tr>
@@ -187,8 +188,8 @@ export function MyTasks() {
             <Table.Tbody>
               {rows.length > 0 ? rows : (
                 <Table.Tr>
-                  <Table.Td colSpan={6} style={{ textAlign: 'center', color: 'gray', padding: 20 }}>
-                    {loading ? t('common.loading') : t('tasks.noTasksFound')}
+                  <Table.Td colSpan={6} style={{ textAlign: 'center', color: 'gray', padding: 40 }}>
+                    {!loading && t('tasks.noTasksFound')}
                   </Table.Td>
                 </Table.Tr>
               )}
