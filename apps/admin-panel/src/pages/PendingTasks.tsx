@@ -4,13 +4,14 @@ import { modals } from '@mantine/modals';
 import { IconCheck, IconX } from '@tabler/icons-react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchTasks, updateTaskStatus } from '@/store/slices/tasksSlice';
-import { TaskStatus, TaskPriority } from '@repo/types';
+import { TaskStatus, TaskPriority, UserRole } from '@repo/types';
 import { RejectTaskModal } from '@/components/Tasks/RejectTaskModal';
 import { notifications } from '@mantine/notifications';
 
 export function PendingTasks() {
   const dispatch = useAppDispatch();
   const { tasks, loading } = useAppSelector((state) => state.tasks);
+  const { user } = useAppSelector((state) => state.auth);
   const [rejectModalOpen, setRejectModalOpen] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
 
@@ -84,13 +85,23 @@ export function PendingTasks() {
       <Table.Td>{new Date(task.createdAt).toLocaleDateString()}</Table.Td>
       <Table.Td>
         <Group gap="xs">
-          <Tooltip label="Approve">
-            <ActionIcon color="green" variant="light" onClick={() => handleApprove(task.id)}>
+          <Tooltip label={user?.role === UserRole.VIEWER ? 'Viewers cannot approve' : 'Approve'}>
+            <ActionIcon 
+                color="green" 
+                variant="light" 
+                onClick={() => handleApprove(task.id)}
+                disabled={user?.role === UserRole.VIEWER}
+            >
               <IconCheck size={18} />
             </ActionIcon>
           </Tooltip>
-          <Tooltip label="Reject">
-            <ActionIcon color="red" variant="light" onClick={() => openRejectModal(task.id)}>
+          <Tooltip label={user?.role === UserRole.VIEWER ? 'Viewers cannot reject' : 'Reject'}>
+            <ActionIcon 
+                color="red" 
+                variant="light" 
+                onClick={() => openRejectModal(task.id)}
+                disabled={user?.role === UserRole.VIEWER}
+            >
               <IconX size={18} />
             </ActionIcon>
           </Tooltip>

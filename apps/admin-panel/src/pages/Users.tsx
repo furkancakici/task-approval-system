@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Title, Group, Button, Table, ActionIcon, Badge, Paper, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { modals } from '@mantine/modals';
@@ -14,9 +15,16 @@ export function Users() {
   const { users, loading } = useAppSelector((state) => state.users);
   const [opened, { open, close }] = useDisclosure(false);
 
+  const { user } = useAppSelector((state) => state.auth);
+  const navigate = useNavigate();
+
   useEffect(() => {
+    if (user && user.role !== UserRole.ADMIN) {
+      navigate('/dashboard');
+      return;
+    }
     dispatch(fetchUsers());
-  }, [dispatch]);
+  }, [dispatch, user, navigate]);
 
   const handleDelete = (id: string) => {
     modals.openConfirmModal({

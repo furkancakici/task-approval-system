@@ -27,7 +27,8 @@ export function AdminLayout() {
       label: 'Users', 
       icon: IconUsers, 
       active: location.pathname === '/users',
-      onClick: () => navigate('/users') 
+      onClick: () => navigate('/users'),
+      roles: ['Admin'] // Only visible to Admins
     },
     { 
       label: 'Pending Tasks', 
@@ -41,7 +42,7 @@ export function AdminLayout() {
       active: location.pathname === '/tasks/all',
       onClick: () => navigate('/tasks/all') 
     },
-  ];
+  ].filter(link => !link.roles || (user && link.roles.includes(user.role)));
 
   return (
     <DashboardLayout
