@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Title, Table, Badge, Paper, TextInput, Select, Group, Button } from '@mantine/core';
+import { Title, Table, Badge, Paper, TextInput, Select, Group, Button, Box } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchTasks } from '@/store/slices/tasksSlice';
@@ -69,70 +69,71 @@ export function AllTasks() {
           {task.priority}
         </Badge>
       </Table.Td>
-      <Table.Td>{new Date(task.createdAt).toLocaleDateString('tr-TR')}</Table.Td>
+      <Table.Td>{new Date(task.createdAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })}</Table.Td>
       <Table.Td>{(task as any).user?.name || 'Unknown'}</Table.Td>
     </Table.Tr>
   ));
 
   return (
-    <>
-      <Title order={2} mb="md">{t('tasks.allTasks')}</Title>
-
-      <Paper p="md" mb="xl" withBorder radius="md">
-        <Group align="end">
-            <TextInput
-            label={t('common.actions')} // Or just 'Search' if I added it
-            placeholder={t('tasks.searchPlaceholder')}
-            leftSection={<IconSearch size={16} />}
-            value={search}
-            onChange={(e) => setSearch(e.currentTarget.value)}
-            style={{ flex: 1 }}
-            />
-            <Select
-            label={t('common.status')}
-            placeholder={t('tasks.filterStatus')}
-            data={Object.values(TaskStatus).map(s => ({ value: s, label: t(`tasks.status_${s.toLowerCase()}`) }))}
-            value={status}
-            onChange={setStatus}
-            clearable
-            />
-            <Select
-            label={t('common.priority')}
-            placeholder={t('tasks.filterPriority')}
-            data={Object.values(TaskPriority)}
-            value={priority}
-            onChange={setPriority}
-            clearable
-            />
-            <Button variant="light" color="gray" onClick={clearFilters} leftSection={<IconX size={16}/>}>
-                {t('tasks.clearFilters')}
-            </Button>
-        </Group>
-      </Paper>
-
       <Paper withBorder radius="md">
-        <Table striped highlightOnHover>
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>{t('tasks.title')}</Table.Th>
-              <Table.Th>{t('common.status')}</Table.Th>
-              <Table.Th>{t('tasks.category')}</Table.Th>
-              <Table.Th>{t('tasks.priority')}</Table.Th>
-              <Table.Th>{t('tasks.createdAt')}</Table.Th>
-              <Table.Th>{t('tasks.creator')}</Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>
-            {rows.length > 0 ? rows : (
+        <Box p="md" style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}>
+          <Title order={3} size="h4">{t('tasks.allTasks')}</Title>
+        </Box>
+        <Box p="md" style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}>
+          <Group align="end">
+              <TextInput
+              label={t('common.actions')}
+              placeholder={t('tasks.searchPlaceholder')}
+              leftSection={<IconSearch size={16} />}
+              value={search}
+              onChange={(e) => setSearch(e.currentTarget.value)}
+              style={{ flex: 1 }}
+              />
+              <Select
+              label={t('common.status')}
+              placeholder={t('tasks.filterStatus')}
+              data={Object.values(TaskStatus).map(s => ({ value: s, label: t(`tasks.status_${s.toLowerCase()}`) }))}
+              value={status}
+              onChange={setStatus}
+              clearable
+              />
+              <Select
+              label={t('common.priority')}
+              placeholder={t('tasks.filterPriority')}
+              data={Object.values(TaskPriority)}
+              value={priority}
+              onChange={setPriority}
+              clearable
+              />
+              <Button variant="light" color="gray" onClick={clearFilters} leftSection={<IconX size={16}/>}>
+                  {t('tasks.clearFilters')}
+              </Button>
+          </Group>
+        </Box>
+
+        <Box style={{ overflowX: 'auto' }}>
+          <Table striped highlightOnHover verticalSpacing="sm" horizontalSpacing="md">
+            <Table.Thead>
               <Table.Tr>
-                <Table.Td colSpan={6} style={{ textAlign: 'center', color: 'gray', padding: 20 }}>
-                  {loading ? t('common.loading') : t('tasks.noTasksFound')}
-                </Table.Td>
+                <Table.Th>{t('tasks.title')}</Table.Th>
+                <Table.Th>{t('common.status')}</Table.Th>
+                <Table.Th>{t('tasks.category')}</Table.Th>
+                <Table.Th>{t('tasks.priority')}</Table.Th>
+                <Table.Th>{t('tasks.createdAt')}</Table.Th>
+                <Table.Th>{t('tasks.creator')}</Table.Th>
               </Table.Tr>
-            )}
-          </Table.Tbody>
-        </Table>
+            </Table.Thead>
+            <Table.Tbody>
+              {rows.length > 0 ? rows : (
+                <Table.Tr>
+                  <Table.Td colSpan={6} style={{ textAlign: 'center', color: 'gray', padding: 20 }}>
+                    {loading ? t('common.loading') : t('tasks.noTasksFound')}
+                  </Table.Td>
+                </Table.Tr>
+              )}
+            </Table.Tbody>
+          </Table>
+        </Box>
       </Paper>
-    </>
   );
 }

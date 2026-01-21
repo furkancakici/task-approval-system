@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Title, Table, Badge, Paper, Button, Group, ActionIcon, Tooltip, Text } from '@mantine/core';
+import { Title, Table, Badge, Paper, Button, Group, ActionIcon, Tooltip, Text, Box } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { IconCheck, IconX } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
@@ -81,7 +81,7 @@ export function PendingTasks() {
           {task.priority}
         </Badge>
       </Table.Td>
-      <Table.Td>{new Date(task.createdAt).toLocaleDateString('tr-TR')}</Table.Td>
+      <Table.Td>{new Date(task.createdAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })}</Table.Td>
       <Table.Td>
         <Group gap="xs">
           <Tooltip label={user?.role === UserRole.VIEWER ? t('tasks.viewersCannotApprove') : t('tasks.approve')}>
@@ -111,25 +111,30 @@ export function PendingTasks() {
 
   return (
     <>
-      <Title order={2} mb="xl">{t('tasks.pendingApprovals')}</Title>
-
       <Paper withBorder radius="md">
-        <Table striped highlightOnHover>
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>{t('tasks.title')}</Table.Th>
-              <Table.Th>{t('tasks.category')}</Table.Th>
-              <Table.Th>{t('tasks.priority')}</Table.Th>
-              <Table.Th>{t('tasks.createdAt')}</Table.Th>
-              <Table.Th>{t('tasks.actions')}</Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>{rows}</Table.Tbody>
-        </Table>
+        <Box p="md" style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}>
+          <Title order={3} size="h4">{t('tasks.pendingApprovals')}</Title>
+        </Box>
+        <Box style={{ overflowX: 'auto' }}>
+          <Table striped highlightOnHover verticalSpacing="sm" horizontalSpacing="md">
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>{t('tasks.title')}</Table.Th>
+                <Table.Th>{t('tasks.category')}</Table.Th>
+                <Table.Th>{t('tasks.priority')}</Table.Th>
+                <Table.Th>{t('tasks.createdAt')}</Table.Th>
+                <Table.Th>{t('tasks.actions')}</Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>{rows}</Table.Tbody>
+          </Table>
+        </Box>
         {pendingTasks.length === 0 && !loading && (
-          <div style={{ padding: '20px', textAlign: 'center', color: 'gray' }}>
-            {t('tasks.noPendingTasks')}
-          </div>
+          <Box p="xl" style={{ textAlign: 'center' }}>
+            <Text c="dimmed" size="sm">
+              {t('tasks.noPendingTasks')}
+            </Text>
+          </Box>
         )}
       </Paper>
 

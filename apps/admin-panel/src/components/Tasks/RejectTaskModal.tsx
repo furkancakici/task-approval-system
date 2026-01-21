@@ -4,6 +4,7 @@ import { useAppDispatch } from '@/store/hooks';
 import { updateTaskStatus } from '@/store/slices/tasksSlice';
 import { notifications } from '@mantine/notifications';
 import { TaskStatus } from '@repo/types';
+import { useTranslation } from 'react-i18next';
 
 interface RejectTaskModalProps {
   opened: boolean;
@@ -12,6 +13,7 @@ interface RejectTaskModalProps {
 }
 
 export function RejectTaskModal({ opened, onClose, taskId }: RejectTaskModalProps) {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const [reason, setReason] = useState('');
   const [loading, setLoading] = useState(false);
@@ -20,8 +22,8 @@ export function RejectTaskModal({ opened, onClose, taskId }: RejectTaskModalProp
     if (!taskId) return;
     if (reason.length < 5) {
         notifications.show({
-            title: 'Error',
-            message: 'Reason must be at least 5 characters long',
+            title: t('common.error'),
+            message: t('tasks.rejectionReasonMinLength'),
             color: 'red'
         });
         return;
@@ -35,16 +37,16 @@ export function RejectTaskModal({ opened, onClose, taskId }: RejectTaskModalProp
       })).unwrap();
       
       notifications.show({
-        title: 'Success',
-        message: 'Task rejected successfully',
+        title: t('common.success'),
+        message: t('tasks.rejectSuccess'),
         color: 'green',
       });
       setReason('');
       onClose();
     } catch (error) {
       notifications.show({
-        title: 'Error',
-        message: 'Failed to reject task',
+        title: t('common.error'),
+        message: t('tasks.rejectError'),
         color: 'red',
       });
     } finally {
@@ -53,10 +55,10 @@ export function RejectTaskModal({ opened, onClose, taskId }: RejectTaskModalProp
   };
 
   return (
-    <Modal opened={opened} onClose={onClose} title="Reject Task" centered>
+    <Modal opened={opened} onClose={onClose} title={t('tasks.rejectTaskTitle')} centered>
       <Textarea
-        label="Rejection Reason"
-        placeholder="Please explain why this task is being rejected..."
+        label={t('tasks.rejectionReasonLabel')}
+        placeholder={t('tasks.rejectionReasonPlaceholder')}
         minRows={3}
         value={reason}
         onChange={(event) => setReason(event.currentTarget.value)}
@@ -65,8 +67,8 @@ export function RejectTaskModal({ opened, onClose, taskId }: RejectTaskModalProp
       />
 
       <Group justify="flex-end">
-        <Button variant="default" onClick={onClose} disabled={loading}>Cancel</Button>
-        <Button color="red" onClick={handleReject} loading={loading}>Reject Task</Button>
+        <Button variant="default" onClick={onClose} disabled={loading}>{t('common.cancel')}</Button>
+        <Button color="red" onClick={handleReject} loading={loading}>{t('tasks.reject')}</Button>
       </Group>
     </Modal>
   );

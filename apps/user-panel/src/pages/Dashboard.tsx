@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Title, SimpleGrid, Paper, Text, Group, Button, Table, Badge, LoadingOverlay } from '@mantine/core';
+import { Title, SimpleGrid, Paper, Text, Group, Button, Table, Badge, LoadingOverlay, Box } from '@mantine/core';
 import { IconCheck, IconClock, IconX, IconPlus, IconListCheck } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -43,7 +43,7 @@ export function Dashboard() {
           {task.status}
         </Badge>
       </Table.Td>
-      <Table.Td>{new Date(task.createdAt).toLocaleDateString('tr-TR')}</Table.Td>
+      <Table.Td>{new Date(task.createdAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })}</Table.Td>
     </Table.Tr>
   ));
 
@@ -94,33 +94,37 @@ export function Dashboard() {
         </Paper>
       </SimpleGrid>
 
-      <Paper withBorder radius="md" p="md" pos="relative">
+      <Paper withBorder radius="md" pos="relative">
         <LoadingOverlay visible={loading} overlayProps={{ blur: 2 }} />
-        <Group justify="space-between" mb="md">
+        <Box p="md" style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}>
+          <Group justify="space-between">
             <Text fw={600} size="lg">{t('dashboard.recentActivity')}</Text>
             <Button variant="subtle" size="xs" rightSection={<IconListCheck size={14} />} onClick={() => navigate('/tasks')}>
-                {t('common.tasks')}
+              {t('common.tasks')}
             </Button>
-        </Group>
+          </Group>
+        </Box>
         
-        <Table>
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>{t('tasks.title')}</Table.Th>
-              <Table.Th>{t('common.status')}</Table.Th>
-              <Table.Th>{t('common.createdAt')}</Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>
-             {rows.length > 0 ? rows : (
-                 <Table.Tr>
-                     <Table.Td colSpan={3} style={{ textAlign: 'center', color: 'gray', padding: 20 }}>
-                        {loading ? t('common.loading') : t('tasks.noTasksFound')}
-                     </Table.Td>
-                 </Table.Tr>
-             )}
-          </Table.Tbody>
-        </Table>
+        <Box style={{ overflowX: 'auto' }}>
+          <Table striped highlightOnHover verticalSpacing="sm" horizontalSpacing="md">
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>{t('tasks.title')}</Table.Th>
+                <Table.Th>{t('common.status')}</Table.Th>
+                <Table.Th>{t('common.createdAt')}</Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>
+               {rows.length > 0 ? rows : (
+                   <Table.Tr>
+                       <Table.Td colSpan={3} style={{ textAlign: 'center', color: 'gray', padding: 20 }}>
+                          {loading ? t('common.loading') : t('tasks.noTasksFound')}
+                       </Table.Td>
+                   </Table.Tr>
+               )}
+            </Table.Tbody>
+          </Table>
+        </Box>
       </Paper>
     </>
   );

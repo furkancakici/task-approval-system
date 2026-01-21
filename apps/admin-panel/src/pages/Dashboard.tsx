@@ -64,11 +64,13 @@ export function Dashboard() {
         </SimpleGrid>
       )}
 
-      <Paper withBorder p="md" radius="md" mt="xl">
-        <Title order={3} mb="md" size="h4">{t('dashboard.recentActivity')}</Title>
+      <Paper withBorder radius="md" mt="xl">
+        <Box p="md" style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}>
+          <Title order={3} size="h4">{t('dashboard.recentActivity')}</Title>
+        </Box>
         {stats?.recentActivity && stats.recentActivity.length > 0 ? (
           <Box style={{ overflowX: 'auto' }}>
-            <Table highlightOnHover>
+            <Table striped highlightOnHover verticalSpacing="sm" horizontalSpacing="md">
               <Table.Thead>
                 <Table.Tr>
                   <Table.Th>{t('tasks.title')}</Table.Th>
@@ -98,8 +100,8 @@ export function Dashboard() {
                       </Badge>
                     </Table.Td>
                     <Table.Td>
-                      <Text size="xs" c="dimmed">
-                        {new Date(activity.createdAt).toLocaleDateString('tr-TR')}
+                      <Text size="sm" c="dimmed">
+                        {new Date(activity.createdAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })}
                       </Text>
                     </Table.Td>
                   </Table.Tr>
@@ -108,9 +110,11 @@ export function Dashboard() {
             </Table>
           </Box>
         ) : (
-          <Text c="dimmed" size="sm">
-            {loading ? t('common.loading') : t('tasks.noPendingTasks')}
-          </Text>
+          <Box p="xl" style={{ textAlign: 'center' }}>
+            <Text c="dimmed" size="sm">
+              {loading ? t('common.loading') : t('tasks.noPendingTasks')}
+            </Text>
+          </Box>
         )}
       </Paper>
     </Box>

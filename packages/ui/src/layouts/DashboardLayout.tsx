@@ -1,5 +1,6 @@
 import React from 'react';
 import { AppShell, Burger, Group, Text, ScrollArea, NavLink, Avatar, Menu, UnstyledButton, rem } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 import { useDisclosure } from '@mantine/hooks';
 import { IconLogout, IconChevronDown } from '@tabler/icons-react';
 import { ColorSchemeToggle } from '../components/ColorSchemeToggle';
@@ -36,6 +37,7 @@ export function DashboardLayout({
   currentLanguage,
   onLanguageChange
 }: DashboardLayoutProps) {
+  const { t } = useTranslation();
   const [opened, { toggle }] = useDisclosure();
 
   const items = navLinks.map((item) => (
@@ -96,7 +98,7 @@ export function DashboardLayout({
                     leftSection={<IconLogout style={{ width: rem(14), height: rem(14) }} />}
                     onClick={onLogout}
                     >
-                    Logout
+                    {t('common.logout')}
                     </Menu.Item>
                 </Menu.Dropdown>
                 </Menu>

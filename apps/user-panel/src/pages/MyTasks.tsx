@@ -1,11 +1,13 @@
 import { useEffect } from 'react';
-import { Title, Table, Badge, Paper, Tooltip, ActionIcon } from '@mantine/core';
+import { Title, Table, Badge, Paper, Tooltip, ActionIcon, Box, Text } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 import { IconInfoCircle } from '@tabler/icons-react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchMyTasks } from '@/store/slices/tasksSlice';
 import { TaskStatus, TaskPriority } from '@repo/types';
 
 export function MyTasks() {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { tasks, loading } = useAppSelector((state) => state.tasks);
 
@@ -55,33 +57,37 @@ export function MyTasks() {
           )}
         </div>
       </Table.Td>
-      <Table.Td>{new Date(task.createdAt).toLocaleDateString('tr-TR')}</Table.Td>
+      <Table.Td>{new Date(task.createdAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })}</Table.Td>
     </Table.Tr>
   ));
 
   return (
-    <>
-      <Title order={2} mb="xl">My Tasks</Title>
-
       <Paper withBorder radius="md">
-        <Table striped highlightOnHover>
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>Title</Table.Th>
-              <Table.Th>Category</Table.Th>
-              <Table.Th>Priority</Table.Th>
-              <Table.Th>Status</Table.Th>
-              <Table.Th>Created At</Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>{rows}</Table.Tbody>
-        </Table>
+        <Box p="md" style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}>
+          <Title order={3} size="h4">{t('common.myTasks')}</Title>
+        </Box>
+
+        <Box style={{ overflowX: 'auto' }}>
+          <Table striped highlightOnHover verticalSpacing="sm" horizontalSpacing="md">
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>{t('tasks.title')}</Table.Th>
+                <Table.Th>{t('tasks.category')}</Table.Th>
+                <Table.Th>{t('tasks.priority')}</Table.Th>
+                <Table.Th>{t('common.status')}</Table.Th>
+                <Table.Th>{t('tasks.createdAt')}</Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>{rows}</Table.Tbody>
+          </Table>
+        </Box>
         {tasks.length === 0 && !loading && (
-            <div style={{ padding: '20px', textAlign: 'center', color: 'gray' }}>
-                No tasks found. Create one to get started!
-            </div>
+          <Box p="xl" style={{ textAlign: 'center' }}>
+            <Text c="dimmed" size="sm">
+              {t('tasks.noTasksFound')}
+            </Text>
+          </Box>
         )}
       </Paper>
-    </>
   );
 }

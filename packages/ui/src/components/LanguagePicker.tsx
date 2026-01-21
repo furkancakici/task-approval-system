@@ -1,6 +1,5 @@
-import { ActionIcon, Menu, Group, Image } from '@mantine/core';
-import { IconLanguage } from '@tabler/icons-react';
-import styles from './styles/language-picker.module.css';
+import { ActionIcon, Menu, Group, Text } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 
 interface LanguagePickerProps {
   currentLanguage: string;
@@ -8,26 +7,31 @@ interface LanguagePickerProps {
 }
 
 export function LanguagePicker({ currentLanguage, onLanguageChange }: LanguagePickerProps) {
+  const { t } = useTranslation();
   return (
     <Menu shadow="md" width={120}>
       <Menu.Target>
         <ActionIcon variant="outline" size="lg">
           {currentLanguage === 'tr' ? (
-            <span style={{ fontSize: '20px' }}>🇹🇷</span>
+            <Text>🇹🇷</Text>
           ) : (
-            <span style={{ fontSize: '20px' }}>🇺🇸</span>
+            <Text>🇺🇸</Text>
           )}
         </ActionIcon>
       </Menu.Target>
 
       <Menu.Dropdown>
-        <Menu.Item onClick={() => onLanguageChange('tr')} className={styles["language-picker"]}>
-          <span style={{ fontSize: '20px' }}>🇹🇷</span> 
-          <span>Türkçe</span>
+        <Menu.Item onClick={() => onLanguageChange('tr')}>
+          <Group gap={5}>
+            <Text>🇹🇷</Text> 
+            <Text>{t('common.tr')}</Text>
+          </Group>
         </Menu.Item>
-        <Menu.Item onClick={() => onLanguageChange('en')} className={styles["language-picker"]}>
-          <span style={{ fontSize: '20px' }}>🇺🇸</span> 
-          <span>English</span>
+        <Menu.Item onClick={() => onLanguageChange('en')}>
+          <Group gap={5}>
+            <Text>🇺🇸</Text> 
+            <Text>{t('common.en')}</Text>
+          </Group>
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>

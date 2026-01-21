@@ -7,15 +7,15 @@ interface AuthLayoutProps {
   subtitle?: string;
 }
 
+  // minHeight: '100vh', 
+  //     display: 'flex', 
+  //     alignItems: 'center', 
+  //     justifyContent: 'center',
+  //     backgroundColor: 'var(--mantine-color-gray-0)' 
+
 export function AuthLayout({ children, title, subtitle }: AuthLayoutProps) {
   return (
-    <div style={{ 
-      minHeight: '100vh', 
-      display: 'flex', 
-      alignItems: 'center', 
-      justifyContent: 'center',
-      backgroundColor: 'var(--mantine-color-gray-0)' 
-    }}>
+    <Container fluid>
       <Container size={420} my={40}>
         <Title ta="center" className="font-bold text-2xl">
           {title}
@@ -30,6 +30,6 @@ export function AuthLayout({ children, title, subtitle }: AuthLayoutProps) {
           {children}
         </Paper>
       </Container>
-    </div>
+    </Container>
   );
 }

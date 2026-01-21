@@ -8,8 +8,10 @@ import { CreateTaskSchema, type CreateTaskInput } from '@repo/schema';
 import { TaskPriority, TaskCategory } from '@repo/types';
 import { zodResolver } from '@/utils/form-resolver';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export function CreateTask() {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -29,15 +31,15 @@ export function CreateTask() {
     try {
       await dispatch(createTask(values)).unwrap();
       notifications.show({
-        title: 'Success',
-        message: 'Task created successfully',
+        title: t('common.success'),
+        message: t('tasks.createTaskSuccess'),
         color: 'green',
       });
       navigate('/tasks');
     } catch (error) {
       notifications.show({
-        title: 'Error',
-        message: 'Failed to create task',
+        title: t('common.error'),
+        message: t('tasks.createTaskError'),
         color: 'red',
       });
     } finally {
@@ -47,20 +49,20 @@ export function CreateTask() {
 
   return (
     <>
-      <Title order={2} mb="xl">Create New Task</Title>
+      <Title order={2} mb="xl">{t('tasks.createNewTask')}</Title>
 
       <Paper withBorder radius="md" p="xl" maw={600}>
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <TextInput
-            label="Title"
-            placeholder="Enter task title"
+            label={t('tasks.title')}
+            placeholder={t('tasks.enterTitle')}
             withAsterisk
             {...form.getInputProps('title')}
           />
           
           <Textarea
-            label="Description"
-            placeholder="Describe the task details..."
+            label={t('tasks.descriptionLabel')}
+            placeholder={t('tasks.descriptionPlaceholder')}
             minRows={4}
             mt="md"
             withAsterisk
@@ -69,13 +71,13 @@ export function CreateTask() {
 
           <Group grow mt="md">
             <Select
-              label="Priority"
+              label={t('tasks.priority')}
               data={Object.values(TaskPriority)}
               withAsterisk
               {...form.getInputProps('priority')}
             />
             <Select
-              label="Category"
+              label={t('tasks.category')}
               data={Object.values(TaskCategory)}
               withAsterisk
               {...form.getInputProps('category')}
@@ -83,8 +85,8 @@ export function CreateTask() {
           </Group>
 
           <Group justify="flex-end" mt="xl">
-            <Button variant="default" onClick={() => navigate('/tasks')}>Cancel</Button>
-            <Button type="submit" loading={loading}>Create Task</Button>
+            <Button variant="default" onClick={() => navigate('/tasks')}>{t('common.cancel')}</Button>
+            <Button type="submit" loading={loading}>{t('tasks.createNewTask')}</Button>
           </Group>
         </form>
       </Paper>

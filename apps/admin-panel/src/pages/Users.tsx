@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Title, Group, Button, Table, ActionIcon, Badge, Paper, Text } from '@mantine/core';
+import { Title, Group, Button, Table, ActionIcon, Badge, Paper, Text, Box } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 import { useDisclosure } from '@mantine/hooks';
 import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
@@ -11,6 +12,7 @@ import { CreateUserModal } from '@/components/Users/CreateUserModal';
 import { UserRole } from '@repo/types';
 
 export function Users() {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { users, loading } = useAppSelector((state) => state.users);
   const [opened, { open, close }] = useDisclosure(false);
@@ -59,7 +61,6 @@ export function Users() {
 
   const rows = users.map((user) => (
     <Table.Tr key={user.id}>
-      <Table.Td>{user.id}</Table.Td>
       <Table.Td>{user.name}</Table.Td>
       <Table.Td>{user.email}</Table.Td>
       <Table.Td>
@@ -67,7 +68,7 @@ export function Users() {
           {user.role}
         </Badge>
       </Table.Td>
-      <Table.Td>{new Date(user.createdAt).toLocaleDateString('tr-TR')}</Table.Td>
+      <Table.Td>{new Date(user.createdAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })}</Table.Td>
       <Table.Td>
         <ActionIcon color="red" variant="subtle" onClick={() => handleDelete(user.id)}>
           <IconTrash size={16} />
@@ -78,31 +79,36 @@ export function Users() {
 
   return (
     <>
-      <Group justify="space-between" mb="xl">
-        <Title order={2}>User Management</Title>
-        <Button leftSection={<IconPlus size={14} />} onClick={open}>
-          Create User
-        </Button>
-      </Group>
-
       <Paper withBorder radius="md">
-        <Table striped highlightOnHover>
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>ID</Table.Th>
-              <Table.Th>Name</Table.Th>
-              <Table.Th>Email</Table.Th>
-              <Table.Th>Role</Table.Th>
-              <Table.Th>Created At</Table.Th>
-              <Table.Th>Actions</Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>{rows}</Table.Tbody>
-        </Table>
+        <Box p="md" style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}>
+          <Group justify="space-between">
+            <Title order={3} size="h4">{t('common.users')}</Title>
+            <Button leftSection={<IconPlus size={14} />} onClick={open}>
+              {t('common.create')}
+            </Button>
+          </Group>
+        </Box>
+
+        <Box style={{ overflowX: 'auto' }}>
+          <Table striped highlightOnHover verticalSpacing="sm" horizontalSpacing="md">
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>{t('tasks.creator')} (Name)</Table.Th>
+                <Table.Th>{t('auth.email')}</Table.Th>
+                <Table.Th>{t('common.status')} (Role)</Table.Th>
+                <Table.Th>{t('tasks.createdAt')}</Table.Th>
+                <Table.Th>{t('common.actions')}</Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>{rows}</Table.Tbody>
+          </Table>
+        </Box>
         {users.length === 0 && !loading && (
-          <div style={{ padding: '20px', textAlign: 'center', color: 'gray' }}>
-            No users found.
-          </div>
+          <Box p="xl" style={{ textAlign: 'center' }}>
+            <Text c="dimmed" size="sm">
+              {t('tasks.noTasksFound')}
+            </Text>
+          </Box>
         )}
       </Paper>
 

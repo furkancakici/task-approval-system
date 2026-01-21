@@ -1,6 +1,7 @@
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Button, PasswordInput, TextInput } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 import { useForm } from '@mantine/form';
 import { AuthLayout } from '@repo/ui';
 import { zodResolver } from '@/utils/form-resolver';
@@ -10,6 +11,7 @@ import type { AppDispatch } from '@/store';
 import { useAppSelector } from '@/store/hooks';
 
 export function Login() {
+  const { t } = useTranslation();
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { status, error } = useAppSelector((state) => state.auth);
@@ -32,25 +34,25 @@ export function Login() {
 
   return (
     <AuthLayout 
-      title="User Login" 
-      subtitle="Access your tasks and dashboard"
+      title={t('auth.userLoginTitle')} 
+      subtitle={t('auth.userLoginSubtitle')}
     >
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <TextInput
-          label="Email"
-          placeholder="your@email.com"
+          label={t('auth.email')}
+          placeholder={t('auth.emailPlaceholder')}
           required
           {...form.getInputProps('email')}
         />
         <PasswordInput
-          label="Password"
-          placeholder="Your password"
+          label={t('auth.password')}
+          placeholder={t('auth.passwordPlaceholder')}
           required
           mt="md"
           {...form.getInputProps('password')}
         />
         <Button fullWidth mt="xl" type="submit" loading={status === 'loading'}>
-          Sign in
+          {t('auth.signIn')}
         </Button>
       </form>
     </AuthLayout>
