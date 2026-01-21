@@ -8,6 +8,7 @@ import { CreateTask } from './pages/CreateTask';
 import { MyTasks } from './pages/MyTasks';
 import { Dashboard } from './pages/Dashboard';
 import { UserLayout } from './components/Layout/UserLayout';
+import { ProtectedRoute, PublicRoute } from './components/Auth/AuthRoutes';
 
 function App() {
   return (
@@ -15,13 +16,20 @@ function App() {
       <UiProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route element={<UserLayout />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/tasks" element={<MyTasks />} />
-              <Route path="/tasks/create" element={<CreateTask />} />
+            <Route element={<PublicRoute />}>
+              <Route path="/login" element={<Login />} />
             </Route>
-            <Route path="*" element={<Navigate to="/login" replace />} />
+
+            <Route element={<ProtectedRoute />}>
+              <Route element={<UserLayout />}>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/tasks" element={<MyTasks />} />
+                <Route path="/tasks/create" element={<CreateTask />} />
+                <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              </Route>
+            </Route>
+
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </BrowserRouter>
       </UiProvider>
