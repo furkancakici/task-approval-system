@@ -2,6 +2,11 @@
 
 Profesyonel, rol tabanlı ve modern bir Talep Onay Sistemi. Bu proje, monorepo mimarisi (TurboRepo), merkezi çevre değişkenleri ve Docker desteği ile "tak-çalıştır" (plug-and-play) olarak tasarlanmıştır.
 
+<p align="center">
+  <img src="./images/admin-panel.png" alt="Admin Panel" width="100%">
+  <img src="./images/user-panel.png" alt="User Panel" width="100%">
+</p>
+
 ## 🛠️ Hızlı Kurulum
 
 Projeyi ayağa kaldırmak için tek ihtiyacınız **Docker**. Herhangi bir `.env` ayarı yapmanıza gerek yoktur, gerekli tüm ayarlar repoya dahildir.
