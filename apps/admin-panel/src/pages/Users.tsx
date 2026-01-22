@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Title, Group, Button, Table, ActionIcon, Badge, Paper, Text, Box, TextInput, LoadingOverlay } from '@mantine/core';
+import { Title, Group, Button, ActionIcon, Badge, Paper, Text, Box, TextInput } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { useDisclosure, useDebouncedValue } from '@mantine/hooks';
 import { modals } from '@mantine/modals';
@@ -9,8 +9,8 @@ import { IconPlus, IconTrash, IconSearch, IconX } from '@tabler/icons-react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchUsers, deleteUser } from '@/store/slices/usersSlice';
 import { CreateUserModal } from '@/components/Users/CreateUserModal';
-import { UserRole } from '@repo/types';
-import { TablePagination } from '@repo/ui';
+import { UserRole, type User } from '@repo/types';
+import { TablePagination, DataTable, type Column } from '@repo/ui';
 
 export function Users() {
   const { t } = useTranslation();
@@ -102,23 +102,33 @@ export function Users() {
     });
   };
 
-  const rows = users.map((user) => (
-    <Table.Tr key={user.id}>
-      <Table.Td>{user.name}</Table.Td>
-      <Table.Td>{user.email}</Table.Td>
-      <Table.Td>
-        <Badge color={user.role === UserRole.ADMIN ? 'blue' : 'teal'}>
-          {t(`enums.role.${user.role}`)}
+  const columns: Column<User>[] = [
+    { key: 'name', header: t('tasks.creator') }, // Reusing translation or could use t('common.name') if exists
+    { key: 'email', header: t('auth.email') },
+    { 
+      key: 'role', 
+      header: t('common.status'), // Should ideally be common.role if available, using category for now or common.status
+      render: (u) => (
+        <Badge color={u.role === UserRole.ADMIN ? 'blue' : 'teal'}>
+          {t(`enums.role.${u.role}`)}
         </Badge>
-      </Table.Td>
-      <Table.Td>{new Date(user.createdAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })}</Table.Td>
-      <Table.Td>
-        <ActionIcon color="red" variant="subtle" onClick={() => handleDelete(user.id)}>
+      )
+    },
+    { 
+      key: 'createdAt', 
+      header: t('tasks.createdAt'),
+      render: (u) => new Date(u.createdAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })
+    },
+    { 
+      key: 'actions', 
+      header: t('common.actions'),
+      render: (u) => (
+        <ActionIcon color="red" variant="subtle" onClick={() => handleDelete(u.id)}>
           <IconTrash size={16} />
         </ActionIcon>
-      </Table.Td>
-    </Table.Tr>
-  ));
+      )
+    }
+  ];
 
   return (
     <>
@@ -148,41 +158,20 @@ export function Users() {
           </Group>
         </Box>
 
-        <Box style={{ overflowX: 'auto', position: 'relative', minHeight: users.length === 0 ? 200 : 'auto' }}>
-          <LoadingOverlay visible={loading} overlayProps={{ blur: 2 }} />
-          <Table striped highlightOnHover verticalSpacing="sm" horizontalSpacing="md">
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th>{t('tasks.creator')} (Name)</Table.Th>
-                <Table.Th>{t('auth.email')}</Table.Th>
-                <Table.Th>{t('common.status')} (Role)</Table.Th>
-                <Table.Th>{t('tasks.createdAt')}</Table.Th>
-                <Table.Th>{t('common.actions')}</Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>
-              {rows.length > 0 ? rows : (
-                <Table.Tr>
-                  <Table.Td colSpan={5} style={{ textAlign: 'center', color: 'gray', padding: 40 }}>
-                    {!loading && t('tasks.noTasksFound')}
-                  </Table.Td>
-                </Table.Tr>
-              )}
-            </Table.Tbody>
-          </Table>
-        </Box>
-        {meta && (
-            <Box px="md" pb="md">
-                <TablePagination 
-                    total={meta.total} 
-                    totalPages={meta.totalPages} 
-                    page={meta.page} 
-                    onChange={handlePageChange}
-                    limit={meta.limit}
-                    onLimitChange={handleLimitChange}
-                />
-            </Box>
-        )}
+        <DataTable
+          columns={columns}
+          data={users}
+          loading={loading}
+          emptyMessage={t('tasks.noTasksFound')}
+          pagination={meta ? {
+            total: meta.total,
+            totalPages: meta.totalPages,
+            page: meta.page,
+            onChange: handlePageChange,
+            limit: meta.limit,
+            onLimitChange: handleLimitChange
+          } : undefined}
+        />
       </Paper>
 
       <CreateUserModal opened={opened} onClose={() => {

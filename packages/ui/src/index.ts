@@ -5,3 +5,4 @@ export * from './layouts/DashboardLayout';
 export * from './components/ColorSchemeToggle';
 export * from './components/LanguagePicker';
 export * from './components/TablePagination';
+export * from './components/DataTable';

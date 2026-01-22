@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
-import { Title, SimpleGrid, Paper, Text, Group, Button, Table, Badge, LoadingOverlay, Box } from '@mantine/core';
+import { Title, SimpleGrid, Paper, Text, Group, Button, Badge, LoadingOverlay, Box } from '@mantine/core';
 import { IconCheck, IconClock, IconX, IconPlus, IconListCheck } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchMyTasks } from '@/store/slices/tasksSlice';
 import { TaskStatus, type Task } from '@repo/types';
+import { DataTable, type Column } from '@repo/ui';
 
 export function Dashboard() {
   const { t } = useTranslation();
@@ -35,17 +36,23 @@ export function Dashboard() {
     }
   };
 
-  const rows = recentTasks.map((task: Task) => (
-    <Table.Tr key={task.id}>
-      <Table.Td>{task.title}</Table.Td>
-      <Table.Td>
-        <Badge color={getStatusColor(task.status)} size="sm" variant="outline">
+  const columns: Column<Task>[] = [
+    { key: 'title', header: t('tasks.title') },
+    { 
+      key: 'status', 
+      header: t('common.status'),
+      render: (task) => (
+        <Badge color={getStatusColor(task.status)} variant="outline">
           {t(`enums.status.${task.status}`)}
         </Badge>
-      </Table.Td>
-      <Table.Td>{new Date(task.createdAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })}</Table.Td>
-    </Table.Tr>
-  ));
+      )
+    },
+    { 
+      key: 'createdAt', 
+      header: t('common.createdAt'),
+      render: (task) => new Date(task.createdAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })
+    }
+  ];
 
   return (
     <>
@@ -105,26 +112,13 @@ export function Dashboard() {
           </Group>
         </Box>
         
-        <Box style={{ overflowX: 'auto' }}>
-          <Table striped highlightOnHover verticalSpacing="sm" horizontalSpacing="md">
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th>{t('tasks.title')}</Table.Th>
-                <Table.Th>{t('common.status')}</Table.Th>
-                <Table.Th>{t('common.createdAt')}</Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>
-               {rows.length > 0 ? rows : (
-                   <Table.Tr>
-                       <Table.Td colSpan={3} style={{ textAlign: 'center', color: 'gray', padding: 40 }}>
-                          {!loading && t('tasks.noTasksFound')}
-                       </Table.Td>
-                   </Table.Tr>
-               )}
-            </Table.Tbody>
-          </Table>
-        </Box>
+        <DataTable
+          columns={columns}
+          data={recentTasks}
+          loading={loading}
+          emptyMessage={t('tasks.noTasksFound')}
+          minHeight={150}
+        />
       </Paper>
     </>
   );

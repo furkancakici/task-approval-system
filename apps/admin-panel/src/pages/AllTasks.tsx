@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Title, Table, Badge, Paper, TextInput, Select, Group, Button, Box, LoadingOverlay } from '@mantine/core';
+import { Title, Badge, Paper, TextInput, Select, Group, Button, Box } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchTasks } from '@/store/slices/tasksSlice';
 import { TaskStatus, TaskPriority, TaskCategory, type Task } from '@repo/types';
 import { IconSearch, IconX } from '@tabler/icons-react';
 import { useDebouncedValue } from '@mantine/hooks';
-import { TablePagination } from '@repo/ui';
+import { TablePagination, DataTable, type Column } from '@repo/ui';
 
 export function AllTasks() {
   const { t } = useTranslation();
@@ -90,33 +90,53 @@ export function AllTasks() {
     }
   };
 
-  const rows = tasks.map((task: Task) => (
-    <Table.Tr key={task.id}>
-      <Table.Td>{task.title}</Table.Td>
-      <Table.Td>
+  const columns: Column<Task>[] = [
+    { key: 'title', header: t('tasks.title') },
+    { 
+      key: 'status', 
+      header: t('common.status'),
+      render: (task) => (
         <Badge color={getStatusColor(task.status)} variant="outline">
-            {t(`enums.status.${task.status}`)}
+          {t(`enums.status.${task.status}`)}
         </Badge>
-      </Table.Td>
-      <Table.Td>
+      )
+    },
+    { 
+      key: 'category', 
+      header: t('tasks.category'),
+      render: (task) => (
         <Badge color={getCategoryColor(task.category as TaskCategory)} variant="dot">
           {t(`enums.category.${task.category}`)}
         </Badge>
-      </Table.Td>
-      <Table.Td>
+      )
+    },
+    { 
+      key: 'priority', 
+      header: t('tasks.priority'),
+      render: (task) => (
         <Badge color={getPriorityColor(task.priority)} variant="light">
           {t(`enums.priority.${task.priority}`)}
         </Badge>
-      </Table.Td>
-      <Table.Td>{new Date(task.createdAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })}</Table.Td>
-      <Table.Td>
-        {task.status !== TaskStatus.PENDING 
-          ? new Date(task.updatedAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })
-          : '-'}
-      </Table.Td>
-      <Table.Td>{(task as any).user?.name || 'Unknown'}</Table.Td>
-    </Table.Tr>
-  ));
+      )
+    },
+    { 
+      key: 'createdAt', 
+      header: t('tasks.createdAt'),
+      render: (task) => new Date(task.createdAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })
+    },
+    { 
+      key: 'updatedAt', 
+      header: t('tasks.updatedAt'),
+      render: (task) => task.status !== TaskStatus.PENDING 
+        ? new Date(task.updatedAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })
+        : '-'
+    },
+    { 
+      key: 'creator', 
+      header: t('tasks.creator'),
+      render: (task) => (task as any).user?.name || 'Unknown'
+    }
+  ];
 
   return (
       <Paper withBorder radius="md">
@@ -163,43 +183,20 @@ export function AllTasks() {
           </Group>
         </Box>
 
-        <Box style={{ overflowX: 'auto', position: 'relative', minHeight: tasks.length === 0 ? 200 : 'auto' }}>
-          <LoadingOverlay visible={loading} overlayProps={{ blur: 2 }} />
-          <Table striped highlightOnHover verticalSpacing="sm" horizontalSpacing="md">
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th>{t('tasks.title')}</Table.Th>
-                <Table.Th>{t('common.status')}</Table.Th>
-                <Table.Th>{t('tasks.category')}</Table.Th>
-                <Table.Th>{t('tasks.priority')}</Table.Th>
-                <Table.Th>{t('tasks.createdAt')}</Table.Th>
-                <Table.Th>{t('tasks.updatedAt')}</Table.Th>
-                <Table.Th>{t('tasks.creator')}</Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>
-              {rows.length > 0 ? rows : (
-                <Table.Tr>
-                  <Table.Td colSpan={7} style={{ textAlign: 'center', color: 'gray', padding: 40 }}>
-                    {!loading && t('tasks.noTasksFound')}
-                  </Table.Td>
-                </Table.Tr>
-              )}
-            </Table.Tbody>
-          </Table>
-        </Box>
-        {meta && (
-            <Box px="md" pb="md">
-                <TablePagination 
-                    total={meta.total} 
-                    totalPages={meta.totalPages} 
-                    page={meta.page} 
-                    onChange={handlePageChange}
-                    limit={meta.limit}
-                    onLimitChange={handleLimitChange}
-                />
-            </Box>
-        )}
+        <DataTable
+          columns={columns}
+          data={tasks}
+          loading={loading}
+          emptyMessage={t('tasks.noTasksFound')}
+          pagination={meta ? {
+            total: meta.total,
+            totalPages: meta.totalPages,
+            page: meta.page,
+            onChange: handlePageChange,
+            limit: meta.limit,
+            onLimitChange: handleLimitChange
+          } : undefined}
+        />
       </Paper>
   );
 }

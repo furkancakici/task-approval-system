@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
-import { Title, Table, Badge, Paper, Button, Group, ActionIcon, Tooltip, Text, Box, TextInput, Select, LoadingOverlay } from '@mantine/core';
+import { Title, Badge, Paper, Button, Group, ActionIcon, Tooltip, Text, Box, TextInput, Select } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { IconCheck, IconSearch, IconX } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchTasks, updateTaskStatus } from '@/store/slices/tasksSlice';
-import { TaskStatus, TaskPriority, TaskCategory, UserRole } from '@repo/types';
+import { TaskStatus, TaskPriority, TaskCategory, UserRole, type Task } from '@repo/types';
 import { RejectTaskModal } from '@/components/Tasks/RejectTaskModal';
 import { notifications } from '@mantine/notifications';
-import { TablePagination } from '@repo/ui';
+import { TablePagination, DataTable, type Column } from '@repo/ui';
 import { useDebouncedValue } from '@mantine/hooks';
 
 export function PendingTasks() {
@@ -133,23 +133,35 @@ export function PendingTasks() {
     }
   };
 
-  // tasks are already filtered by backend query, but double check creates no harm or just map directly
-  // Backend returns filtered list based on query param status=PENDING
-  const rows = tasks.map((task) => (
-    <Table.Tr key={task.id}>
-      <Table.Td>{task.title}</Table.Td>
-      <Table.Td>
+  const columns: Column<Task>[] = [
+    { key: 'title', header: t('tasks.title') },
+    { 
+      key: 'category', 
+      header: t('tasks.category'),
+      render: (task) => (
         <Badge color={getCategoryColor(task.category as TaskCategory)} variant="dot">
           {t(`enums.category.${task.category}`)}
         </Badge>
-      </Table.Td>
-      <Table.Td>
+      )
+    },
+    { 
+      key: 'priority', 
+      header: t('tasks.priority'),
+      render: (task) => (
         <Badge color={getPriorityColor(task.priority)} variant="light">
           {t(`enums.priority.${task.priority}`)}
         </Badge>
-      </Table.Td>
-      <Table.Td>{new Date(task.createdAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })}</Table.Td>
-      <Table.Td>
+      )
+    },
+    { 
+      key: 'createdAt', 
+      header: t('tasks.createdAt'),
+      render: (task) => new Date(task.createdAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })
+    },
+    { 
+      key: 'actions', 
+      header: t('tasks.actions'),
+      render: (task) => (
         <Group gap="xs">
           <Tooltip label={user?.role === UserRole.VIEWER ? t('tasks.viewersCannotApprove') : t('tasks.approve')}>
             <ActionIcon 
@@ -172,9 +184,9 @@ export function PendingTasks() {
             </ActionIcon>
           </Tooltip>
         </Group>
-      </Table.Td>
-    </Table.Tr>
-  ));
+      )
+    }
+  ];
 
   return (
     <>
@@ -215,41 +227,20 @@ export function PendingTasks() {
           </Group>
         </Box>
 
-        <Box style={{ overflowX: 'auto', position: 'relative', minHeight: tasks.length === 0 ? 200 : 'auto' }}>
-          <LoadingOverlay visible={loading} overlayProps={{ blur: 2 }} />
-          <Table striped highlightOnHover verticalSpacing="sm" horizontalSpacing="md">
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th>{t('tasks.title')}</Table.Th>
-                <Table.Th>{t('tasks.category')}</Table.Th>
-                <Table.Th>{t('tasks.priority')}</Table.Th>
-                <Table.Th>{t('tasks.createdAt')}</Table.Th>
-                <Table.Th>{t('tasks.actions')}</Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>
-              {rows.length > 0 ? rows : (
-                <Table.Tr>
-                  <Table.Td colSpan={5} style={{ textAlign: 'center', color: 'gray', padding: 40 }}>
-                    {!loading && t('tasks.noPendingTasks')}
-                  </Table.Td>
-                </Table.Tr>
-              )}
-            </Table.Tbody>
-          </Table>
-        </Box>
-        {meta && (
-            <Box px="md" pb="md">
-                <TablePagination 
-                    total={meta.total} 
-                    totalPages={meta.totalPages} 
-                    page={meta.page} 
-                    onChange={handlePageChange}
-                    limit={meta.limit}
-                    onLimitChange={handleLimitChange}
-                />
-            </Box>
-        )}
+        <DataTable
+          columns={columns}
+          data={tasks}
+          loading={loading}
+          emptyMessage={t('tasks.noPendingTasks')}
+          pagination={meta ? {
+            total: meta.total,
+            totalPages: meta.totalPages,
+            page: meta.page,
+            onChange: handlePageChange,
+            limit: meta.limit,
+            onLimitChange: handleLimitChange
+          } : undefined}
+        />
       </Paper>
 
       <RejectTaskModal 

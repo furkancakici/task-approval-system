@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
-import { SimpleGrid, Paper, Text, Group, Box, Title, ThemeIcon, Loader, Center, Table, Badge, LoadingOverlay } from '@mantine/core';
+import { SimpleGrid, Paper, Text, Group, Box, Title, ThemeIcon, Badge, LoadingOverlay } from '@mantine/core';
 import { IconUser, IconListCheck, IconChecks } from '@tabler/icons-react';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { fetchAdminStats } from '@/store/slices/statsSlice';
 import { useTranslation } from 'react-i18next';
+import { DataTable, type Column } from '@repo/ui';
 
 interface StatProps {
   label: string;
@@ -48,6 +49,43 @@ export function Dashboard() {
     { label: t('dashboard.completedTasks'), value: stats.completedTasks.toString(), icon: IconChecks, color: 'teal' },
   ] : [];
 
+  const columns: Column<any>[] = [
+    { 
+      key: 'title', 
+      header: t('tasks.title'),
+      render: (activity) => <Text size="sm" fw={500}>{activity.title}</Text>
+    },
+    { 
+      key: 'user', 
+      header: t('common.users'),
+      render: (activity) => <Text size="sm">{activity.user.name}</Text>
+    },
+    { 
+      key: 'status', 
+      header: t('common.status'),
+      render: (activity) => (
+        <Badge 
+          variant="outline" 
+          color={
+            activity.status === 'pending' ? 'yellow' : 
+            activity.status === 'approved' ? 'green' : 'red'
+          }
+        >
+          {t(`enums.status.${activity.status}`)}
+        </Badge>
+      )
+    },
+    { 
+      key: 'createdAt', 
+      header: t('common.createdAt'),
+      render: (activity) => (
+        <Text size="sm" c="dimmed">
+          {new Date(activity.createdAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })}
+        </Text>
+      )
+    }
+  ];
+
   return (
     <Box pos="relative">
       <LoadingOverlay visible={loading} overlayProps={{ blur: 2 }} />
@@ -63,54 +101,13 @@ export function Dashboard() {
         <Box p="md" style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}>
           <Title order={3} size="h4">{t('dashboard.recentActivity')}</Title>
         </Box>
-        {stats?.recentActivity && stats.recentActivity.length > 0 ? (
-          <Box style={{ overflowX: 'auto' }}>
-            <Table striped highlightOnHover verticalSpacing="sm" horizontalSpacing="md">
-              <Table.Thead>
-                <Table.Tr>
-                  <Table.Th>{t('tasks.title')}</Table.Th>
-                  <Table.Th>{t('common.users')}</Table.Th>
-                  <Table.Th>{t('common.status')}</Table.Th>
-                  <Table.Th>{t('common.createdAt')}</Table.Th>
-                </Table.Tr>
-              </Table.Thead>
-              <Table.Tbody>
-                {stats.recentActivity.map((activity) => (
-                  <Table.Tr key={activity.id}>
-                    <Table.Td>
-                      <Text size="sm" fw={500}>{activity.title}</Text>
-                    </Table.Td>
-                    <Table.Td>
-                      <Text size="sm">{activity.user.name}</Text>
-                    </Table.Td>
-                    <Table.Td>
-                      <Badge 
-                        variant="outline" 
-                        color={
-                          activity.status === 'pending' ? 'yellow' : 
-                          activity.status === 'approved' ? 'green' : 'red'
-                        }
-                      >
-                        {t(`enums.status.${activity.status}`)}
-                      </Badge>
-                    </Table.Td>
-                    <Table.Td>
-                      <Text size="sm" c="dimmed">
-                        {new Date(activity.createdAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })}
-                      </Text>
-                    </Table.Td>
-                  </Table.Tr>
-                ))}
-              </Table.Tbody>
-            </Table>
-          </Box>
-        ) : (
-          <Box p="xl" style={{ textAlign: 'center' }}>
-            <Text c="dimmed" size="sm">
-              {!loading && t('tasks.noPendingTasks')}
-            </Text>
-          </Box>
-        )}
+        <DataTable
+          columns={columns}
+          data={stats?.recentActivity || []}
+          loading={loading}
+          emptyMessage={t('tasks.noPendingTasks')}
+          minHeight={150}
+        />
       </Paper>
     </Box>
   );
