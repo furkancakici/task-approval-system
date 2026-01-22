@@ -1,6 +1,7 @@
 import { useDispatch } from '@repo/store';
 import { useNavigate } from 'react-router-dom';
-import { Button, PasswordInput, TextInput, useForm } from '@repo/mantine';
+import { Button, PasswordInput, TextInput, useForm, Alert } from '@repo/mantine';
+import { IconAlertCircle } from '@repo/mantine';
 import { useTranslation } from 'react-i18next';
 import { AuthLayout } from '@repo/ui';
 import { zodResolver } from '@/utils/form-resolver';
@@ -38,11 +39,18 @@ export function Login() {
       currentLanguage={i18n.language}
       onLanguageChange={(lang) => i18n.changeLanguage(lang)}
     >
+      {error && (
+        <Alert icon={<IconAlertCircle size={16} />} title={t('common.error')} color="red" mb="md">
+          {t(error) || error}
+        </Alert>
+      )}
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <TextInput
           label={t('auth.email')}
           placeholder={t('auth.emailPlaceholder')}
           required
+          size="md"
+          radius="md"
           {...form.getInputProps('email')}
         />
         <PasswordInput
@@ -50,9 +58,11 @@ export function Login() {
           placeholder={t('auth.passwordPlaceholder')}
           required
           mt="md"
+          size="md"
+          radius="md"
           {...form.getInputProps('password')}
         />
-        <Button fullWidth mt="xl" type="submit" loading={status === 'loading'}>
+        <Button fullWidth mt="xl" size="md" radius="md" type="submit" loading={status === 'loading'}>
           {t('auth.signIn')}
         </Button>
       </form>

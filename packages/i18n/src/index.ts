@@ -49,6 +49,8 @@ const resources = {
           'You do not have permission to access the Admin Panel. You will be redirected to the User Panel.',
         redirectToUserPanel: 'Go to User Panel',
         loggingOutIn: 'Logging out in {{seconds}} seconds...',
+        loginSideTitle: 'Task Approval System',
+        loginSideSubtitle: 'Streamlining workflows, one approval at a time.',
       },
       dashboard: {
         welcome: 'Welcome back, {{name}}!',
@@ -196,6 +198,8 @@ const resources = {
           'Admin Paneline erişim yetkiniz bulunmamaktadır. Kullanıcı Paneline yönlendiriliyorsunuz.',
         redirectToUserPanel: 'Kullanıcı Paneline Git',
         loggingOutIn: '{{seconds}} saniye içinde çıkış yapılıyor...',
+        loginSideTitle: 'Talep Onay Sistemi',
+        loginSideSubtitle: 'İş akışlarını optimize edin, her adımda kolayca onaylayın.',
       },
       dashboard: {
         welcome: 'Tekrar hoş geldin, {{name}}!',
