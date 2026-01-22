@@ -104,7 +104,9 @@ export function EditUserModal({ opened, onClose, user }: EditUserModalProps) {
         />
 
         <Group justify="flex-end">
-          <Button variant="default" onClick={onClose}>{t('common.cancel')}</Button>
+          <Button variant="default" onClick={onClose}>
+            {t('common.cancel')}
+          </Button>
           <Button type="submit">{t('common.save')}</Button>
         </Group>
       </form>

@@ -1,5 +1,16 @@
 import { useEffect, useState } from 'react';
-import { Title, Paper, TextInput, Select, Group, Button, Box, IconSearch, IconX, useDebouncedValue } from '@repo/mantine';
+import {
+  Title,
+  Paper,
+  TextInput,
+  Select,
+  Group,
+  Button,
+  Box,
+  IconSearch,
+  IconX,
+  useDebouncedValue,
+} from '@repo/mantine';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchTasks } from '@/store/slices/tasksSlice';
@@ -17,7 +28,7 @@ export function AllTasks() {
     onView: (task) => {
       setSelectedTask(task);
       setDetailOpened(true);
-    }
+    },
   });
 
   // Filters
@@ -29,36 +40,42 @@ export function AllTasks() {
   const [debouncedSearch] = useDebouncedValue(search, 500);
 
   useEffect(() => {
-    dispatch(fetchTasks({
-      search: debouncedSearch || undefined,
-      status: status as TaskStatus | undefined,
-      priority: priority as TaskPriority | undefined,
-      category: category as TaskCategory | undefined,
-      page: 1,
-      limit: 10
-    }));
+    dispatch(
+      fetchTasks({
+        search: debouncedSearch || undefined,
+        status: status as TaskStatus | undefined,
+        priority: priority as TaskPriority | undefined,
+        category: category as TaskCategory | undefined,
+        page: 1,
+        limit: 10,
+      })
+    );
   }, [dispatch, debouncedSearch, status, priority, category]);
 
   const handlePageChange = (page: number) => {
-    dispatch(fetchTasks({
-      search: debouncedSearch || undefined,
-      status: status as TaskStatus | undefined,
-      priority: priority as TaskPriority | undefined,
-      category: category as TaskCategory | undefined,
-      page,
-      limit: meta?.limit || 10
-    }));
+    dispatch(
+      fetchTasks({
+        search: debouncedSearch || undefined,
+        status: status as TaskStatus | undefined,
+        priority: priority as TaskPriority | undefined,
+        category: category as TaskCategory | undefined,
+        page,
+        limit: meta?.limit || 10,
+      })
+    );
   };
 
   const handleLimitChange = (limit: number) => {
-    dispatch(fetchTasks({
-      search: debouncedSearch || undefined,
-      status: status as TaskStatus | undefined,
-      priority: priority as TaskPriority | undefined,
-      category: category as TaskCategory | undefined,
-      page: 1,
-      limit
-    }));
+    dispatch(
+      fetchTasks({
+        search: debouncedSearch || undefined,
+        status: status as TaskStatus | undefined,
+        priority: priority as TaskPriority | undefined,
+        category: category as TaskCategory | undefined,
+        page: 1,
+        limit,
+      })
+    );
   };
 
   const clearFilters = () => {
@@ -72,7 +89,9 @@ export function AllTasks() {
     <>
       <Paper withBorder radius="md">
         <Box p="md" style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}>
-          <Title order={3} size="h4">{t('tasks.allTasks')}</Title>
+          <Title order={3} size="h4">
+            {t('tasks.allTasks')}
+          </Title>
         </Box>
         <Box p="md" style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}>
           <Group align="end">
@@ -87,7 +106,10 @@ export function AllTasks() {
             <Select
               label={t('common.status')}
               placeholder={t('tasks.filterStatus')}
-              data={Object.values(TaskStatus).map(s => ({ value: s, label: t(`enums.status.${s}`) }))}
+              data={Object.values(TaskStatus).map((s) => ({
+                value: s,
+                label: t(`enums.status.${s}`),
+              }))}
               value={status}
               onChange={setStatus}
               clearable
@@ -95,7 +117,10 @@ export function AllTasks() {
             <Select
               label={t('common.priority')}
               placeholder={t('tasks.filterPriority')}
-              data={Object.values(TaskPriority).map(p => ({ value: p, label: t(`enums.priority.${p}`) }))}
+              data={Object.values(TaskPriority).map((p) => ({
+                value: p,
+                label: t(`enums.priority.${p}`),
+              }))}
               value={priority}
               onChange={setPriority}
               clearable
@@ -103,7 +128,10 @@ export function AllTasks() {
             <Select
               label={t('common.category')}
               placeholder={t('tasks.category')}
-              data={Object.values(TaskCategory).map(c => ({ value: c, label: t(`enums.category.${c}`) }))}
+              data={Object.values(TaskCategory).map((c) => ({
+                value: c,
+                label: t(`enums.category.${c}`),
+              }))}
               value={category}
               onChange={setCategory}
               clearable
@@ -119,21 +147,21 @@ export function AllTasks() {
           data={tasks}
           loading={loading}
           emptyMessage={t('tasks.noTasksFound')}
-          pagination={meta ? {
-            total: meta.total,
-            totalPages: meta.totalPages,
-            page: meta.page,
-            onChange: handlePageChange,
-            limit: meta.limit,
-            onLimitChange: handleLimitChange
-          } : undefined}
+          pagination={
+            meta
+              ? {
+                  total: meta.total,
+                  totalPages: meta.totalPages,
+                  page: meta.page,
+                  onChange: handlePageChange,
+                  limit: meta.limit,
+                  onLimitChange: handleLimitChange,
+                }
+              : undefined
+          }
         />
       </Paper>
-      <TaskDetailModal
-        opened={detailOpened}
-        onClose={() => setDetailOpened(false)}
-        task={selectedTask}
-      />
+      <TaskDetailModal opened={detailOpened} onClose={() => setDetailOpened(false)} task={selectedTask} />
     </>
   );
 }

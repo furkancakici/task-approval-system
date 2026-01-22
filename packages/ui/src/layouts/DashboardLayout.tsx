@@ -1,22 +1,11 @@
-import React from "react";
-import {
-  AppShell,
-  Burger,
-  Group,
-  Text,
-  ScrollArea,
-  NavLink,
-  Avatar,
-  Menu,
-  UnstyledButton,
-  rem,
-} from "@repo/mantine";
-import { useTranslation } from "react-i18next";
-import { useDisclosure } from "@repo/mantine";
-import { IconLogout, IconChevronDown } from "@repo/mantine";
-import { ColorSchemeToggle } from "../components/ColorSchemeToggle";
-import { LanguagePicker } from "../components/LanguagePicker";
-import { motion } from "@repo/shared";
+import React from 'react';
+import { AppShell, Burger, Group, Text, ScrollArea, NavLink, Avatar, Menu, UnstyledButton, rem } from '@repo/mantine';
+import { useTranslation } from 'react-i18next';
+import { useDisclosure } from '@repo/mantine';
+import { IconLogout, IconChevronDown } from '@repo/mantine';
+import { ColorSchemeToggle } from '../components/ColorSchemeToggle';
+import { LanguagePicker } from '../components/LanguagePicker';
+import { motion } from '@repo/shared';
 
 export interface NavLinkItem {
   label: string;
@@ -71,7 +60,7 @@ export function DashboardLayout({
       header={{ height: 60 }}
       navbar={{
         width: 300,
-        breakpoint: "sm",
+        breakpoint: 'sm',
         collapsed: { mobile: !opened },
       }}
       padding="md"
@@ -85,10 +74,7 @@ export function DashboardLayout({
 
           <Group>
             {currentLanguage && onLanguageChange && (
-              <LanguagePicker
-                currentLanguage={currentLanguage}
-                onLanguageChange={onLanguageChange}
-              />
+              <LanguagePicker currentLanguage={currentLanguage} onLanguageChange={onLanguageChange} />
             )}
             <ColorSchemeToggle />
 
@@ -117,7 +103,7 @@ export function DashboardLayout({
                     leftSection={<IconLogout style={{ width: rem(14), height: rem(14) }} />}
                     onClick={onLogout}
                   >
-                    {t("common.logout")}
+                    {t('common.logout')}
                   </Menu.Item>
                 </Menu.Dropdown>
               </Menu>
@@ -134,7 +120,7 @@ export function DashboardLayout({
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
         >
           {children}
         </motion.div>

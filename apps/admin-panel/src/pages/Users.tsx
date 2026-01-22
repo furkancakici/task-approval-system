@@ -1,6 +1,24 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Title, Group, Button, ActionIcon, Paper, Text, Box, TextInput, useDisclosure, useDebouncedValue, modals, notifications, IconPlus, IconTrash, IconSearch, IconX, IconEdit } from '@repo/mantine';
+import {
+  Title,
+  Group,
+  Button,
+  ActionIcon,
+  Paper,
+  Text,
+  Box,
+  TextInput,
+  useDisclosure,
+  useDebouncedValue,
+  modals,
+  notifications,
+  IconPlus,
+  IconTrash,
+  IconSearch,
+  IconX,
+  IconEdit,
+} from '@repo/mantine';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchUsers, deleteUser } from '@/store/slices/usersSlice';
@@ -31,27 +49,33 @@ export function Users() {
       navigate('/dashboard');
       return;
     }
-    dispatch(fetchUsers({
-      email: debouncedSearch || undefined,
-      page: 1,
-      limit: 10
-    }));
+    dispatch(
+      fetchUsers({
+        email: debouncedSearch || undefined,
+        page: 1,
+        limit: 10,
+      })
+    );
   }, [dispatch, user, navigate, debouncedSearch]);
 
   const handlePageChange = (page: number) => {
-    dispatch(fetchUsers({
-      email: debouncedSearch || undefined,
-      page,
-      limit: meta?.limit || 10
-    }));
+    dispatch(
+      fetchUsers({
+        email: debouncedSearch || undefined,
+        page,
+        limit: meta?.limit || 10,
+      })
+    );
   };
 
   const handleLimitChange = (limit: number) => {
-    dispatch(fetchUsers({
-      email: debouncedSearch || undefined,
-      page: 1,
-      limit
-    }));
+    dispatch(
+      fetchUsers({
+        email: debouncedSearch || undefined,
+        page: 1,
+        limit,
+      })
+    );
   };
 
   const clearFilters = () => {
@@ -66,11 +90,7 @@ export function Users() {
   const handleDelete = (id: string) => {
     modals.openConfirmModal({
       title: 'Delete User',
-      children: (
-        <Text size="sm">
-          Are you sure you want to delete this user? This action cannot be undone.
-        </Text>
-      ),
+      children: <Text size="sm">Are you sure you want to delete this user? This action cannot be undone.</Text>,
       labels: { confirm: 'Delete', cancel: 'Cancel' },
       confirmProps: { color: 'red' },
       centered: true,
@@ -81,27 +101,31 @@ export function Users() {
           notifications.show({
             title: 'Success',
             message: 'User deleted successfully',
-            color: 'green'
+            color: 'green',
           });
 
           if (users.length === 1 && meta && meta.page > 1) {
-            dispatch(fetchUsers({
-              email: debouncedSearch || undefined,
-              page: meta.page - 1,
-              limit: meta.limit
-            }));
+            dispatch(
+              fetchUsers({
+                email: debouncedSearch || undefined,
+                page: meta.page - 1,
+                limit: meta.limit,
+              })
+            );
           } else {
-            dispatch(fetchUsers({
-              email: debouncedSearch || undefined,
-              page: meta?.page || 1,
-              limit: meta?.limit || 10
-            }));
+            dispatch(
+              fetchUsers({
+                email: debouncedSearch || undefined,
+                page: meta?.page || 1,
+                limit: meta?.limit || 10,
+              })
+            );
           }
         } catch (error) {
           notifications.show({
             title: 'Error',
             message: 'Failed to delete user',
-            color: 'red'
+            color: 'red',
           });
         }
       },
@@ -122,8 +146,8 @@ export function Users() {
             <IconTrash size={16} />
           </ActionIcon>
         </Group>
-      )
-    }
+      ),
+    },
   ];
 
   return (
@@ -131,7 +155,9 @@ export function Users() {
       <Paper withBorder radius="md">
         <Box p="md" style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}>
           <Group justify="space-between">
-            <Title order={3} size="h4">{t('common.users')}</Title>
+            <Title order={3} size="h4">
+              {t('common.users')}
+            </Title>
             <Button leftSection={<IconPlus size={14} />} onClick={open}>
               {t('common.create')}
             </Button>
@@ -159,33 +185,48 @@ export function Users() {
           data={users}
           loading={loading}
           emptyMessage={t('tasks.noTasksFound')}
-          pagination={meta ? {
-            total: meta.total,
-            totalPages: meta.totalPages,
-            page: meta.page,
-            onChange: handlePageChange,
-            limit: meta.limit,
-            onLimitChange: handleLimitChange
-          } : undefined}
+          pagination={
+            meta
+              ? {
+                  total: meta.total,
+                  totalPages: meta.totalPages,
+                  page: meta.page,
+                  onChange: handlePageChange,
+                  limit: meta.limit,
+                  onLimitChange: handleLimitChange,
+                }
+              : undefined
+          }
         />
       </Paper>
 
-      <CreateUserModal opened={opened} onClose={() => {
-        close();
-        dispatch(fetchUsers({
-          email: debouncedSearch || undefined,
-          page: 1,
-          limit: meta?.limit || 10
-        }));
-      }} />
-      <EditUserModal opened={editOpened} onClose={() => {
-        closeEdit();
-        dispatch(fetchUsers({
-          email: debouncedSearch || undefined,
-          page: meta?.page || 1,
-          limit: meta?.limit || 10
-        }));
-      }} user={selectedUser} />
+      <CreateUserModal
+        opened={opened}
+        onClose={() => {
+          close();
+          dispatch(
+            fetchUsers({
+              email: debouncedSearch || undefined,
+              page: 1,
+              limit: meta?.limit || 10,
+            })
+          );
+        }}
+      />
+      <EditUserModal
+        opened={editOpened}
+        onClose={() => {
+          closeEdit();
+          dispatch(
+            fetchUsers({
+              email: debouncedSearch || undefined,
+              page: meta?.page || 1,
+              limit: meta?.limit || 10,
+            })
+          );
+        }}
+        user={selectedUser}
+      />
     </>
   );
 }

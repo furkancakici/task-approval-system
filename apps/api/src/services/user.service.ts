@@ -14,31 +14,31 @@ export const userService = {
     if (email) where.email = { contains: email, mode: 'insensitive' };
 
     const [users, total] = await Promise.all([
-        prisma.user.findMany({
-            where,
-            select: { id: true, name: true, email: true, role: true, createdAt: true },
-            skip,
-            take,
-            orderBy: { createdAt: 'desc' }
-        }),
-        prisma.user.count({ where })
+      prisma.user.findMany({
+        where,
+        select: { id: true, name: true, email: true, role: true, createdAt: true },
+        skip,
+        take,
+        orderBy: { createdAt: 'desc' },
+      }),
+      prisma.user.count({ where }),
     ]);
-    
+
     return {
-        data: users,
-        meta: {
-            page: Number(page),
-            limit: Number(limit),
-            total,
-            totalPages: Math.ceil(total / Number(limit))
-        }
+      data: users,
+      meta: {
+        page: Number(page),
+        limit: Number(limit),
+        total,
+        totalPages: Math.ceil(total / Number(limit)),
+      },
     };
   },
 
   async getUserById(id: string) {
     const user = await prisma.user.findUnique({
       where: { id },
-      select: { id: true, name: true, email: true, role: true, createdAt: true }
+      select: { id: true, name: true, email: true, role: true, createdAt: true },
     });
     return user;
   },
@@ -52,7 +52,7 @@ export const userService = {
         password: hashedPassword,
         role: data.role || UserRole.USER,
       },
-      select: { id: true, name: true, email: true, role: true, createdAt: true }
+      select: { id: true, name: true, email: true, role: true, createdAt: true },
     });
     return user;
   },
@@ -62,19 +62,19 @@ export const userService = {
     if (data.name) updateData.name = data.name;
     if (data.email) updateData.email = data.email;
     if (data.password) {
-        updateData.password = await bcrypt.hash(data.password, 10);
+      updateData.password = await bcrypt.hash(data.password, 10);
     }
     if (data.role) updateData.role = data.role;
-    
+
     const user = await prisma.user.update({
       where: { id },
       data: updateData,
-      select: { id: true, name: true, email: true, role: true, createdAt: true }
+      select: { id: true, name: true, email: true, role: true, createdAt: true },
     });
     return user;
   },
 
   async deleteUser(id: string) {
     return prisma.user.delete({ where: { id } });
-  }
+  },
 };

@@ -12,7 +12,7 @@ async function main() {
 
   // Create Users (Employees)
   const password = await bcrypt.hash('123456', 10);
-  
+
   const user1 = await prisma.user.create({
     data: {
       email: 'user1@test.com',
@@ -83,7 +83,7 @@ async function main() {
     const createdAt = new Date(Date.now() - Math.floor(Math.random() * 1000000000));
     const isProcessed = status !== TaskStatus.PENDING;
     // Set updatedAt to a random time between createdAt and now if processed
-    const updatedAt = isProcessed 
+    const updatedAt = isProcessed
       ? new Date(createdAt.getTime() + Math.random() * (Date.now() - createdAt.getTime()))
       : createdAt;
 

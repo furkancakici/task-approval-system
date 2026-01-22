@@ -21,18 +21,21 @@ docker compose up
 ## ✨ Temel Özellikler
 
 ### 🔐 Rol Tabanlı Erişim (RBAC)
+
 - **Admin**: Tüm kullanıcıları ve talepleri yönetebilir.
 - **Moderator**: Talepleri onaylayabilir/reddedebilir ve kullanıcı listesini görebilir.
 - **Viewer**: Sadece talepleri ve detayları görüntüleyebilir (İşlem yetkisi yoktur).
 - **User**: Kendi taleplerini oluşturabilir ve durumlarını takip edebilir.
 
 ### 🏢 Gelişmiş Paneller
+
 - **Merkezi Dashboard**: Bugünün onay/red istatistikleri ve öncelik dağılımı grafikleri.
 - **Talep Yönetimi**: Başlık veya talep sahibine göre arama, öncelik ve duruma göre filtreleme.
 - **Detay Görünümü**: Taleplerin tüm detaylarını (açıklama, işlem tarihi vb.) gösteren şık modal.
 - **Kullanıcı Yönetimi**: Adminler için kullanıcı oluşturma ve düzenleme (Ad, E-posta, Rol, Şifre).
 
 ### 🌍 Teknik Detaylar
+
 - **Monorepo**: TurboRepo ile yönetilen ölçeklenebilir yapı.
 - **UI/UX**: Mantine UI ile modern, karanlık mod destekli ve premium tasarım.
 - **i18n**: Tam Türkçe ve İngilizce dil desteği.
@@ -43,12 +46,13 @@ docker compose up
 
 ## 🔑 Test Kullanıcıları
 
-| Rol | E-posta | Şifre |
-| :--- | :--- | :--- |
-| **Admin** | admin@test.com | admin123 |
-| **Moderator** | moderator@test.com | mod123 |
-| **Viewer** | viewer@test.com | viewer123 |
-| **User** | user1@test.com | 123456 |
+| Rol           | E-posta            | Şifre     |
+| :------------ | :----------------- | :-------- |
+| **Admin**     | admin@test.com     | admin123  |
+| **Moderator** | moderator@test.com | mod123    |
+| **Viewer**    | viewer@test.com    | viewer123 |
+| **User**      | user1@test.com     | 123456    |
 
 ---
-*Bu proje, teknik gereksinimlerin tamamını karşılayacak şekilde profesyonel standartlarda geliştirilmiştir.*
+
+_Bu proje, teknik gereksinimlerin tamamını karşılayacak şekilde profesyonel standartlarda geliştirilmiştir._

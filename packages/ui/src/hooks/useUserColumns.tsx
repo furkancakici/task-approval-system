@@ -16,12 +16,16 @@ export function useUserColumns() {
         <Badge color={user.role === UserRole.ADMIN ? 'indigo' : user.role === UserRole.MODERATOR ? 'lime' : 'teal'}>
           {t(`enums.role.${user.role}`)}
         </Badge>
-      )
+      ),
     },
     {
       key: 'createdAt',
       header: t('common.createdAt'),
-      render: (user) => new Date(user.createdAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })
+      render: (user) =>
+        new Date(user.createdAt).toLocaleString('tr-TR', {
+          dateStyle: 'short',
+          timeStyle: 'short',
+        }),
     },
   ];
 

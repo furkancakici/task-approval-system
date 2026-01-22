@@ -28,17 +28,14 @@ const initialState: AuthState = {
   error: null,
 };
 
-export const login = createAsyncThunk(
-  'auth/login',
-  async (credentials: any, { rejectWithValue }) => {
-    try {
-      const response = await api.post('/auth/login', credentials);
-      return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Login failed');
-    }
+export const login = createAsyncThunk('auth/login', async (credentials: any, { rejectWithValue }) => {
+  try {
+    const response = await api.post('/auth/login', credentials);
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(error.response?.data?.message || 'Login failed');
   }
-);
+});
 
 const authSlice = createSlice({
   name: 'auth',

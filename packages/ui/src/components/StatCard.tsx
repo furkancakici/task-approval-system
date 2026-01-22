@@ -1,7 +1,6 @@
 import { Paper, Text, Group, ThemeIcon } from '@repo/mantine';
 import { motion } from '@repo/shared';
 
-
 export interface StatCardProps {
   label: string;
   value: string | number;

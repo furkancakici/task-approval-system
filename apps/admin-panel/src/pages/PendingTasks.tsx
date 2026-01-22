@@ -27,36 +27,42 @@ export function PendingTasks() {
   const [debouncedSearch] = useDebouncedValue(search, 500);
 
   useEffect(() => {
-    dispatch(fetchTasks({
-      status: TaskStatus.PENDING,
-      search: debouncedSearch || undefined,
-      priority: priority as TaskPriority | undefined,
-      category: category as TaskCategory | undefined,
-      page: 1,
-      limit: 10
-    }));
+    dispatch(
+      fetchTasks({
+        status: TaskStatus.PENDING,
+        search: debouncedSearch || undefined,
+        priority: priority as TaskPriority | undefined,
+        category: category as TaskCategory | undefined,
+        page: 1,
+        limit: 10,
+      })
+    );
   }, [dispatch, debouncedSearch, priority, category]);
 
   const handlePageChange = (page: number) => {
-    dispatch(fetchTasks({
-      status: TaskStatus.PENDING,
-      search: debouncedSearch || undefined,
-      priority: priority as TaskPriority | undefined,
-      category: category as TaskCategory | undefined,
-      page,
-      limit: meta?.limit || 10
-    }));
+    dispatch(
+      fetchTasks({
+        status: TaskStatus.PENDING,
+        search: debouncedSearch || undefined,
+        priority: priority as TaskPriority | undefined,
+        category: category as TaskCategory | undefined,
+        page,
+        limit: meta?.limit || 10,
+      })
+    );
   };
 
   const handleLimitChange = (limit: number) => {
-    dispatch(fetchTasks({
-      status: TaskStatus.PENDING,
-      search: debouncedSearch || undefined,
-      priority: priority as TaskPriority | undefined,
-      category: category as TaskCategory | undefined,
-      page: 1,
-      limit
-    }));
+    dispatch(
+      fetchTasks({
+        status: TaskStatus.PENDING,
+        search: debouncedSearch || undefined,
+        priority: priority as TaskPriority | undefined,
+        category: category as TaskCategory | undefined,
+        page: 1,
+        limit,
+      })
+    );
   };
 
   const clearFilters = () => {
@@ -68,40 +74,40 @@ export function PendingTasks() {
   const handleApprove = (id: string) => {
     modals.openConfirmModal({
       title: t('tasks.approveConfirmTitle'),
-      children: (
-        <Text size="sm">
-          {t('tasks.approveConfirmMessage')}
-        </Text>
-      ),
+      children: <Text size="sm">{t('tasks.approveConfirmMessage')}</Text>,
       labels: { confirm: t('common.save'), cancel: t('common.cancel') },
       confirmProps: { color: 'green' },
       centered: true,
       onCancel: () => console.log('Cancel'),
       onConfirm: async () => {
         try {
-          await dispatch(updateTaskStatus({
-            id,
-            data: { status: TaskStatus.APPROVED }
-          })).unwrap();
+          await dispatch(
+            updateTaskStatus({
+              id,
+              data: { status: TaskStatus.APPROVED },
+            })
+          ).unwrap();
           notifications.show({
             title: t('common.success'),
             message: t('tasks.approveSuccess'),
-            color: 'green'
+            color: 'green',
           });
           // Refresh list
-          dispatch(fetchTasks({
-            status: TaskStatus.PENDING,
-            search: debouncedSearch || undefined,
-            priority: priority as TaskPriority | undefined,
-            category: category as TaskCategory | undefined,
-            page: meta?.page || 1,
-            limit: meta?.limit || 10
-          }));
+          dispatch(
+            fetchTasks({
+              status: TaskStatus.PENDING,
+              search: debouncedSearch || undefined,
+              priority: priority as TaskPriority | undefined,
+              category: category as TaskCategory | undefined,
+              page: meta?.page || 1,
+              limit: meta?.limit || 10,
+            })
+          );
         } catch (error) {
           notifications.show({
             title: t('common.error'),
             message: t('tasks.approveError'),
-            color: 'red'
+            color: 'red',
           });
         }
       },
@@ -155,15 +161,17 @@ export function PendingTasks() {
             </ActionIcon>
           </Tooltip>
         </Group>
-      )
-    }
+      ),
+    },
   ];
 
   return (
     <>
       <Paper withBorder radius="md">
         <Box p="md" style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}>
-          <Title order={3} size="h4">{t('tasks.pendingApprovals')}</Title>
+          <Title order={3} size="h4">
+            {t('tasks.pendingApprovals')}
+          </Title>
         </Box>
 
         <Box p="md" style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}>
@@ -179,7 +187,10 @@ export function PendingTasks() {
             <Select
               label={t('common.priority')}
               placeholder={t('tasks.filterPriority')}
-              data={Object.values(TaskPriority).map(p => ({ value: p, label: t(`enums.priority.${p}`) }))}
+              data={Object.values(TaskPriority).map((p) => ({
+                value: p,
+                label: t(`enums.priority.${p}`),
+              }))}
               value={priority}
               onChange={setPriority}
               clearable
@@ -187,7 +198,10 @@ export function PendingTasks() {
             <Select
               label={t('common.category')}
               placeholder={t('tasks.category')}
-              data={Object.values(TaskCategory).map(c => ({ value: c, label: t(`enums.category.${c}`) }))}
+              data={Object.values(TaskCategory).map((c) => ({
+                value: c,
+                label: t(`enums.category.${c}`),
+              }))}
               value={category}
               onChange={setCategory}
               clearable
@@ -203,14 +217,18 @@ export function PendingTasks() {
           data={tasks}
           loading={loading}
           emptyMessage={t('tasks.noPendingTasks')}
-          pagination={meta ? {
-            total: meta.total,
-            totalPages: meta.totalPages,
-            page: meta.page,
-            onChange: handlePageChange,
-            limit: meta.limit,
-            onLimitChange: handleLimitChange
-          } : undefined}
+          pagination={
+            meta
+              ? {
+                  total: meta.total,
+                  totalPages: meta.totalPages,
+                  page: meta.page,
+                  onChange: handlePageChange,
+                  limit: meta.limit,
+                  onLimitChange: handleLimitChange,
+                }
+              : undefined
+          }
         />
       </Paper>
 
@@ -220,23 +238,21 @@ export function PendingTasks() {
           setRejectModalOpen(false);
           setSelectedTaskId(null);
           // Refresh list on close
-          dispatch(fetchTasks({
-            status: TaskStatus.PENDING,
-            search: debouncedSearch || undefined,
-            priority: priority as TaskPriority | undefined,
-            category: category as TaskCategory | undefined,
-            page: meta?.page || 1,
-            limit: meta?.limit || 10
-          }));
+          dispatch(
+            fetchTasks({
+              status: TaskStatus.PENDING,
+              search: debouncedSearch || undefined,
+              priority: priority as TaskPriority | undefined,
+              category: category as TaskCategory | undefined,
+              page: meta?.page || 1,
+              limit: meta?.limit || 10,
+            })
+          );
         }}
         taskId={selectedTaskId}
       />
 
-      <TaskDetailModal
-        opened={detailOpened}
-        onClose={() => setDetailOpened(false)}
-        task={selectedTask}
-      />
+      <TaskDetailModal opened={detailOpened} onClose={() => setDetailOpened(false)} task={selectedTask} />
     </>
   );
 }

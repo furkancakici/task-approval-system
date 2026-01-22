@@ -12,11 +12,7 @@ export function LanguagePicker({ currentLanguage, onLanguageChange }: LanguagePi
     <Menu shadow="md" width={120}>
       <Menu.Target>
         <ActionIcon variant="default" size="lg">
-          {currentLanguage === 'tr' ? (
-            <Text size="xl">🇹🇷</Text>
-          ) : (
-            <Text size="xl">🇺🇸</Text>
-          )}
+          {currentLanguage === 'tr' ? <Text size="xl">🇹🇷</Text> : <Text size="xl">🇺🇸</Text>}
         </ActionIcon>
       </Menu.Target>
 

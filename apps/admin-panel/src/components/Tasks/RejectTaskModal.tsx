@@ -23,17 +23,19 @@ export function RejectTaskModal({ opened, onClose, taskId }: RejectTaskModalProp
       notifications.show({
         title: t('common.error'),
         message: t('tasks.rejectionReasonMinLength'),
-        color: 'red'
+        color: 'red',
       });
       return;
     }
 
     setLoading(true);
     try {
-      await dispatch(updateTaskStatus({
-        id: taskId,
-        data: { status: TaskStatus.REJECTED, rejectionReason: reason }
-      })).unwrap();
+      await dispatch(
+        updateTaskStatus({
+          id: taskId,
+          data: { status: TaskStatus.REJECTED, rejectionReason: reason },
+        })
+      ).unwrap();
 
       notifications.show({
         title: t('common.success'),
@@ -66,8 +68,12 @@ export function RejectTaskModal({ opened, onClose, taskId }: RejectTaskModalProp
       />
 
       <Group justify="flex-end">
-        <Button variant="default" onClick={onClose} disabled={loading}>{t('common.cancel')}</Button>
-        <Button color="red" onClick={handleReject} loading={loading}>{t('tasks.reject')}</Button>
+        <Button variant="default" onClick={onClose} disabled={loading}>
+          {t('common.cancel')}
+        </Button>
+        <Button color="red" onClick={handleReject} loading={loading}>
+          {t('tasks.reject')}
+        </Button>
       </Group>
     </Modal>
   );

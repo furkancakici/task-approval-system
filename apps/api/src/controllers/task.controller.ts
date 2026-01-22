@@ -39,9 +39,11 @@ export const taskController = {
       res.json(updatedTask);
     } catch (error: any) {
       if (error.message === 'Task not found') return res.status(404).json({ message: error.message });
-      if (error.message === 'Access denied' || 
-          error.message === 'Viewers cannot change status' || 
-          error.message === 'Employees cannot change task status') {
+      if (
+        error.message === 'Access denied' ||
+        error.message === 'Viewers cannot change status' ||
+        error.message === 'Employees cannot change task status'
+      ) {
         return res.status(403).json({ message: error.message });
       }
       res.status(500).json({ message: 'Error updating task', error });
@@ -62,5 +64,5 @@ export const taskController = {
       }
       res.status(500).json({ message: 'Error deleting task' });
     }
-  }
+  },
 };

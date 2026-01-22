@@ -48,7 +48,9 @@ export function CreateTask() {
 
   return (
     <>
-      <Title order={2} mb="xl">{t('tasks.createNewTask')}</Title>
+      <Title order={2} mb="xl">
+        {t('tasks.createNewTask')}
+      </Title>
 
       <Paper withBorder radius="md" p="xl" maw={600}>
         <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -88,13 +90,19 @@ export function CreateTask() {
             <Group grow mt="md">
               <Select
                 label={t('tasks.priority')}
-                data={Object.values(TaskPriority).map(p => ({ value: p, label: t(`enums.priority.${p}`) }))}
+                data={Object.values(TaskPriority).map((p) => ({
+                  value: p,
+                  label: t(`enums.priority.${p}`),
+                }))}
                 withAsterisk
                 {...form.getInputProps('priority')}
               />
               <Select
                 label={t('tasks.category')}
-                data={Object.values(TaskCategory).map(c => ({ value: c, label: t(`enums.category.${c}`) }))}
+                data={Object.values(TaskCategory).map((c) => ({
+                  value: c,
+                  label: t(`enums.category.${c}`),
+                }))}
                 withAsterisk
                 {...form.getInputProps('category')}
               />
@@ -107,8 +115,12 @@ export function CreateTask() {
             transition={{ duration: 0.3, delay: 0.4 }}
           >
             <Group justify="flex-end" mt="xl">
-              <Button variant="default" onClick={() => navigate('/tasks')}>{t('common.cancel')}</Button>
-              <Button type="submit" loading={loading}>{t('tasks.createNewTask')}</Button>
+              <Button variant="default" onClick={() => navigate('/tasks')}>
+                {t('common.cancel')}
+              </Button>
+              <Button type="submit" loading={loading}>
+                {t('tasks.createNewTask')}
+              </Button>
             </Group>
           </motion.div>
         </form>

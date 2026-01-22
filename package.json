@@ -37,11 +37,11 @@
     "@tabler/icons-react": "3.36.1"
   },
   "lint-staged": {
-    "*.{ts,tsx}": [
+    "**/*.{ts,tsx}": [
       "prettier --write",
       "eslint --fix"
     ],
-    "*.{json,md}": [
+    "**/*.{json,md}": [
       "prettier --write"
     ]
   }

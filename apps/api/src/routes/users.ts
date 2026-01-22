@@ -8,7 +8,7 @@ import { UserRole } from '@repo/types';
 const router = express.Router();
 
 // All routes require authentication and Admin/Moderator role
-// Assuming Moderators can view but maybe not delete? 
+// Assuming Moderators can view but maybe not delete?
 // For now, let's restrict all management to Admins.
 // Or: Users: Read (Admin/Mod), Write (Admin).
 

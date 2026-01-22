@@ -1,6 +1,13 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from '@repo/store';
 import { api } from '@/lib/api';
-import { TaskPriority, TaskStatus, TaskCategory, type Task, type PaginatedResponse, type PaginationMeta } from '@repo/types';
+import {
+  TaskPriority,
+  TaskStatus,
+  TaskCategory,
+  type Task,
+  type PaginatedResponse,
+  type PaginationMeta,
+} from '@repo/types';
 import type { CreateTaskInput } from '@repo/schema';
 
 interface TasksState {
@@ -17,18 +24,21 @@ const initialState: TasksState = {
   error: null,
 };
 
-export const fetchMyTasks = createAsyncThunk('tasks/fetchMyTasks', async (params?: { 
-  page?: number; 
-  limit?: number;
-  search?: string;
-  status?: TaskStatus;
-  priority?: TaskPriority;
-  category?: TaskCategory;
-}) => {
-  // The backend uses the token to identify the user and filter tasks accordingly
-  const response = await api.get('/tasks', { params });
-  return response.data;
-});
+export const fetchMyTasks = createAsyncThunk(
+  'tasks/fetchMyTasks',
+  async (params?: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    status?: TaskStatus;
+    priority?: TaskPriority;
+    category?: TaskCategory;
+  }) => {
+    // The backend uses the token to identify the user and filter tasks accordingly
+    const response = await api.get('/tasks', { params });
+    return response.data;
+  }
+);
 
 export const createTask = createAsyncThunk('tasks/createTask', async (data: CreateTaskInput) => {
   const response = await api.post('/tasks', data);
@@ -66,7 +76,7 @@ const tasksSlice = createSlice({
         state.loading = false;
         state.tasks.push(action.payload);
         if (state.meta) {
-           state.meta.total += 1;
+          state.meta.total += 1;
         }
       })
       .addCase(createTask.rejected, (state, action) => {

@@ -45,7 +45,8 @@ const resources = {
         emailPlaceholder: 'your@email.com',
         passwordPlaceholder: 'Your password',
         unauthorizedAdminAccessTitle: 'Unauthorized Access',
-        unauthorizedAdminAccessMessage: 'You do not have permission to access the Admin Panel. You will be redirected to the User Panel.',
+        unauthorizedAdminAccessMessage:
+          'You do not have permission to access the Admin Panel. You will be redirected to the User Panel.',
         redirectToUserPanel: 'Go to User Panel',
         loggingOutIn: 'Logging out in {{seconds}} seconds...',
       },
@@ -137,17 +138,17 @@ const resources = {
         category: {
           'Technical Support': 'Technical Support',
           'Leave Request': 'Leave Request',
-          'Purchase': 'Purchase',
-          'Other': 'Other',
+          Purchase: 'Purchase',
+          Other: 'Other',
         },
         role: {
           Admin: 'Admin',
           User: 'User',
           Moderator: 'Moderator',
           Viewer: 'Viewer',
-        }
-      }
-    }
+        },
+      },
+    },
   },
   tr: {
     translation: {
@@ -191,7 +192,8 @@ const resources = {
         emailPlaceholder: 'ornek@eposta.com',
         passwordPlaceholder: 'Şifreniz',
         unauthorizedAdminAccessTitle: 'Yetkisiz Erişim',
-        unauthorizedAdminAccessMessage: 'Admin Paneline erişim yetkiniz bulunmamaktadır. Kullanıcı Paneline yönlendiriliyorsunuz.',
+        unauthorizedAdminAccessMessage:
+          'Admin Paneline erişim yetkiniz bulunmamaktadır. Kullanıcı Paneline yönlendiriliyorsunuz.',
         redirectToUserPanel: 'Kullanıcı Paneline Git',
         loggingOutIn: '{{seconds}} saniye içinde çıkış yapılıyor...',
       },
@@ -283,18 +285,18 @@ const resources = {
         category: {
           'Technical Support': 'Teknik Destek',
           'Leave Request': 'İzin Talebi',
-          'Purchase': 'Satın Alma',
-          'Other': 'Diğer',
+          Purchase: 'Satın Alma',
+          Other: 'Diğer',
         },
         role: {
           Admin: 'Admin',
           User: 'Kullanıcı',
           Moderator: 'Moderatör',
           Viewer: 'İzleyici',
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 };
 
 i18n
@@ -306,7 +308,7 @@ i18n
     lng: 'tr',
     interpolation: {
       escapeValue: false,
-    }
+    },
   });
 
 export default i18n;

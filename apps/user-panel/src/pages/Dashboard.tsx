@@ -1,5 +1,19 @@
 import { useEffect, useState } from 'react';
-import { Title, SimpleGrid, Paper, Text, Group, Button, LoadingOverlay, Box, IconCheck, IconClock, IconX, IconPlus, IconListCheck } from '@repo/mantine';
+import {
+  Title,
+  SimpleGrid,
+  Paper,
+  Text,
+  Group,
+  Button,
+  LoadingOverlay,
+  Box,
+  IconCheck,
+  IconClock,
+  IconX,
+  IconPlus,
+  IconListCheck,
+} from '@repo/mantine';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
@@ -20,7 +34,7 @@ export function Dashboard() {
     onView: (task) => {
       setSelectedTask(task);
       setDetailOpened(true);
-    }
+    },
   });
 
   useEffect(() => {
@@ -29,9 +43,9 @@ export function Dashboard() {
 
   const stats = {
     total: tasks.length,
-    pending: tasks.filter(t => t.status === TaskStatus.PENDING).length,
-    approved: tasks.filter(t => t.status === TaskStatus.APPROVED).length,
-    rejected: tasks.filter(t => t.status === TaskStatus.REJECTED).length,
+    pending: tasks.filter((t) => t.status === TaskStatus.PENDING).length,
+    approved: tasks.filter((t) => t.status === TaskStatus.APPROVED).length,
+    rejected: tasks.filter((t) => t.status === TaskStatus.REJECTED).length,
   };
 
   const statsData = [
@@ -62,8 +76,15 @@ export function Dashboard() {
         <LoadingOverlay visible={loading} overlayProps={{ blur: 2 }} />
         <Box p="md" style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}>
           <Group justify="space-between">
-            <Text fw={600} size="lg">{t('dashboard.recentActivity')}</Text>
-            <Button variant="subtle" size="xs" rightSection={<IconListCheck size={14} />} onClick={() => navigate('/tasks')}>
+            <Text fw={600} size="lg">
+              {t('dashboard.recentActivity')}
+            </Text>
+            <Button
+              variant="subtle"
+              size="xs"
+              rightSection={<IconListCheck size={14} />}
+              onClick={() => navigate('/tasks')}
+            >
               {t('common.tasks')}
             </Button>
           </Group>
@@ -77,11 +98,7 @@ export function Dashboard() {
           minHeight={150}
         />
       </Paper>
-      <TaskDetailModal
-        opened={detailOpened}
-        onClose={() => setDetailOpened(false)}
-        task={selectedTask}
-      />
+      <TaskDetailModal opened={detailOpened} onClose={() => setDetailOpened(false)} task={selectedTask} />
     </>
   );
 }

@@ -1,4 +1,4 @@
-export * from "@reduxjs/toolkit";
+export * from '@reduxjs/toolkit';
 export {
   Provider,
   useDispatch,
@@ -7,5 +7,4 @@ export {
   shallowEqual,
   connect,
   type TypedUseSelectorHook,
-} from "react-redux";
-
+} from 'react-redux';

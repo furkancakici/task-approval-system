@@ -17,10 +17,13 @@ const initialState: UsersState = {
   error: null,
 };
 
-export const fetchUsers = createAsyncThunk('users/fetchUsers', async (params?: { page?: number; limit?: number; email?: string }) => {
-  const response = await api.get('/users', { params });
-  return response.data;
-});
+export const fetchUsers = createAsyncThunk(
+  'users/fetchUsers',
+  async (params?: { page?: number; limit?: number; email?: string }) => {
+    const response = await api.get('/users', { params });
+    return response.data;
+  }
+);
 
 export const createUser = createAsyncThunk('users/createUser', async (userData: CreateUserInput) => {
   const response = await api.post('/users', userData);
@@ -59,32 +62,29 @@ const usersSlice = createSlice({
       });
 
     // Create User
-    builder
-      .addCase(createUser.fulfilled, (state, action: PayloadAction<User>) => {
-        state.users.push(action.payload);
-        // Optimistically update total count if meta exists, though ideally refresh list
-        if (state.meta) {
-           state.meta.total += 1;
-        }
-      });
+    builder.addCase(createUser.fulfilled, (state, action: PayloadAction<User>) => {
+      state.users.push(action.payload);
+      // Optimistically update total count if meta exists, though ideally refresh list
+      if (state.meta) {
+        state.meta.total += 1;
+      }
+    });
 
     // Delete User
-    builder
-      .addCase(deleteUser.fulfilled, (state, action: PayloadAction<string>) => {
-        state.users = state.users.filter((user) => user.id !== action.payload);
-        if (state.meta) {
-            state.meta.total -= 1;
-        }
-      });
+    builder.addCase(deleteUser.fulfilled, (state, action: PayloadAction<string>) => {
+      state.users = state.users.filter((user) => user.id !== action.payload);
+      if (state.meta) {
+        state.meta.total -= 1;
+      }
+    });
 
     // Update User
-    builder
-      .addCase(updateUser.fulfilled, (state, action: PayloadAction<User>) => {
-        const index = state.users.findIndex((u) => u.id === action.payload.id);
-        if (index !== -1) {
-          state.users[index] = action.payload;
-        }
-      });
+    builder.addCase(updateUser.fulfilled, (state, action: PayloadAction<User>) => {
+      const index = state.users.findIndex((u) => u.id === action.payload.id);
+      if (index !== -1) {
+        state.users[index] = action.payload;
+      }
+    });
   },
 });
 

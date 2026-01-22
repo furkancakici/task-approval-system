@@ -22,19 +22,19 @@ export function UserLayout() {
       label: t('common.dashboard'),
       icon: IconLayoutDashboard,
       active: location.pathname === '/dashboard',
-      onClick: () => navigate('/dashboard')
+      onClick: () => navigate('/dashboard'),
     },
     {
       label: t('common.myTasks'),
       icon: IconListCheck,
       active: location.pathname === '/tasks',
-      onClick: () => navigate('/tasks')
+      onClick: () => navigate('/tasks'),
     },
     {
       label: t('common.createTask'),
       icon: IconPlus,
       active: location.pathname === '/tasks/create',
-      onClick: () => navigate('/tasks/create')
+      onClick: () => navigate('/tasks/create'),
     },
   ];
 
@@ -43,7 +43,11 @@ export function UserLayout() {
       navLinks={navLinks}
       user={user ? { name: user.name, email: user.email } : null}
       onLogout={handleLogout}
-      logo={<Text fw={700} size="lg">{t('common.dashboard')}</Text>}
+      logo={
+        <Text fw={700} size="lg">
+          {t('common.dashboard')}
+        </Text>
+      }
       currentLanguage={i18n.language}
       onLanguageChange={(lang) => i18n.changeLanguage(lang)}
     >

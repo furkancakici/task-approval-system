@@ -18,12 +18,16 @@ export function useTaskColumns(options: UseTaskColumnsOptions = {}) {
     {
       key: 'title',
       header: t('tasks.title'),
-      render: (task) => <Text size="sm" fw={500}>{task.title}</Text>
+      render: (task) => (
+        <Text size="sm" fw={500}>
+          {task.title}
+        </Text>
+      ),
     },
     {
       key: 'user',
       header: t('common.users'),
-      render: (task) => <Text size="sm">{(task as any).user?.name || '-'}</Text>
+      render: (task) => <Text size="sm">{(task as any).user?.name || '-'}</Text>,
     },
     {
       key: 'category',
@@ -32,7 +36,7 @@ export function useTaskColumns(options: UseTaskColumnsOptions = {}) {
         <Badge color={getCategoryColor(task.category as TaskCategory)} variant="dot">
           {t(`enums.category.${task.category}`)}
         </Badge>
-      )
+      ),
     },
     {
       key: 'priority',
@@ -41,7 +45,7 @@ export function useTaskColumns(options: UseTaskColumnsOptions = {}) {
         <Badge color={getPriorityColor(task.priority)} variant="light">
           {t(`enums.priority.${task.priority}`)}
         </Badge>
-      )
+      ),
     },
     {
       key: 'status',
@@ -59,16 +63,19 @@ export function useTaskColumns(options: UseTaskColumnsOptions = {}) {
             </Tooltip>
           )}
         </div>
-      )
+      ),
     },
     {
       key: 'createdAt',
       header: t('common.createdAt'),
       render: (task) => (
         <Text size="sm">
-          {new Date(task.createdAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })}
+          {new Date(task.createdAt).toLocaleString('tr-TR', {
+            dateStyle: 'short',
+            timeStyle: 'short',
+          })}
         </Text>
-      )
+      ),
     },
     {
       key: 'updatedAt',
@@ -76,10 +83,13 @@ export function useTaskColumns(options: UseTaskColumnsOptions = {}) {
       render: (task) => (
         <Text size="sm">
           {task.status !== TaskStatus.PENDING
-            ? new Date(task.updatedAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })
+            ? new Date(task.updatedAt).toLocaleString('tr-TR', {
+                dateStyle: 'short',
+                timeStyle: 'short',
+              })
             : '-'}
         </Text>
-      )
+      ),
     },
     {
       key: 'actions',
@@ -94,9 +104,9 @@ export function useTaskColumns(options: UseTaskColumnsOptions = {}) {
             </Tooltip>
           )}
         </Group>
-      )
-    }
+      ),
+    },
   ];
 
-  return allColumns.filter(col => !excludeFields.includes(col.key as any));
+  return allColumns.filter((col) => !excludeFields.includes(col.key as any));
 }

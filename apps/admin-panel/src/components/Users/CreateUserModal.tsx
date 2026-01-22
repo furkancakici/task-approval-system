@@ -86,7 +86,9 @@ export function CreateUserModal({ opened, onClose }: CreateUserModalProps) {
         />
 
         <Group justify="flex-end">
-          <Button variant="default" onClick={onClose}>{t('common.cancel')}</Button>
+          <Button variant="default" onClick={onClose}>
+            {t('common.cancel')}
+          </Button>
           <Button type="submit">{t('common.create')}</Button>
         </Group>
       </form>

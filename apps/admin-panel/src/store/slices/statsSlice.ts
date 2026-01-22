@@ -33,13 +33,10 @@ const initialState: StatsState = {
   error: null,
 };
 
-export const fetchAdminStats = createAsyncThunk(
-  'stats/fetchAdminStats',
-  async () => {
-    const response = await api.get('/admin/stats');
-    return response.data;
-  }
-);
+export const fetchAdminStats = createAsyncThunk('stats/fetchAdminStats', async () => {
+  const response = await api.get('/admin/stats');
+  return response.data;
+});
 
 const statsSlice = createSlice({
   name: 'stats',

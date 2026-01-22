@@ -30,14 +30,7 @@ export function TablePagination({ total, totalPages, page, onChange, limit, onLi
             allowDeselect={false}
           />
         )}
-        <Pagination
-          total={totalPages}
-          value={page}
-          onChange={onChange}
-          size="sm"
-          radius="md"
-          withEdges
-        />
+        <Pagination total={totalPages} value={page} onChange={onChange} size="sm" radius="md" withEdges />
       </Group>
     </Group>
   );

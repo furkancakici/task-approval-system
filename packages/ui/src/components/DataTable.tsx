@@ -5,7 +5,6 @@ import { TablePagination } from './TablePagination';
 
 const MotionTr = motion.create(Table.Tr);
 
-
 export interface Column<T> {
   key: string;
   header: ReactNode;
@@ -45,7 +44,13 @@ export function DataTable<T>({
 }: DataTableProps<T>) {
   return (
     <Box>
-      <Box style={{ overflowX: 'auto', position: 'relative', minHeight: data.length === 0 ? minHeight : 'auto' }}>
+      <Box
+        style={{
+          overflowX: 'auto',
+          position: 'relative',
+          minHeight: data.length === 0 ? minHeight : 'auto',
+        }}
+      >
         <LoadingOverlay visible={loading} overlayProps={{ blur: 2 }} />
         <Table striped highlightOnHover verticalSpacing="sm" horizontalSpacing="md" {...tableProps}>
           <Table.Thead>

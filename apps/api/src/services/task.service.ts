@@ -8,61 +8,61 @@ export const taskService = {
     const take = Number(limit);
 
     const where: any = {};
-    
+
     // Filters
     if (status) where.status = status;
     if (priority) where.priority = priority;
     if (category) where.category = category;
     if (filters.search) {
-        where.OR = [
-            { title: { contains: filters.search, mode: 'insensitive' } },
-            { user: { name: { contains: filters.search, mode: 'insensitive' } } }
-        ];
+      where.OR = [
+        { title: { contains: filters.search, mode: 'insensitive' } },
+        { user: { name: { contains: filters.search, mode: 'insensitive' } } },
+      ];
     }
 
     // Access Control
     if (user.type !== 'admin') {
-        // Employees can only see their own tasks
-        where.userId = user.id;
-    } 
+      // Employees can only see their own tasks
+      where.userId = user.id;
+    }
 
     const [data, total] = await Promise.all([
-        prisma.task.findMany({
-            where,
-            include: {
-                user: {
-                    select: { id: true, name: true, email: true }
-                }
-            },
-            orderBy: status === TaskStatus.PENDING ? { createdAt: 'desc' as const } : { updatedAt: 'desc' as const },
-            skip,
-            take
-        }),
-        prisma.task.count({ where })
+      prisma.task.findMany({
+        where,
+        include: {
+          user: {
+            select: { id: true, name: true, email: true },
+          },
+        },
+        orderBy: status === TaskStatus.PENDING ? { createdAt: 'desc' as const } : { updatedAt: 'desc' as const },
+        skip,
+        take,
+      }),
+      prisma.task.count({ where }),
     ]);
 
     return {
-        data,
-        meta: {
-            page: Number(page),
-            limit: Number(limit),
-            total,
-            totalPages: Math.ceil(total / Number(limit))
-        }
+      data,
+      meta: {
+        page: Number(page),
+        limit: Number(limit),
+        total,
+        totalPages: Math.ceil(total / Number(limit)),
+      },
     };
   },
 
   async getTaskById(id: string, user: any) {
     const task = await prisma.task.findUnique({
       where: { id },
-      include: { user: { select: { id: true, name: true } } }
+      include: { user: { select: { id: true, name: true } } },
     });
 
     if (!task) return null;
 
     // Access Check
     if (user.type !== 'admin' && task.userId !== user.id) {
-        throw new Error('Access denied');
+      throw new Error('Access denied');
     }
 
     return task;
@@ -76,8 +76,8 @@ export const taskService = {
         priority: data.priority as TaskPriority,
         category: data.category as TaskCategory,
         status: TaskStatus.PENDING,
-        userId
-      }
+        userId,
+      },
     });
   },
 
@@ -88,35 +88,35 @@ export const taskService = {
     const updateData: any = {};
 
     if (user.type === 'admin') {
-        const canApprove = [UserRole.ADMIN, UserRole.MODERATOR].includes(user.role);
-        
-        if (data.status) {
-            if (!canApprove) throw new Error('Viewers cannot change status');
-            updateData.status = data.status;
-            
-            if (data.status === TaskStatus.REJECTED && data.rejectionReason) {
-                updateData.rejectionReason = data.rejectionReason;
-            }
-        }
-    } else {
-        // Regular user
-        if (existingTask.userId !== user.id) throw new Error('Access denied');
-        
-        // Cannot change status
-        if (data.status && data.status !== existingTask.status) {
-            throw new Error('Employees cannot change task status');
-        }
+      const canApprove = [UserRole.ADMIN, UserRole.MODERATOR].includes(user.role);
 
-        // Can edit details
-        if (data.title) updateData.title = data.title;
-        if (data.description) updateData.description = data.description;
-        if (data.priority) updateData.priority = data.priority;
-        if (data.category) updateData.category = data.category;
+      if (data.status) {
+        if (!canApprove) throw new Error('Viewers cannot change status');
+        updateData.status = data.status;
+
+        if (data.status === TaskStatus.REJECTED && data.rejectionReason) {
+          updateData.rejectionReason = data.rejectionReason;
+        }
+      }
+    } else {
+      // Regular user
+      if (existingTask.userId !== user.id) throw new Error('Access denied');
+
+      // Cannot change status
+      if (data.status && data.status !== existingTask.status) {
+        throw new Error('Employees cannot change task status');
+      }
+
+      // Can edit details
+      if (data.title) updateData.title = data.title;
+      if (data.description) updateData.description = data.description;
+      if (data.priority) updateData.priority = data.priority;
+      if (data.category) updateData.category = data.category;
     }
 
     return prisma.task.update({
       where: { id },
-      data: updateData
+      data: updateData,
     });
   },
 
@@ -125,12 +125,12 @@ export const taskService = {
     if (!task) throw new Error('Task not found');
 
     if (user.type !== 'admin') {
-        if (task.userId !== user.id) throw new Error('Access denied');
-        if (task.status !== TaskStatus.PENDING) throw new Error('Cannot delete processed tasks');
+      if (task.userId !== user.id) throw new Error('Access denied');
+      if (task.status !== TaskStatus.PENDING) throw new Error('Cannot delete processed tasks');
     } else {
-        if(user.role === UserRole.VIEWER) throw new Error('Viewers cannot delete tasks');
+      if (user.role === UserRole.VIEWER) throw new Error('Viewers cannot delete tasks');
     }
 
     return prisma.task.delete({ where: { id } });
-  }
+  },
 };

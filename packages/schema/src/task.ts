@@ -8,22 +8,27 @@ export const CreateTaskSchema = z.object({
   category: z.nativeEnum(TaskCategory),
 });
 
-export const UpdateTaskSchema = z.object({
-  title: z.string().min(3, 'validation.titleMin').optional(),
-  description: z.string().min(10, 'validation.descriptionMin').optional(),
-  priority: z.nativeEnum(TaskPriority).optional(),
-  category: z.nativeEnum(TaskCategory).optional(),
-  status: z.nativeEnum(TaskStatus).optional(),
-  rejectionReason: z.string().min(5, 'validation.rejectionReasonMin').optional(),
-}).refine((data) => {
-  if (data.status === TaskStatus.REJECTED && !data.rejectionReason) {
-    return false;
-  }
-  return true;
-}, {
-  message: "validation.rejectionReasonRequired",
-  path: ["rejectionReason"],
-});
+export const UpdateTaskSchema = z
+  .object({
+    title: z.string().min(3, 'validation.titleMin').optional(),
+    description: z.string().min(10, 'validation.descriptionMin').optional(),
+    priority: z.nativeEnum(TaskPriority).optional(),
+    category: z.nativeEnum(TaskCategory).optional(),
+    status: z.nativeEnum(TaskStatus).optional(),
+    rejectionReason: z.string().min(5, 'validation.rejectionReasonMin').optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.status === TaskStatus.REJECTED && !data.rejectionReason) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: 'validation.rejectionReasonRequired',
+      path: ['rejectionReason'],
+    }
+  );
 
 export const TaskQuerySchema = z.object({
   status: z.nativeEnum(TaskStatus).optional(),

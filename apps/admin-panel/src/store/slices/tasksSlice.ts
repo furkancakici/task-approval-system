@@ -17,10 +17,13 @@ const initialState: TasksState = {
   error: null,
 };
 
-export const fetchTasks = createAsyncThunk('tasks/fetchTasks', async (query: TaskQueryInput & { page?: number; limit?: number }) => {
-  const response = await api.get('/tasks', { params: query });
-  return response.data;
-});
+export const fetchTasks = createAsyncThunk(
+  'tasks/fetchTasks',
+  async (query: TaskQueryInput & { page?: number; limit?: number }) => {
+    const response = await api.get('/tasks', { params: query });
+    return response.data;
+  }
+);
 
 export const updateTaskStatus = createAsyncThunk(
   'tasks/updateTaskStatus',
@@ -54,9 +57,7 @@ const tasksSlice = createSlice({
     // Update Task Status
     builder.addCase(updateTaskStatus.fulfilled, (state, action: PayloadAction<Task>) => {
       // Update the task in the list
-      state.tasks = state.tasks.map((task) =>
-        task.id === action.payload.id ? action.payload : task
-      );
+      state.tasks = state.tasks.map((task) => (task.id === action.payload.id ? action.payload : task));
     });
   },
 });

@@ -26,7 +26,8 @@ export const userController = {
       const user = await userService.createUser(req.body);
       res.status(201).json(user);
     } catch (error: any) {
-      if (error.code === 'P2002') { // Prisma unique constraint error
+      if (error.code === 'P2002') {
+        // Prisma unique constraint error
         return res.status(409).json({ message: 'Email already exists' });
       }
       res.status(500).json({ message: 'Error creating user', error });
@@ -38,7 +39,7 @@ export const userController = {
       const user = await userService.updateUser(req.params.id, req.body);
       res.json(user);
     } catch (error: any) {
-       if (error.code === 'P2025') {
+      if (error.code === 'P2025') {
         return res.status(404).json({ message: 'User not found' });
       }
       res.status(500).json({ message: 'Error updating user', error });
@@ -55,5 +56,5 @@ export const userController = {
       }
       res.status(500).json({ message: 'Error deleting user' });
     }
-  }
+  },
 };
