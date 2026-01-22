@@ -5,6 +5,7 @@ import path from "path";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  envDir: "../../",
   server: {
     port: Number(process.env.ADMIN_PANEL_PORT) || 3001,
   },
