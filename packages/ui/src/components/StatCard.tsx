@@ -15,9 +15,10 @@ export function StatCard({ label, value, icon: Icon, color }: StatCardProps) {
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ scale: 1.02, translateY: -5 }}
       transition={{ duration: 0.3 }}
+      style={{ height: '100%' }}
     >
-      <Paper withBorder p="md" radius="md">
-        <Group justify="space-between">
+      <Paper withBorder p="md" radius="md" h="100%">
+        <Group justify="space-between" h="100%">
           <div>
             <Text c="dimmed" tt="uppercase" fw={700} fz="xs">
               {label}

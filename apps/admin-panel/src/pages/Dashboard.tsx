@@ -12,6 +12,7 @@ import {
   IconChecks,
   IconX,
 } from '@repo/mantine';
+import { motion } from '@repo/shared';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { fetchAdminStats } from '@/store/slices/statsSlice';
 import { useTranslation } from 'react-i18next';
@@ -63,7 +64,7 @@ export function Dashboard() {
   return (
     <Box pos="relative">
       <LoadingOverlay visible={loading} overlayProps={{ blur: 2 }} />
-      <Title order={2} mb="xl">
+      <Title order={2} mb="lg">
         {t('dashboard.welcome', { name: user?.name || 'Admin' })}
       </Title>
 
@@ -72,36 +73,44 @@ export function Dashboard() {
           <StatCard key={stat.label} {...stat} />
         ))}
         {stats?.priorityStats && (
-          <Paper withBorder p="md" radius="md">
-            <Text c="dimmed" tt="uppercase" fw={700} fz="xs" mb="xs">
-              {t('dashboard.priorityDistribution')}
-            </Text>
-            <Group gap="xs">
-              {Object.entries(stats.priorityStats).map(([priority, count]) => (
-                <Box key={priority} style={{ textAlign: 'center' }}>
-                  <Text size="10px" c="dimmed" tt="uppercase" fw={700} mb={2}>
-                    {t(`enums.priority.${priority}`)}
-                  </Text>
-                  <Badge
-                    size="md"
-                    variant="filled"
-                    radius="xl"
-                    color={
-                      priority === 'urgent'
-                        ? 'red'
-                        : priority === 'high'
-                          ? 'orange'
-                          : priority === 'normal'
-                            ? 'blue'
-                            : 'teal'
-                    }
-                  >
-                    {count}
-                  </Badge>
-                </Box>
-              ))}
-            </Group>
-          </Paper>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ scale: 1.02, translateY: -5 }}
+            transition={{ duration: 0.3, delay: 0.2 }}
+            style={{ height: '100%' }}
+          >
+            <Paper withBorder p="md" radius="md" h="100%">
+              <Text c="dimmed" tt="uppercase" fw={700} fz="xs" mb="xs">
+                {t('dashboard.priorityDistribution')}
+              </Text>
+              <Group gap="xs">
+                {Object.entries(stats.priorityStats).map(([priority, count]) => (
+                  <Box key={priority} style={{ textAlign: 'center' }}>
+                    <Text size="10px" c="dimmed" tt="uppercase" fw={700} mb={2}>
+                      {t(`enums.priority.${priority}`)}
+                    </Text>
+                    <Badge
+                      size="md"
+                      variant="filled"
+                      radius="xl"
+                      color={
+                        priority === 'urgent'
+                          ? 'red'
+                          : priority === 'high'
+                            ? 'orange'
+                            : priority === 'normal'
+                              ? 'blue'
+                              : 'teal'
+                      }
+                    >
+                      {count}
+                    </Badge>
+                  </Box>
+                ))}
+              </Group>
+            </Paper>
+          </motion.div>
         )}
       </SimpleGrid>
 

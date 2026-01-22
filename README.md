@@ -41,6 +41,7 @@ docker compose up
 - **i18n**: Tam Türkçe ve İngilizce dil desteği.
 - **Database**: Prisma ORM ve PostgreSQL (Docker üzerinde hazır gelir).
 - **Security**: JWT tabanlı kimlik doğrulama ve Route korumaları.
+- **Code Quality**: Husky ve lint-staged ile otomatik kod formatlama (Prettier) ve linting (ESLint) kontrolleri.
 
 ---
 
