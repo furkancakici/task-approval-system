@@ -1,12 +1,22 @@
-import React from 'react';
-import { AppShell, Burger, Group, Text, ScrollArea, NavLink, Avatar, Menu, UnstyledButton, rem } from '@repo/mantine';
-import { useTranslation } from 'react-i18next';
-import { useDisclosure } from '@repo/mantine';
-import { IconLogout, IconChevronDown } from '@repo/mantine';
-import { ColorSchemeToggle } from '../components/ColorSchemeToggle';
-import { LanguagePicker } from '../components/LanguagePicker';
-import { motion, AnimatePresence } from '@repo/shared';
-
+import React from "react";
+import {
+  AppShell,
+  Burger,
+  Group,
+  Text,
+  ScrollArea,
+  NavLink,
+  Avatar,
+  Menu,
+  UnstyledButton,
+  rem,
+} from "@repo/mantine";
+import { useTranslation } from "react-i18next";
+import { useDisclosure } from "@repo/mantine";
+import { IconLogout, IconChevronDown } from "@repo/mantine";
+import { ColorSchemeToggle } from "../components/ColorSchemeToggle";
+import { LanguagePicker } from "../components/LanguagePicker";
+import { motion } from "@repo/shared";
 
 export interface NavLinkItem {
   label: string;
@@ -37,7 +47,7 @@ export function DashboardLayout({
   user,
   onLogout,
   currentLanguage,
-  onLanguageChange
+  onLanguageChange,
 }: DashboardLayoutProps) {
   const { t } = useTranslation();
   const [opened, { toggle, close }] = useDisclosure();
@@ -61,7 +71,7 @@ export function DashboardLayout({
       header={{ height: 60 }}
       navbar={{
         width: 300,
-        breakpoint: 'sm',
+        breakpoint: "sm",
         collapsed: { mobile: !opened },
       }}
       padding="md"
@@ -89,8 +99,12 @@ export function DashboardLayout({
                     <Group gap={7}>
                       <Avatar src={user.image} alt={user.name} radius="xl" size={30} />
                       <div style={{ flex: 1 }} className="hidden-mobile">
-                        <Text size="sm" fw={500}>{user.name}</Text>
-                        <Text c="dimmed" size="xs">{user.email}</Text>
+                        <Text size="sm" fw={500}>
+                          {user.name}
+                        </Text>
+                        <Text c="dimmed" size="xs">
+                          {user.email}
+                        </Text>
                       </div>
                       <IconChevronDown style={{ width: rem(12), height: rem(12) }} stroke={1.5} />
                     </Group>
@@ -103,7 +117,7 @@ export function DashboardLayout({
                     leftSection={<IconLogout style={{ width: rem(14), height: rem(14) }} />}
                     onClick={onLogout}
                   >
-                    {t('common.logout')}
+                    {t("common.logout")}
                   </Menu.Item>
                 </Menu.Dropdown>
               </Menu>
@@ -113,9 +127,7 @@ export function DashboardLayout({
       </AppShell.Header>
 
       <AppShell.Navbar p="md">
-        <ScrollArea>
-          {items}
-        </ScrollArea>
+        <ScrollArea>{items}</ScrollArea>
       </AppShell.Navbar>
 
       <AppShell.Main>
