@@ -23,6 +23,7 @@ export function Dashboard() {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
   const { stats, loading } = useAppSelector((state) => state.stats);
+  const { lastUpdated } = useAppSelector((state) => state.tasks);
   const [selectedTask, setSelectedTask] = useState<any>(null);
   const [detailOpened, setDetailOpened] = useState(false);
 
@@ -36,7 +37,7 @@ export function Dashboard() {
 
   useEffect(() => {
     dispatch(fetchAdminStats());
-  }, [dispatch]);
+  }, [dispatch, lastUpdated]);
 
   const statsData = stats
     ? [

@@ -1,5 +1,7 @@
 import prisma from '@/lib/prisma';
 import { TaskStatus, TaskPriority, TaskCategory, UserRole } from '@repo/types';
+import { getIO } from '@repo/socket/server';
+import { SocketEvents } from '@repo/socket';
 
 export const taskService = {
   async getTasks(filters: any, user: any) {
@@ -69,7 +71,7 @@ export const taskService = {
   },
 
   async createTask(data: any, userId: string) {
-    return prisma.task.create({
+    const task = await prisma.task.create({
       data: {
         title: data.title,
         description: data.description,
@@ -78,7 +80,18 @@ export const taskService = {
         status: TaskStatus.PENDING,
         userId,
       },
+      include: {
+        user: { select: { id: true, name: true, email: true } },
+      },
     });
+
+    try {
+      getIO().emit(SocketEvents.TASK_CREATED, task);
+    } catch (error) {
+      console.error('Socket emit error:', error);
+    }
+
+    return task;
   },
 
   async updateTask(id: string, data: any, user: any) {
@@ -114,10 +127,21 @@ export const taskService = {
       if (data.category) updateData.category = data.category;
     }
 
-    return prisma.task.update({
+    const updatedTask = await prisma.task.update({
       where: { id },
       data: updateData,
+      include: {
+        user: { select: { id: true, name: true, email: true } },
+      },
     });
+
+    try {
+      getIO().emit(SocketEvents.TASK_UPDATED, updatedTask);
+    } catch (error) {
+      console.error('Socket emit error:', error);
+    }
+
+    return updatedTask;
   },
 
   async deleteTask(id: string, user: any) {
@@ -131,6 +155,34 @@ export const taskService = {
       if (user.role === UserRole.VIEWER) throw new Error('Viewers cannot delete tasks');
     }
 
-    return prisma.task.delete({ where: { id } });
+    const deletedTask = await prisma.task.delete({ where: { id } });
+    try {
+      getIO().emit(SocketEvents.TASK_DELETED, { id });
+    } catch (error) {
+      console.error('Socket emit error:', error);
+    }
+    return deletedTask;
+  },
+
+  async getTaskStats(user: any) {
+    const where: any = {};
+
+    if (user.type !== 'admin') {
+      where.userId = user.id;
+    }
+
+    const [total, pending, approved, rejected] = await Promise.all([
+      prisma.task.count({ where }),
+      prisma.task.count({ where: { ...where, status: TaskStatus.PENDING } }),
+      prisma.task.count({ where: { ...where, status: TaskStatus.APPROVED } }),
+      prisma.task.count({ where: { ...where, status: TaskStatus.REJECTED } }),
+    ]);
+
+    return {
+      total,
+      pending,
+      approved,
+      rejected,
+    };
   },
 };

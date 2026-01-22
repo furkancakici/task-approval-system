@@ -94,6 +94,7 @@ export function CreateTask() {
                   value: p,
                   label: t(`enums.priority.${p}`),
                 }))}
+                allowDeselect={false}
                 withAsterisk
                 {...form.getInputProps('priority')}
               />
@@ -103,6 +104,7 @@ export function CreateTask() {
                   value: c,
                   label: t(`enums.category.${c}`),
                 }))}
+                allowDeselect={false}
                 withAsterisk
                 {...form.getInputProps('category')}
               />

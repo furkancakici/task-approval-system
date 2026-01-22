@@ -7,8 +7,15 @@ import taskRoutes from '@/routes/tasks';
 import userRoutes from '@/routes/users';
 import adminRoutes from '@/routes/admin';
 
+import { createServer } from 'http';
+import { initializeSocket } from '@repo/socket/server';
+
 const app = express();
+const httpServer = createServer(app);
 const port = process.env.PORT || 4000;
+
+// Initialize Socket.io
+initializeSocket(httpServer);
 
 app.use(helmet());
 app.use(
@@ -29,6 +36,6 @@ app.use('/tasks', taskRoutes);
 app.use('/users', userRoutes);
 app.use('/admin', adminRoutes);
 
-app.listen(port, () => {
+httpServer.listen(port, () => {
   console.log(`API running on http://localhost:${port}`);
 });

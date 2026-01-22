@@ -16,16 +16,18 @@ import {
 } from '@repo/mantine';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchMyTasks } from '@/store/slices/tasksSlice';
 import { TaskStatus, type Task } from '@repo/types';
 import { DataTable, useTaskColumns, TaskDetailModal, StatCard } from '@repo/ui';
+import { fetchStats } from '@/store/slices/statsSlice';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
 export function Dashboard() {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { tasks, loading } = useAppSelector((state) => state.tasks);
+  const { tasks, loading, lastUpdated } = useAppSelector((state) => state.tasks);
+  const { total, pending, approved, rejected } = useAppSelector((state) => state.stats);
   const [selectedTask, setSelectedTask] = useState<any>(null);
   const [detailOpened, setDetailOpened] = useState(false);
 
@@ -39,20 +41,14 @@ export function Dashboard() {
 
   useEffect(() => {
     dispatch(fetchMyTasks());
-  }, [dispatch]);
-
-  const stats = {
-    total: tasks.length,
-    pending: tasks.filter((t) => t.status === TaskStatus.PENDING).length,
-    approved: tasks.filter((t) => t.status === TaskStatus.APPROVED).length,
-    rejected: tasks.filter((t) => t.status === TaskStatus.REJECTED).length,
-  };
+    dispatch(fetchStats());
+  }, [dispatch, lastUpdated]);
 
   const statsData = [
-    { label: t('common.total'), value: stats.total, icon: IconListCheck, color: 'blue' },
-    { label: t('enums.status.pending'), value: stats.pending, icon: IconClock, color: 'orange' },
-    { label: t('enums.status.approved'), value: stats.approved, icon: IconCheck, color: 'green' },
-    { label: t('enums.status.rejected'), value: stats.rejected, icon: IconX, color: 'red' },
+    { label: t('common.total'), value: total, icon: IconListCheck, color: 'blue' },
+    { label: t('enums.status.pending'), value: pending, icon: IconClock, color: 'orange' },
+    { label: t('enums.status.approved'), value: approved, icon: IconCheck, color: 'green' },
+    { label: t('enums.status.rejected'), value: rejected, icon: IconX, color: 'red' },
   ];
 
   const recentTasks = tasks.slice(0, 5);

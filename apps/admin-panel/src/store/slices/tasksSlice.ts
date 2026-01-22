@@ -8,6 +8,7 @@ interface TasksState {
   meta: PaginationMeta | null;
   loading: boolean;
   error: string | null;
+  lastUpdated: number;
 }
 
 const initialState: TasksState = {
@@ -15,6 +16,7 @@ const initialState: TasksState = {
   meta: null,
   loading: false,
   error: null,
+  lastUpdated: 0,
 };
 
 export const fetchTasks = createAsyncThunk(
@@ -36,7 +38,17 @@ export const updateTaskStatus = createAsyncThunk(
 const tasksSlice = createSlice({
   name: 'tasks',
   initialState,
-  reducers: {},
+  reducers: {
+    taskAdded: (state) => {
+      state.lastUpdated = Date.now();
+    },
+    taskUpdated: (state) => {
+      state.lastUpdated = Date.now();
+    },
+    taskDeleted: (state) => {
+      state.lastUpdated = Date.now();
+    },
+  },
   extraReducers: (builder) => {
     // Fetch Tasks
     builder
@@ -55,11 +67,11 @@ const tasksSlice = createSlice({
       });
 
     // Update Task Status
-    builder.addCase(updateTaskStatus.fulfilled, (state, action: PayloadAction<Task>) => {
-      // Update the task in the list
-      state.tasks = state.tasks.map((task) => (task.id === action.payload.id ? action.payload : task));
+    builder.addCase(updateTaskStatus.fulfilled, (state) => {
+      state.lastUpdated = Date.now();
     });
   },
 });
 
+export const { taskAdded, taskUpdated, taskDeleted } = tasksSlice.actions;
 export default tasksSlice.reducer;

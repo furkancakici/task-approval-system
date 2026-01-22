@@ -65,4 +65,12 @@ export const taskController = {
       res.status(500).json({ message: 'Error deleting task' });
     }
   },
+  async getTaskStats(req: any, res: Response) {
+    try {
+      const stats = await taskService.getTaskStats(req.user);
+      res.json(stats);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching task stats' });
+    }
+  },
 };

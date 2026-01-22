@@ -1,11 +1,13 @@
 import { configureStore } from '@repo/store';
 import authReducer from './slices/authSlice';
 import tasksReducer from './slices/tasksSlice';
+import statsReducer from './slices/statsSlice';
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     tasks: tasksReducer,
+    stats: statsReducer,
   },
 });
 

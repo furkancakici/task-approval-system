@@ -20,7 +20,7 @@ import { DataTable, useTaskColumns, TaskDetailModal } from '@repo/ui';
 export function AllTasks() {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const { tasks, loading, meta } = useAppSelector((state) => state.tasks);
+  const { tasks, loading, meta, lastUpdated } = useAppSelector((state) => state.tasks);
   const [selectedTask, setSelectedTask] = useState<any>(null);
   const [detailOpened, setDetailOpened] = useState(false);
 
@@ -46,11 +46,11 @@ export function AllTasks() {
         status: status as TaskStatus | undefined,
         priority: priority as TaskPriority | undefined,
         category: category as TaskCategory | undefined,
-        page: 1,
-        limit: 10,
+        page: meta?.page || 1,
+        limit: meta?.limit || 10,
       })
     );
-  }, [dispatch, debouncedSearch, status, priority, category]);
+  }, [dispatch, debouncedSearch, status, priority, category, lastUpdated]);
 
   const handlePageChange = (page: number) => {
     dispatch(

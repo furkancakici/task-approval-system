@@ -12,7 +12,7 @@ import { useDebouncedValue } from '@repo/mantine';
 export function PendingTasks() {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const { tasks, loading, meta } = useAppSelector((state) => state.tasks);
+  const { tasks, loading, meta, lastUpdated } = useAppSelector((state) => state.tasks);
   const { user } = useAppSelector((state) => state.auth);
   const [rejectModalOpen, setRejectModalOpen] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
@@ -33,11 +33,11 @@ export function PendingTasks() {
         search: debouncedSearch || undefined,
         priority: priority as TaskPriority | undefined,
         category: category as TaskCategory | undefined,
-        page: 1,
-        limit: 10,
+        page: meta?.page || 1,
+        limit: meta?.limit || 10,
       })
     );
-  }, [dispatch, debouncedSearch, priority, category]);
+  }, [dispatch, debouncedSearch, priority, category, lastUpdated]);
 
   const handlePageChange = (page: number) => {
     dispatch(
