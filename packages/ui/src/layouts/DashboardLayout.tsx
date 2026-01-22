@@ -52,6 +52,7 @@ export function DashboardLayout({
         close();
       }}
       variant="light"
+      style={{ borderRadius: 'var(--mantine-radius-md)' }}
     />
   ));
 

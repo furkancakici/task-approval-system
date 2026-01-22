@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { DashboardLayout } from '@repo/ui';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { logout } from '@/store/slices/authSlice';
-import { Text, IconListCheck, IconPlus, IconLayoutDashboard } from '@repo/mantine';
+import { Text, IconListCheck, IconPlus, IconLayoutDashboard, Group, IconUserCircle } from '@repo/mantine';
 
 export function UserLayout() {
   const { t, i18n } = useTranslation();
@@ -44,9 +44,12 @@ export function UserLayout() {
       user={user ? { name: user.name, email: user.email } : null}
       onLogout={handleLogout}
       logo={
-        <Text fw={700} size="lg">
-          {t('common.dashboard')}
-        </Text>
+        <Group gap="xs">
+          <IconUserCircle size={28} color="var(--mantine-primary-color-filled)" />
+          <Text fw={900} size="xl">
+            User Panel
+          </Text>
+        </Group>
       }
       currentLanguage={i18n.language}
       onLanguageChange={(lang) => i18n.changeLanguage(lang)}

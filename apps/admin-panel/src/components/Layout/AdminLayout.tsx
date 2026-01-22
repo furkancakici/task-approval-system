@@ -2,7 +2,7 @@ import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { DashboardLayout } from '@repo/ui';
 import { useAppSelector } from '@/store/hooks';
-import { IconDashboard, IconUsers, IconListCheck, Text } from '@repo/mantine';
+import { IconDashboard, IconUsers, IconListCheck, Text, Group, IconShieldLock } from '@repo/mantine';
 import { useUnauthorizedAccess } from '@/hooks/useUnauthorizedAccess';
 
 export function AdminLayout() {
@@ -49,9 +49,12 @@ export function AdminLayout() {
       user={user ? { name: user.name, email: user.email } : null}
       onLogout={handleLogout}
       logo={
-        <Text fw={700} size="lg">
-          {t('common.dashboard')}
-        </Text>
+        <Group gap="xs">
+          <IconShieldLock size={28} color="var(--mantine-primary-color-filled)" />
+          <Text fw={900} size="xl">
+            Admin Panel
+          </Text>
+        </Group>
       }
       currentLanguage={i18n.language}
       onLanguageChange={(lang) => i18n.changeLanguage(lang)}

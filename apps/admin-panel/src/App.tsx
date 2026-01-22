@@ -24,7 +24,7 @@ function AppContent() {
 function App() {
   return (
     <Provider store={store}>
-      <UiProvider>
+      <UiProvider theme={{ primaryColor: 'cyan' }}>
         <AppContent />
       </UiProvider>
     </Provider>
