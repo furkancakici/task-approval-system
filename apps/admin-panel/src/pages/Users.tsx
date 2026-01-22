@@ -1,11 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Title, Group, Button, ActionIcon, Paper, Text, Box, TextInput } from '@mantine/core';
+import { Title, Group, Button, ActionIcon, Paper, Text, Box, TextInput, useDisclosure, useDebouncedValue, modals, notifications, IconPlus, IconTrash, IconSearch, IconX, IconEdit } from '@repo/mantine';
 import { useTranslation } from 'react-i18next';
-import { useDisclosure, useDebouncedValue } from '@mantine/hooks';
-import { modals } from '@mantine/modals';
-import { notifications } from '@mantine/notifications';
-import { IconPlus, IconTrash, IconSearch, IconX, IconEdit } from '@tabler/icons-react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchUsers, deleteUser } from '@/store/slices/usersSlice';
 import { CreateUserModal } from '@/components/Users/CreateUserModal';
@@ -35,26 +31,26 @@ export function Users() {
       navigate('/dashboard');
       return;
     }
-    dispatch(fetchUsers({ 
+    dispatch(fetchUsers({
       email: debouncedSearch || undefined,
-      page: 1, 
-      limit: 10 
+      page: 1,
+      limit: 10
     }));
   }, [dispatch, user, navigate, debouncedSearch]);
 
   const handlePageChange = (page: number) => {
-    dispatch(fetchUsers({ 
+    dispatch(fetchUsers({
       email: debouncedSearch || undefined,
-      page, 
-      limit: meta?.limit || 10 
+      page,
+      limit: meta?.limit || 10
     }));
   };
 
   const handleLimitChange = (limit: number) => {
-    dispatch(fetchUsers({ 
+    dispatch(fetchUsers({
       email: debouncedSearch || undefined,
-      page: 1, 
-      limit 
+      page: 1,
+      limit
     }));
   };
 
@@ -87,19 +83,19 @@ export function Users() {
             message: 'User deleted successfully',
             color: 'green'
           });
-          
+
           if (users.length === 1 && meta && meta.page > 1) {
-              dispatch(fetchUsers({ 
-                email: debouncedSearch || undefined,
-                page: meta.page - 1, 
-                limit: meta.limit 
-              }));
+            dispatch(fetchUsers({
+              email: debouncedSearch || undefined,
+              page: meta.page - 1,
+              limit: meta.limit
+            }));
           } else {
-              dispatch(fetchUsers({ 
-                email: debouncedSearch || undefined,
-                page: meta?.page || 1, 
-                limit: meta?.limit || 10 
-              }));
+            dispatch(fetchUsers({
+              email: debouncedSearch || undefined,
+              page: meta?.page || 1,
+              limit: meta?.limit || 10
+            }));
           }
         } catch (error) {
           notifications.show({
@@ -114,8 +110,8 @@ export function Users() {
 
   const columns: Column<User>[] = [
     ...userColumns,
-    { 
-      key: 'actions', 
+    {
+      key: 'actions',
       header: t('common.actions'),
       render: (u) => (
         <Group gap="xs">
@@ -144,17 +140,17 @@ export function Users() {
 
         <Box p="md" style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}>
           <Group align="end">
-              <TextInput
+            <TextInput
               label={t('common.actions')}
               placeholder={t('auth.email')}
               leftSection={<IconSearch size={16} />}
               value={search}
               onChange={(e) => setSearch(e.currentTarget.value)}
               style={{ flex: 1 }}
-              />
-              <Button variant="light" color="gray" onClick={clearFilters} leftSection={<IconX size={16}/>}>
-                  {t('tasks.clearFilters')}
-              </Button>
+            />
+            <Button variant="light" color="gray" onClick={clearFilters} leftSection={<IconX size={16} />}>
+              {t('tasks.clearFilters')}
+            </Button>
           </Group>
         </Box>
 
@@ -176,18 +172,18 @@ export function Users() {
 
       <CreateUserModal opened={opened} onClose={() => {
         close();
-        dispatch(fetchUsers({ 
-            email: debouncedSearch || undefined,
-            page: 1, 
-            limit: meta?.limit || 10 
+        dispatch(fetchUsers({
+          email: debouncedSearch || undefined,
+          page: 1,
+          limit: meta?.limit || 10
         }));
       }} />
       <EditUserModal opened={editOpened} onClose={() => {
         closeEdit();
-        dispatch(fetchUsers({ 
-            email: debouncedSearch || undefined,
-            page: meta?.page || 1, 
-            limit: meta?.limit || 10 
+        dispatch(fetchUsers({
+          email: debouncedSearch || undefined,
+          page: meta?.page || 1,
+          limit: meta?.limit || 10
         }));
       }} user={selectedUser} />
     </>

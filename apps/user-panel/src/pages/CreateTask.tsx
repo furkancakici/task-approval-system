@@ -1,6 +1,4 @@
-import { Title, TextInput, Textarea, Select, Button, Paper, Group } from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { notifications } from '@mantine/notifications';
+import { Title, TextInput, Textarea, Select, Button, Paper, Group, notifications, useForm } from '@repo/mantine';
 import { useAppDispatch } from '@/store/hooks';
 import { createTask } from '@/store/slices/tasksSlice';
 import { useNavigate } from 'react-router-dom';
@@ -59,7 +57,7 @@ export function CreateTask() {
             withAsterisk
             {...form.getInputProps('title')}
           />
-          
+
           <Textarea
             label={t('tasks.descriptionLabel')}
             placeholder={t('tasks.descriptionPlaceholder')}

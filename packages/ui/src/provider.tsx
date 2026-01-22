@@ -1,7 +1,5 @@
 import React from 'react';
-import { MantineProvider } from '@mantine/core';
-import { ModalsProvider } from '@mantine/modals';
-import { Notifications } from '@mantine/notifications';
+import { MantineProvider, ModalsProvider, Notifications } from '@repo/mantine';
 import { theme } from './theme';
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Paper, Title, Text, Group } from '@mantine/core';
+import { Container, Paper, Title, Text, Group } from '@repo/mantine';
 import { ColorSchemeToggle } from '../components/ColorSchemeToggle';
 import { LanguagePicker } from '../components/LanguagePicker';
 

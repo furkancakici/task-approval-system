@@ -1,5 +1,5 @@
-import { Badge, Text, Tooltip, ActionIcon, Group } from '@mantine/core';
-import { IconInfoCircle, IconEye } from '@tabler/icons-react';
+import { Badge, Text, Tooltip, ActionIcon, Group } from '@repo/mantine';
+import { IconInfoCircle, IconEye } from '@repo/mantine';
 import { useTranslation } from 'react-i18next';
 import { TaskStatus, TaskCategory, type Task } from '@repo/types';
 import type { Column } from '../components/DataTable';
@@ -15,18 +15,18 @@ export function useTaskColumns(options: UseTaskColumnsOptions = {}) {
   const { excludeFields = [] } = options;
 
   const allColumns: Column<Task>[] = [
-    { 
-      key: 'title', 
+    {
+      key: 'title',
       header: t('tasks.title'),
       render: (task) => <Text size="sm" fw={500}>{task.title}</Text>
     },
-    { 
-      key: 'user', 
+    {
+      key: 'user',
       header: t('common.users'),
       render: (task) => <Text size="sm">{(task as any).user?.name || '-'}</Text>
     },
-    { 
-      key: 'category', 
+    {
+      key: 'category',
       header: t('tasks.category'),
       render: (task) => (
         <Badge color={getCategoryColor(task.category as TaskCategory)} variant="dot">
@@ -34,8 +34,8 @@ export function useTaskColumns(options: UseTaskColumnsOptions = {}) {
         </Badge>
       )
     },
-    { 
-      key: 'priority', 
+    {
+      key: 'priority',
       header: t('tasks.priority'),
       render: (task) => (
         <Badge color={getPriorityColor(task.priority)} variant="light">
@@ -43,8 +43,8 @@ export function useTaskColumns(options: UseTaskColumnsOptions = {}) {
         </Badge>
       )
     },
-    { 
-      key: 'status', 
+    {
+      key: 'status',
       header: t('common.status'),
       render: (task) => (
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -61,26 +61,26 @@ export function useTaskColumns(options: UseTaskColumnsOptions = {}) {
         </div>
       )
     },
-    { 
-      key: 'createdAt', 
+    {
+      key: 'createdAt',
       header: t('common.createdAt'),
       render: (task) => (
-        <Text size="sm" c="dimmed">
+        <Text size="sm">
           {new Date(task.createdAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })}
         </Text>
       )
     },
-    { 
-        key: 'updatedAt', 
-        header: t('tasks.updatedAt'),
-        render: (task) => (
-          <Text size="sm" c="dimmed">
-            {task.status !== TaskStatus.PENDING 
-                ? new Date(task.updatedAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })
-                : '-'}
-          </Text>
-        )
-      },
+    {
+      key: 'updatedAt',
+      header: t('tasks.updatedAt'),
+      render: (task) => (
+        <Text size="sm">
+          {task.status !== TaskStatus.PENDING
+            ? new Date(task.updatedAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })
+            : '-'}
+        </Text>
+      )
+    },
     {
       key: 'actions',
       header: t('common.actions'),

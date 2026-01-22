@@ -1,4 +1,4 @@
-import { Modal, Text, Group, Badge, Stack, Divider, Box, Paper } from '@mantine/core';
+import { Modal, Text, Group, Badge, Stack, Divider, Box, Paper } from '@repo/mantine';
 import { useTranslation } from 'react-i18next';
 import { TaskStatus, TaskPriority, TaskCategory, type Task } from '@repo/types';
 import { getStatusColor, getCategoryColor, getPriorityColor } from '../columns/task';

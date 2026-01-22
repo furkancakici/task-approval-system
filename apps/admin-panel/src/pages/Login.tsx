@@ -1,8 +1,7 @@
-import { useDispatch } from 'react-redux';
+import { useDispatch } from '@repo/store';
 import { useNavigate } from 'react-router-dom';
-import { Button, PasswordInput, TextInput } from '@mantine/core';
+import { Button, PasswordInput, TextInput, useForm } from '@repo/mantine';
 import { useTranslation } from 'react-i18next';
-import { useForm } from '@mantine/form';
 import { AuthLayout } from '@repo/ui';
 import { zodResolver } from '@/utils/form-resolver';
 import { LoginSchema, type LoginInput } from '@repo/schema';
@@ -33,8 +32,8 @@ export function Login() {
   };
 
   return (
-    <AuthLayout 
-      title={t('auth.adminLoginTitle')} 
+    <AuthLayout
+      title={t('auth.adminLoginTitle')}
       subtitle={t('auth.adminLoginSubtitle')}
       currentLanguage={i18n.language}
       onLanguageChange={(lang) => i18n.changeLanguage(lang)}

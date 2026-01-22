@@ -1,4 +1,4 @@
-import { ActionIcon, Menu, Group, Text } from '@mantine/core';
+import { ActionIcon, Menu, Group, Text } from '@repo/mantine';
 import { useTranslation } from 'react-i18next';
 
 interface LanguagePickerProps {

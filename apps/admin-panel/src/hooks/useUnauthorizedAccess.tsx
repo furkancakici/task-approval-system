@@ -1,6 +1,6 @@
 import { useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { modals } from '@mantine/modals';
+import { modals } from '@repo/mantine';
 import { UserRole } from '@repo/types';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { logout } from '@/store/slices/authSlice';

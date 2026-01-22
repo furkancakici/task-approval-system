@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { Modal, Textarea, Button, Group } from '@mantine/core';
+import { Modal, Textarea, Button, Group, notifications } from '@repo/mantine';
 import { useAppDispatch } from '@/store/hooks';
 import { updateTaskStatus } from '@/store/slices/tasksSlice';
-import { notifications } from '@mantine/notifications';
 import { TaskStatus } from '@repo/types';
 import { useTranslation } from 'react-i18next';
 
@@ -21,12 +20,12 @@ export function RejectTaskModal({ opened, onClose, taskId }: RejectTaskModalProp
   const handleReject = async () => {
     if (!taskId) return;
     if (reason.length < 5) {
-        notifications.show({
-            title: t('common.error'),
-            message: t('tasks.rejectionReasonMinLength'),
-            color: 'red'
-        });
-        return;
+      notifications.show({
+        title: t('common.error'),
+        message: t('tasks.rejectionReasonMinLength'),
+        color: 'red'
+      });
+      return;
     }
 
     setLoading(true);
@@ -35,7 +34,7 @@ export function RejectTaskModal({ opened, onClose, taskId }: RejectTaskModalProp
         id: taskId,
         data: { status: TaskStatus.REJECTED, rejectionReason: reason }
       })).unwrap();
-      
+
       notifications.show({
         title: t('common.success'),
         message: t('tasks.rejectSuccess'),

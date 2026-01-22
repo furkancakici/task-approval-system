@@ -1,11 +1,10 @@
-import { Modal, TextInput, PasswordInput, Select, Button, Group } from '@mantine/core';
-import { useForm } from '@mantine/form';
+import { Modal, TextInput, PasswordInput, Select, Button, Group, useForm } from '@repo/mantine';
 import { zodResolver } from '@/utils/form-resolver';
 import { CreateUserSchema, type CreateUserInput } from '@repo/schema';
 import { UserRole } from '@repo/types';
 import { useAppDispatch } from '@/store/hooks';
 import { createUser } from '@/store/slices/usersSlice';
-import { notifications } from '@mantine/notifications';
+import { notifications } from '@repo/mantine';
 import { useTranslation } from 'react-i18next';
 
 interface CreateUserModalProps {
@@ -16,7 +15,7 @@ interface CreateUserModalProps {
 export function CreateUserModal({ opened, onClose }: CreateUserModalProps) {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  
+
   const form = useForm<CreateUserInput>({
     initialValues: {
       name: '',
@@ -56,7 +55,7 @@ export function CreateUserModal({ opened, onClose }: CreateUserModalProps) {
           mb="md"
           {...form.getInputProps('name')}
         />
-        
+
         <TextInput
           label={t('auth.email')}
           placeholder={t('users.emailPlaceholder')}

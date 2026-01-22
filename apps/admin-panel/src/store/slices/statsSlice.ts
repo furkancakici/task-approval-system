@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@repo/store';
 import { api } from '@/lib/api';
 
 interface RecentActivity {

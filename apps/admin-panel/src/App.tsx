@@ -1,8 +1,8 @@
 import { UiProvider } from '@repo/ui';
-import { Provider } from 'react-redux';
+import { Provider } from '@repo/store';
 import { RouterProvider } from 'react-router-dom';
-import { store } from './store';
-import { router } from './lib/routes';
+import { store } from '@/store';
+import { router } from '@/lib/routes';
 
 function App() {
   return (

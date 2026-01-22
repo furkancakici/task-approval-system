@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from '@repo/shared';
 
 export const LoginSchema = z.object({
   email: z.string().email('validation.emailInvalid'),

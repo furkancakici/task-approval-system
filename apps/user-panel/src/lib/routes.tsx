@@ -1,14 +1,14 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
-import { Center, Loader } from '@mantine/core';
-import { UserLayout } from '../components/Layout/UserLayout';
-import { ProtectedRoute, PublicRoute } from '../components/Auth/AuthRoutes';
+import { Center, Loader } from '@repo/mantine';
+import { UserLayout } from '@/components/Layout/UserLayout';
+import { ProtectedRoute, PublicRoute } from '@/components/Auth/AuthRoutes';
 
 // Lazy loaded pages
-const Login = lazy(() => import('../pages/Login').then(m => ({ default: m.Login })));
-const CreateTask = lazy(() => import('../pages/CreateTask').then(m => ({ default: m.CreateTask })));
-const MyTasks = lazy(() => import('../pages/MyTasks').then(m => ({ default: m.MyTasks })));
-const Dashboard = lazy(() => import('../pages/Dashboard').then(m => ({ default: m.Dashboard })));
+const Login = lazy(() => import('@/pages/Login').then(m => ({ default: m.Login })));
+const CreateTask = lazy(() => import('@/pages/CreateTask').then(m => ({ default: m.CreateTask })));
+const MyTasks = lazy(() => import('@/pages/MyTasks').then(m => ({ default: m.MyTasks })));
+const Dashboard = lazy(() => import('@/pages/Dashboard').then(m => ({ default: m.Dashboard })));
 
 // Shared Page Loader
 const PageLoader = () => (

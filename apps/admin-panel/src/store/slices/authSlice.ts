@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, type PayloadAction } from '@repo/store';
 import { api } from '@/lib/api';
 import { UserRole } from '@repo/types';
 

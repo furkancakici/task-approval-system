@@ -1,11 +1,10 @@
-import { Modal, TextInput, PasswordInput, Select, Button, Group } from '@mantine/core';
-import { useForm } from '@mantine/form';
+import { Modal, TextInput, PasswordInput, Select, Button, Group, useForm } from '@repo/mantine';
 import { zodResolver } from '@/utils/form-resolver';
 import { UpdateUserSchema, type UpdateUserInput } from '@repo/schema';
 import { UserRole, type User } from '@repo/types';
 import { useAppDispatch } from '@/store/hooks';
 import { updateUser } from '@/store/slices/usersSlice';
-import { notifications } from '@mantine/notifications';
+import { notifications } from '@repo/mantine';
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
 
@@ -18,7 +17,7 @@ interface EditUserModalProps {
 export function EditUserModal({ opened, onClose, user }: EditUserModalProps) {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  
+
   const form = useForm<UpdateUserInput>({
     initialValues: {
       name: '',
@@ -42,7 +41,7 @@ export function EditUserModal({ opened, onClose, user }: EditUserModalProps) {
 
   const handleSubmit = async (values: UpdateUserInput) => {
     if (!user) return;
-    
+
     try {
       // Only send password if it's not empty
       const data = { ...values };
@@ -74,7 +73,7 @@ export function EditUserModal({ opened, onClose, user }: EditUserModalProps) {
           mb="md"
           {...form.getInputProps('name')}
         />
-        
+
         <TextInput
           label={t('auth.email')}
           placeholder={t('users.emailPlaceholder')}

@@ -1,8 +1,8 @@
 import React from 'react';
-import { AppShell, Burger, Group, Text, ScrollArea, NavLink, Avatar, Menu, UnstyledButton, rem } from '@mantine/core';
+import { AppShell, Burger, Group, Text, ScrollArea, NavLink, Avatar, Menu, UnstyledButton, rem } from '@repo/mantine';
 import { useTranslation } from 'react-i18next';
-import { useDisclosure } from '@mantine/hooks';
-import { IconLogout, IconChevronDown } from '@tabler/icons-react';
+import { useDisclosure } from '@repo/mantine';
+import { IconLogout, IconChevronDown } from '@repo/mantine';
 import { ColorSchemeToggle } from '../components/ColorSchemeToggle';
 import { LanguagePicker } from '../components/LanguagePicker';
 

@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore } from '@repo/store';
 import authReducer from './slices/authSlice';
 import tasksReducer from './slices/tasksSlice';
 

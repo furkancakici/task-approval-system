@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from '@repo/shared';
 import { UserRole } from '@repo/types';
 
 export const CreateUserSchema = z.object({

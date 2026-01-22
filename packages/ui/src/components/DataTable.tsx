@@ -1,4 +1,4 @@
-import { Table, LoadingOverlay, Box, type TableProps } from '@mantine/core';
+import { Table, LoadingOverlay, Box, type TableProps } from '@repo/mantine';
 import type { ReactNode } from 'react';
 import { TablePagination } from './TablePagination';
 

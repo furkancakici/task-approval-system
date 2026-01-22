@@ -1,15 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Title, Badge, Paper, Button, Group, ActionIcon, Tooltip, Text, Box, TextInput, Select } from '@mantine/core';
-import { modals } from '@mantine/modals';
-import { IconCheck, IconSearch, IconX, IconEye } from '@tabler/icons-react';
+import { Title, Badge, Paper, Button, Group, ActionIcon, Tooltip, Text, Box, TextInput, Select } from '@repo/mantine';
+import { IconCheck, IconSearch, IconX, IconEye, modals, notifications } from '@repo/mantine';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchTasks, updateTaskStatus } from '@/store/slices/tasksSlice';
 import { TaskStatus, TaskPriority, TaskCategory, UserRole, type Task } from '@repo/types';
 import { RejectTaskModal } from '@/components/Tasks/RejectTaskModal';
-import { notifications } from '@mantine/notifications';
 import { DataTable, useTaskColumns, TaskDetailModal, type Column } from '@repo/ui';
-import { useDebouncedValue } from '@mantine/hooks';
+import { useDebouncedValue } from '@repo/mantine';
 
 export function PendingTasks() {
   const { t } = useTranslation();

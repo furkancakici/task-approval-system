@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Title, SimpleGrid, Paper, Text, Group, Button, Badge, LoadingOverlay, Box } from '@mantine/core';
-import { IconCheck, IconClock, IconX, IconPlus, IconListCheck } from '@tabler/icons-react';
+import { Title, SimpleGrid, Paper, Text, Group, Button, LoadingOverlay, Box, IconCheck, IconClock, IconX, IconPlus, IconListCheck } from '@repo/mantine';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
@@ -16,7 +15,7 @@ export function Dashboard() {
   const [selectedTask, setSelectedTask] = useState<any>(null);
   const [detailOpened, setDetailOpened] = useState(false);
 
-  const columns = useTaskColumns({ 
+  const columns = useTaskColumns({
     excludeFields: ['user', 'category', 'priority', 'updatedAt'],
     onView: (task) => {
       setSelectedTask(task);
@@ -69,7 +68,7 @@ export function Dashboard() {
             </Button>
           </Group>
         </Box>
-        
+
         <DataTable
           columns={columns}
           data={recentTasks}
@@ -78,10 +77,10 @@ export function Dashboard() {
           minHeight={150}
         />
       </Paper>
-      <TaskDetailModal 
-        opened={detailOpened} 
-        onClose={() => setDetailOpened(false)} 
-        task={selectedTask} 
+      <TaskDetailModal
+        opened={detailOpened}
+        onClose={() => setDetailOpened(false)}
+        task={selectedTask}
       />
     </>
   );

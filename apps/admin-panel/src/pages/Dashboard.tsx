@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { SimpleGrid, Paper, Text, Group, Box, Title, ThemeIcon, Badge, LoadingOverlay } from '@mantine/core';
-import { IconUser, IconListCheck, IconChecks, IconX } from '@tabler/icons-react';
+import { SimpleGrid, Paper, Text, Group, Box, Title, Badge, LoadingOverlay, IconListCheck, IconChecks, IconX } from '@repo/mantine';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { fetchAdminStats } from '@/store/slices/statsSlice';
 import { useTranslation } from 'react-i18next';

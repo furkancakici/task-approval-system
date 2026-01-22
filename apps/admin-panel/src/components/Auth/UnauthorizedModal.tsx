@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Stack, Center, Text, Anchor, Box } from '@mantine/core';
-import { IconAlertCircle } from '@tabler/icons-react';
+import { Stack, Center, Text, Anchor, Box, IconAlertCircle } from '@repo/mantine';
 
 interface UnauthorizedModalProps {
     onTimeout: () => void;

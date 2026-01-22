@@ -3,8 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { DashboardLayout } from '@repo/ui';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { logout } from '@/store/slices/authSlice';
-import { IconListCheck, IconPlus, IconLayoutDashboard } from '@tabler/icons-react';
-import { Text } from '@mantine/core';
+import { Text, IconListCheck, IconPlus, IconLayoutDashboard } from '@repo/mantine';
 
 export function UserLayout() {
   const { t, i18n } = useTranslation();
@@ -19,23 +18,23 @@ export function UserLayout() {
   };
 
   const navLinks = [
-    { 
-      label: t('common.dashboard'), 
-      icon: IconLayoutDashboard, 
+    {
+      label: t('common.dashboard'),
+      icon: IconLayoutDashboard,
       active: location.pathname === '/dashboard',
-      onClick: () => navigate('/dashboard') 
+      onClick: () => navigate('/dashboard')
     },
-    { 
-      label: t('common.myTasks'), 
-      icon: IconListCheck, 
+    {
+      label: t('common.myTasks'),
+      icon: IconListCheck,
       active: location.pathname === '/tasks',
-      onClick: () => navigate('/tasks') 
+      onClick: () => navigate('/tasks')
     },
-    { 
-      label: t('common.createTask'), 
-      icon: IconPlus, 
+    {
+      label: t('common.createTask'),
+      icon: IconPlus,
       active: location.pathname === '/tasks/create',
-      onClick: () => navigate('/tasks/create') 
+      onClick: () => navigate('/tasks/create')
     },
   ];
 

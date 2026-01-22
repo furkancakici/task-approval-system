@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Title, Paper, TextInput, Select, Group, Button, Box } from '@mantine/core';
+import { Title, Paper, TextInput, Select, Group, Button, Box, IconSearch, IconX, useDebouncedValue } from '@repo/mantine';
 import { useTranslation } from 'react-i18next';
-import { IconSearch, IconX } from '@tabler/icons-react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchMyTasks } from '@/store/slices/tasksSlice';
 import { TaskStatus, TaskPriority, TaskCategory } from '@repo/types';
 import { DataTable, useTaskColumns, TaskDetailModal } from '@repo/ui';
-import { useDebouncedValue } from '@mantine/hooks';
 
 export function MyTasks() {
   const { t } = useTranslation();
@@ -15,7 +13,7 @@ export function MyTasks() {
   const [selectedTask, setSelectedTask] = useState<any>(null);
   const [detailOpened, setDetailOpened] = useState(false);
 
-  const columns = useTaskColumns({ 
+  const columns = useTaskColumns({
     excludeFields: ['user'],
     onView: (task) => {
       setSelectedTask(task);
@@ -28,39 +26,39 @@ export function MyTasks() {
   const [status, setStatus] = useState<string | null>(null);
   const [priority, setPriority] = useState<string | null>(null);
   const [category, setCategory] = useState<string | null>(null);
-  
+
   const [debouncedSearch] = useDebouncedValue(search, 500);
 
   useEffect(() => {
-    dispatch(fetchMyTasks({ 
+    dispatch(fetchMyTasks({
       search: debouncedSearch || undefined,
       status: status as TaskStatus | undefined,
       priority: priority as TaskPriority | undefined,
       category: category as TaskCategory | undefined,
-      page: 1, 
-      limit: 10 
+      page: 1,
+      limit: 10
     }));
   }, [dispatch, debouncedSearch, status, priority, category]);
 
   const handlePageChange = (page: number) => {
-    dispatch(fetchMyTasks({ 
+    dispatch(fetchMyTasks({
       search: debouncedSearch || undefined,
       status: status as TaskStatus | undefined,
       priority: priority as TaskPriority | undefined,
       category: category as TaskCategory | undefined,
-      page, 
-      limit: meta?.limit || 10 
+      page,
+      limit: meta?.limit || 10
     }));
   };
 
   const handleLimitChange = (limit: number) => {
-    dispatch(fetchMyTasks({ 
+    dispatch(fetchMyTasks({
       search: debouncedSearch || undefined,
       status: status as TaskStatus | undefined,
       priority: priority as TaskPriority | undefined,
       category: category as TaskCategory | undefined,
-      page: 1, 
-      limit 
+      page: 1,
+      limit
     }));
   };
 
@@ -80,41 +78,41 @@ export function MyTasks() {
 
         <Box p="md" style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}>
           <Group align="end">
-              <TextInput
+            <TextInput
               label={t('common.actions')}
               placeholder={t('tasks.searchPlaceholder')}
               leftSection={<IconSearch size={16} />}
               value={search}
               onChange={(e) => setSearch(e.currentTarget.value)}
               style={{ flex: 1 }}
-              />
-              <Select
+            />
+            <Select
               label={t('common.status')}
               placeholder={t('tasks.filterStatus')}
               data={Object.values(TaskStatus).map(s => ({ value: s, label: t(`enums.status.${s}`) }))}
               value={status}
               onChange={setStatus}
               clearable
-              />
-              <Select
+            />
+            <Select
               label={t('common.priority')}
               placeholder={t('tasks.filterPriority')}
               data={Object.values(TaskPriority).map(p => ({ value: p, label: t(`enums.priority.${p}`) }))}
               value={priority}
               onChange={setPriority}
               clearable
-              />
-              <Select
+            />
+            <Select
               label={t('common.category')}
               placeholder={t('tasks.category')}
               data={Object.values(TaskCategory).map(c => ({ value: c, label: t(`enums.category.${c}`) }))}
               value={category}
               onChange={setCategory}
               clearable
-              />
-              <Button variant="light" color="gray" onClick={clearFilters} leftSection={<IconX size={16}/>}>
-                  {t('tasks.clearFilters')}
-              </Button>
+            />
+            <Button variant="light" color="gray" onClick={clearFilters} leftSection={<IconX size={16} />}>
+              {t('tasks.clearFilters')}
+            </Button>
           </Group>
         </Box>
 
@@ -133,10 +131,10 @@ export function MyTasks() {
           } : undefined}
         />
       </Paper>
-      <TaskDetailModal 
-        opened={detailOpened} 
-        onClose={() => setDetailOpened(false)} 
-        task={selectedTask} 
+      <TaskDetailModal
+        opened={detailOpened}
+        onClose={() => setDetailOpened(false)}
+        task={selectedTask}
       />
     </>
   );

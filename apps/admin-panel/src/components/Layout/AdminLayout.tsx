@@ -2,8 +2,7 @@ import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { DashboardLayout } from '@repo/ui';
 import { useAppSelector } from '@/store/hooks';
-import { IconDashboard, IconUsers, IconListCheck } from '@tabler/icons-react';
-import { Text } from '@mantine/core';
+import { IconDashboard, IconUsers, IconListCheck, Text } from '@repo/mantine';
 import { useUnauthorizedAccess } from '@/hooks/useUnauthorizedAccess';
 
 export function AdminLayout() {

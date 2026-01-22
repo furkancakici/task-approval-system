@@ -1,4 +1,4 @@
-import { Pagination, Group, Text, Select } from '@mantine/core';
+import { Pagination, Group, Text, Select } from '@repo/mantine';
 import { useTranslation } from 'react-i18next';
 
 interface TablePaginationProps {

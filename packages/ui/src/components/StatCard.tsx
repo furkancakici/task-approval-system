@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper, Text, Group, ThemeIcon } from '@mantine/core';
+import { Paper, Text, Group, ThemeIcon } from '@repo/mantine';
 
 export interface StatCardProps {
   label: string;

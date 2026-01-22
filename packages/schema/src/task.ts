@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from '@repo/shared';
 import { TaskStatus, TaskPriority, TaskCategory } from '@repo/types';
 
 export const CreateTaskSchema = z.object({
