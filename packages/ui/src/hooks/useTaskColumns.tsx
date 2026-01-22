@@ -97,7 +97,7 @@ export function useTaskColumns(options: UseTaskColumnsOptions = {}) {
       render: (task) => (
         <Group gap="xs">
           {options.onView && (
-            <Tooltip label={t('common.view')}>
+            <Tooltip label={t('common.view')} multiline w={220}>
               <ActionIcon variant="light" color="blue" onClick={() => options.onView?.(task)}>
                 <IconEye size={16} />
               </ActionIcon>

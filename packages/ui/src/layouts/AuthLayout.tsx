@@ -28,7 +28,7 @@ export function AuthLayout({ children, title, subtitle, currentLanguage, onLangu
 
       {/* Left side: Image/Abstract */}
       <Box
-        visibleFrom="md"
+        visibleFrom="xs"
         style={{
           flex: 1,
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${loginBg})`,
