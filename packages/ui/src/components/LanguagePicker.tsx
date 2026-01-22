@@ -11,11 +11,11 @@ export function LanguagePicker({ currentLanguage, onLanguageChange }: LanguagePi
   return (
     <Menu shadow="md" width={120}>
       <Menu.Target>
-        <ActionIcon variant="outline" size="lg">
+        <ActionIcon variant="default" size="lg">
           {currentLanguage === 'tr' ? (
-            <Text>🇹🇷</Text>
+            <Text size="xl">🇹🇷</Text>
           ) : (
-            <Text>🇺🇸</Text>
+            <Text size="xl">🇺🇸</Text>
           )}
         </ActionIcon>
       </Menu.Target>
@@ -23,13 +23,13 @@ export function LanguagePicker({ currentLanguage, onLanguageChange }: LanguagePi
       <Menu.Dropdown>
         <Menu.Item onClick={() => onLanguageChange('tr')}>
           <Group gap={5}>
-            <Text>🇹🇷</Text> 
+            <Text size="xl">🇹🇷</Text>
             <Text>{t('common.tr')}</Text>
           </Group>
         </Menu.Item>
         <Menu.Item onClick={() => onLanguageChange('en')}>
           <Group gap={5}>
-            <Text>🇺🇸</Text> 
+            <Text size="xl">🇺🇸</Text>
             <Text>{t('common.en')}</Text>
           </Group>
         </Menu.Item>

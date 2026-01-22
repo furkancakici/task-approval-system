@@ -15,7 +15,7 @@ export function Dashboard() {
   const [selectedTask, setSelectedTask] = useState<any>(null);
   const [detailOpened, setDetailOpened] = useState(false);
 
-  const columns = useTaskColumns({ 
+  const columns = useTaskColumns({
     excludeFields: ['category', 'priority', 'updatedAt'],
     onView: (task) => {
       setSelectedTask(task);
@@ -37,7 +37,7 @@ export function Dashboard() {
     <Box pos="relative">
       <LoadingOverlay visible={loading} overlayProps={{ blur: 2 }} />
       <Title order={2} mb="xl">{t('dashboard.welcome', { name: user?.name || 'Admin' })}</Title>
-      
+
       <SimpleGrid cols={{ base: 1, sm: 4 }} mb="lg" style={{ alignItems: 'stretch' }}>
         {statsData.map((stat) => (
           <StatCard key={stat.label} {...stat} />
@@ -53,14 +53,14 @@ export function Dashboard() {
                   <Text size="10px" c="dimmed" tt="uppercase" fw={700} mb={2}>
                     {t(`enums.priority.${priority}`)}
                   </Text>
-                  <Badge 
-                    size="sm" 
-                    variant="filled" 
+                  <Badge
+                    size="md"
+                    variant="filled"
                     radius="xl"
                     color={
-                      priority === 'urgent' ? 'red' : 
-                      priority === 'high' ? 'orange' : 
-                      priority === 'normal' ? 'blue' : 'teal'
+                      priority === 'urgent' ? 'red' :
+                        priority === 'high' ? 'orange' :
+                          priority === 'normal' ? 'blue' : 'teal'
                     }
                   >
                     {count}
@@ -85,10 +85,10 @@ export function Dashboard() {
         />
       </Paper>
 
-      <TaskDetailModal 
-        opened={detailOpened} 
-        onClose={() => setDetailOpened(false)} 
-        task={selectedTask} 
+      <TaskDetailModal
+        opened={detailOpened}
+        onClose={() => setDetailOpened(false)}
+        task={selectedTask}
       />
     </Box>
   );

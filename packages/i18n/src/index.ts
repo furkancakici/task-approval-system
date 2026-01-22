@@ -31,6 +31,7 @@ const resources = {
         tr: 'Turkish',
         en: 'English',
         view: 'View',
+        totalItems: 'Total {{total}} items',
       },
       auth: {
         email: 'Email',
@@ -176,6 +177,7 @@ const resources = {
         tr: 'Türkçe',
         en: 'İngilizce',
         view: 'Görüntüle',
+        totalItems: 'Toplam {{total}} kayıt',
       },
       auth: {
         email: 'E-posta',

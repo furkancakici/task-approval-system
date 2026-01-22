@@ -33,7 +33,7 @@ export const adminService = {
       }),
       prisma.task.findMany({
         take: 5,
-        orderBy: { createdAt: 'desc' },
+        orderBy: { updatedAt: 'desc' },
         include: {
           user: {
             select: { name: true, email: true }

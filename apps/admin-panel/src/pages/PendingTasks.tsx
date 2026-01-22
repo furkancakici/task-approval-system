@@ -25,39 +25,39 @@ export function PendingTasks() {
   const [search, setSearch] = useState('');
   const [priority, setPriority] = useState<string | null>(null);
   const [category, setCategory] = useState<string | null>(null);
-  
+
   const [debouncedSearch] = useDebouncedValue(search, 500);
 
   useEffect(() => {
-    dispatch(fetchTasks({ 
-      status: TaskStatus.PENDING, 
+    dispatch(fetchTasks({
+      status: TaskStatus.PENDING,
       search: debouncedSearch || undefined,
       priority: priority as TaskPriority | undefined,
       category: category as TaskCategory | undefined,
-      page: 1, 
-      limit: 10 
+      page: 1,
+      limit: 10
     }));
   }, [dispatch, debouncedSearch, priority, category]);
 
   const handlePageChange = (page: number) => {
-    dispatch(fetchTasks({ 
-      status: TaskStatus.PENDING, 
+    dispatch(fetchTasks({
+      status: TaskStatus.PENDING,
       search: debouncedSearch || undefined,
       priority: priority as TaskPriority | undefined,
       category: category as TaskCategory | undefined,
-      page, 
-      limit: meta?.limit || 10 
+      page,
+      limit: meta?.limit || 10
     }));
   };
 
   const handleLimitChange = (limit: number) => {
-    dispatch(fetchTasks({ 
-      status: TaskStatus.PENDING, 
+    dispatch(fetchTasks({
+      status: TaskStatus.PENDING,
       search: debouncedSearch || undefined,
       priority: priority as TaskPriority | undefined,
       category: category as TaskCategory | undefined,
-      page: 1, 
-      limit 
+      page: 1,
+      limit
     }));
   };
 
@@ -81,30 +81,30 @@ export function PendingTasks() {
       onCancel: () => console.log('Cancel'),
       onConfirm: async () => {
         try {
-            await dispatch(updateTaskStatus({
-                id,
-                data: { status: TaskStatus.APPROVED }
-            })).unwrap();
-            notifications.show({
-                title: t('common.success'),
-                message: t('tasks.approveSuccess'),
-                color: 'green'
-            });
-            // Refresh list
-            dispatch(fetchTasks({ 
-                status: TaskStatus.PENDING, 
-                search: debouncedSearch || undefined,
-                priority: priority as TaskPriority | undefined,
-                category: category as TaskCategory | undefined,
-                page: meta?.page || 1, 
-                limit: meta?.limit || 10 
-            }));
+          await dispatch(updateTaskStatus({
+            id,
+            data: { status: TaskStatus.APPROVED }
+          })).unwrap();
+          notifications.show({
+            title: t('common.success'),
+            message: t('tasks.approveSuccess'),
+            color: 'green'
+          });
+          // Refresh list
+          dispatch(fetchTasks({
+            status: TaskStatus.PENDING,
+            search: debouncedSearch || undefined,
+            priority: priority as TaskPriority | undefined,
+            category: category as TaskCategory | undefined,
+            page: meta?.page || 1,
+            limit: meta?.limit || 10
+          }));
         } catch (error) {
-            notifications.show({
-                title: t('common.error'),
-                message: t('tasks.approveError'),
-                color: 'red'
-            });
+          notifications.show({
+            title: t('common.error'),
+            message: t('tasks.approveError'),
+            color: 'red'
+          });
         }
       },
     });
@@ -115,43 +115,43 @@ export function PendingTasks() {
     setRejectModalOpen(true);
   };
 
-  const taskColumns = useTaskColumns({ excludeFields: ['status', 'updatedAt'] });
+  const taskColumns = useTaskColumns({ excludeFields: ['status', 'updatedAt', 'actions'] });
 
   const columns: Column<Task>[] = [
     ...taskColumns,
-    { 
-      key: 'actions', 
+    {
+      key: 'actions',
       header: t('tasks.actions'),
       render: (task) => (
         <Group gap="xs">
           <Tooltip label={t('common.view')}>
-            <ActionIcon 
-                color="blue" 
-                variant="light" 
-                onClick={() => {
-                  setSelectedTask(task);
-                  setDetailOpened(true);
-                }}
+            <ActionIcon
+              color="blue"
+              variant="light"
+              onClick={() => {
+                setSelectedTask(task);
+                setDetailOpened(true);
+              }}
             >
               <IconEye size={18} />
             </ActionIcon>
           </Tooltip>
           <Tooltip label={user?.role === UserRole.VIEWER ? t('tasks.viewersCannotApprove') : t('tasks.approve')}>
-            <ActionIcon 
-                color="green" 
-                variant="light" 
-                onClick={() => handleApprove(task.id)}
-                disabled={user?.role === UserRole.VIEWER}
+            <ActionIcon
+              color="green"
+              variant="light"
+              onClick={() => handleApprove(task.id)}
+              disabled={user?.role === UserRole.VIEWER}
             >
               <IconCheck size={18} />
             </ActionIcon>
           </Tooltip>
           <Tooltip label={user?.role === UserRole.VIEWER ? t('tasks.viewersCannotReject') : t('tasks.reject')}>
-            <ActionIcon 
-                color="red" 
-                variant="light" 
-                onClick={() => openRejectModal(task.id)}
-                disabled={user?.role === UserRole.VIEWER}
+            <ActionIcon
+              color="red"
+              variant="light"
+              onClick={() => openRejectModal(task.id)}
+              disabled={user?.role === UserRole.VIEWER}
             >
               <IconX size={18} />
             </ActionIcon>
@@ -170,33 +170,33 @@ export function PendingTasks() {
 
         <Box p="md" style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}>
           <Group align="end">
-              <TextInput
+            <TextInput
               label={t('common.actions')}
               placeholder={t('tasks.searchPlaceholder')}
               leftSection={<IconSearch size={16} />}
               value={search}
               onChange={(e) => setSearch(e.currentTarget.value)}
               style={{ flex: 1 }}
-              />
-              <Select
+            />
+            <Select
               label={t('common.priority')}
               placeholder={t('tasks.filterPriority')}
               data={Object.values(TaskPriority).map(p => ({ value: p, label: t(`enums.priority.${p}`) }))}
               value={priority}
               onChange={setPriority}
               clearable
-              />
-              <Select
+            />
+            <Select
               label={t('common.category')}
               placeholder={t('tasks.category')}
               data={Object.values(TaskCategory).map(c => ({ value: c, label: t(`enums.category.${c}`) }))}
               value={category}
               onChange={setCategory}
               clearable
-              />
-              <Button variant="light" color="gray" onClick={clearFilters} leftSection={<IconX size={16}/>}>
-                  {t('tasks.clearFilters')}
-              </Button>
+            />
+            <Button variant="light" color="gray" onClick={clearFilters} leftSection={<IconX size={16} />}>
+              {t('tasks.clearFilters')}
+            </Button>
           </Group>
         </Box>
 
@@ -216,28 +216,28 @@ export function PendingTasks() {
         />
       </Paper>
 
-      <RejectTaskModal 
-        opened={rejectModalOpen} 
-        onClose={() => { 
-            setRejectModalOpen(false); 
-            setSelectedTaskId(null); 
-            // Refresh list on close
-            dispatch(fetchTasks({ 
-                status: TaskStatus.PENDING, 
-                search: debouncedSearch || undefined,
-                priority: priority as TaskPriority | undefined,
-                category: category as TaskCategory | undefined,
-                page: meta?.page || 1, 
-                limit: meta?.limit || 10 
-            }));
+      <RejectTaskModal
+        opened={rejectModalOpen}
+        onClose={() => {
+          setRejectModalOpen(false);
+          setSelectedTaskId(null);
+          // Refresh list on close
+          dispatch(fetchTasks({
+            status: TaskStatus.PENDING,
+            search: debouncedSearch || undefined,
+            priority: priority as TaskPriority | undefined,
+            category: category as TaskCategory | undefined,
+            page: meta?.page || 1,
+            limit: meta?.limit || 10
+          }));
         }}
         taskId={selectedTaskId}
       />
 
-      <TaskDetailModal 
-        opened={detailOpened} 
-        onClose={() => setDetailOpened(false)} 
-        task={selectedTask} 
+      <TaskDetailModal
+        opened={detailOpened}
+        onClose={() => setDetailOpened(false)}
+        task={selectedTask}
       />
     </>
   );
