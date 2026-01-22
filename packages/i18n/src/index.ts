@@ -47,7 +47,9 @@ const resources = {
         welcome: 'Welcome back, {{name}}!',
         totalUsers: 'Total Users',
         pendingTasks: 'Pending Tasks',
-        completedTasks: 'Completed Tasks',
+        todayApproved: 'Approved Today',
+        todayRejected: 'Rejected Today',
+        priorityDistribution: 'Priority Distribution',
         recentActivity: 'Recent Activity',
       },
       tasks: {
@@ -89,6 +91,7 @@ const resources = {
         rejectionReasonLabel: 'Rejection Reason',
         rejectionReasonPlaceholder: 'Please explain why this task is being rejected...',
         rejectionReasonMinLength: 'Reason must be at least 5 characters long',
+        taskDetail: 'Task Details',
       },
       users: {
         createUserTitle: 'Create New User',
@@ -97,8 +100,12 @@ const resources = {
         emailPlaceholder: 'john@example.com',
         passwordPlaceholder: 'Secure password',
         roleLabel: 'Role',
+        editUserTitle: 'Edit User',
         createUserSuccess: 'User created successfully',
         createUserError: 'Failed to create user',
+        updateUserSuccess: 'User updated successfully',
+        updateUserError: 'Failed to update user',
+        passwordUpdateDescription: 'Leave empty to keep current password',
       },
       validation: {
         titleMin: 'Title must be at least 3 characters',
@@ -180,7 +187,9 @@ const resources = {
         welcome: 'Tekrar hoş geldin, {{name}}!',
         totalUsers: 'Toplam Kullanıcı',
         pendingTasks: 'Bekleyen Talepler',
-        completedTasks: 'Tamamlanan Talepler',
+        todayApproved: 'Bugün Onaylanan',
+        todayRejected: 'Bugün Reddedilen',
+        priorityDistribution: 'Öncelik Dağılımı',
         recentActivity: 'Son Aktiviteler',
       },
       tasks: {
@@ -222,6 +231,7 @@ const resources = {
         rejectionReasonLabel: 'Red Nedeni',
         rejectionReasonPlaceholder: 'Lütfen bu talebin neden reddedildiğini açıklayın...',
         rejectionReasonMinLength: 'Neden en az 5 karakter olmalıdır',
+        taskDetail: 'Talep Detayları',
       },
       users: {
         createUserTitle: 'Yeni Kullanıcı Oluştur',
@@ -230,8 +240,12 @@ const resources = {
         emailPlaceholder: 'ahmet@ornek.com',
         passwordPlaceholder: 'Güvenli şifre',
         roleLabel: 'Rol',
+        editUserTitle: 'Kullanıcı Düzenle',
         createUserSuccess: 'Kullanıcı başarıyla oluşturuldu',
         createUserError: 'Kullanıcı oluşturulurken hata oluştu',
+        updateUserSuccess: 'Kullanıcı başarıyla güncellendi',
+        updateUserError: 'Kullanıcı güncellenirken hata oluştu',
+        passwordUpdateDescription: 'Şifreyi değiştirmek istemiyorsanız boş bırakın',
       },
       validation: {
         titleMin: 'Başlık en az 3 karakter olmalıdır',

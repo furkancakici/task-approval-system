@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Title, SimpleGrid, Paper, Text, Group, Button, Badge, LoadingOverlay, Box } from '@mantine/core';
 import { IconCheck, IconClock, IconX, IconPlus, IconListCheck } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
@@ -6,13 +6,23 @@ import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchMyTasks } from '@/store/slices/tasksSlice';
 import { TaskStatus, type Task } from '@repo/types';
-import { DataTable, type Column } from '@repo/ui';
+import { DataTable, useTaskColumns, TaskDetailModal, StatCard } from '@repo/ui';
 
 export function Dashboard() {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { tasks, loading } = useAppSelector((state) => state.tasks);
+  const [selectedTask, setSelectedTask] = useState<any>(null);
+  const [detailOpened, setDetailOpened] = useState(false);
+
+  const columns = useTaskColumns({ 
+    excludeFields: ['user', 'category', 'priority', 'updatedAt'],
+    onView: (task) => {
+      setSelectedTask(task);
+      setDetailOpened(true);
+    }
+  });
 
   useEffect(() => {
     dispatch(fetchMyTasks());
@@ -25,80 +35,28 @@ export function Dashboard() {
     rejected: tasks.filter(t => t.status === TaskStatus.REJECTED).length,
   };
 
-  const recentTasks = tasks.slice(0, 5);
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case TaskStatus.APPROVED: return 'green';
-      case TaskStatus.REJECTED: return 'red';
-      case TaskStatus.PENDING: return 'yellow';
-      default: return 'teal';
-    }
-  };
-
-  const columns: Column<Task>[] = [
-    { key: 'title', header: t('tasks.title') },
-    { 
-      key: 'status', 
-      header: t('common.status'),
-      render: (task) => (
-        <Badge color={getStatusColor(task.status)} variant="outline">
-          {t(`enums.status.${task.status}`)}
-        </Badge>
-      )
-    },
-    { 
-      key: 'createdAt', 
-      header: t('common.createdAt'),
-      render: (task) => new Date(task.createdAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })
-    }
+  const statsData = [
+    { label: t('common.total'), value: stats.total, icon: IconListCheck, color: 'blue' },
+    { label: t('enums.status.pending'), value: stats.pending, icon: IconClock, color: 'orange' },
+    { label: t('enums.status.approved'), value: stats.approved, icon: IconCheck, color: 'green' },
+    { label: t('enums.status.rejected'), value: stats.rejected, icon: IconX, color: 'red' },
   ];
+
+  const recentTasks = tasks.slice(0, 5);
 
   return (
     <>
-      <Group justify="space-between" mb="xl">
+      <Group justify="space-between" mb="lg">
         <Title order={2}>{t('common.dashboard')}</Title>
         <Button leftSection={<IconPlus size={18} />} onClick={() => navigate('/tasks/create')}>
           {t('common.createTask')}
         </Button>
       </Group>
 
-      <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="md" mb="xl">
-        <Paper withBorder p="md" radius="md">
-          <Group justify="space-between">
-            <Text size="xs" color="dimmed" fw={700} tt="uppercase">
-              {t('dashboard.pendingTasks')}
-            </Text>
-            <IconClock size={22} color="orange" />
-          </Group>
-          <Group align="flex-end" gap="xs" mt={25}>
-            <Text fw={700} size="xl">{stats.pending}</Text>
-          </Group>
-        </Paper>
-
-        <Paper withBorder p="md" radius="md">
-          <Group justify="space-between">
-            <Text size="xs" color="dimmed" fw={700} tt="uppercase">
-              {t('dashboard.completedTasks')} (OK)
-            </Text>
-            <IconCheck size={22} color="green" />
-          </Group>
-          <Group align="flex-end" gap="xs" mt={25}>
-            <Text fw={700} size="xl">{stats.approved}</Text>
-          </Group>
-        </Paper>
-
-        <Paper withBorder p="md" radius="md">
-          <Group justify="space-between">
-            <Text size="xs" color="dimmed" fw={700} tt="uppercase">
-              {t('common.status')} (X)
-            </Text>
-            <IconX size={22} color="red" />
-          </Group>
-          <Group align="flex-end" gap="xs" mt={25}>
-            <Text fw={700} size="xl">{stats.rejected}</Text>
-          </Group>
-        </Paper>
+      <SimpleGrid cols={{ base: 1, sm: 4 }} spacing="md" mb="lg">
+        {statsData.map((stat, index) => (
+          <StatCard key={index} {...stat} />
+        ))}
       </SimpleGrid>
 
       <Paper withBorder radius="md" pos="relative">
@@ -120,6 +78,11 @@ export function Dashboard() {
           minHeight={150}
         />
       </Paper>
+      <TaskDetailModal 
+        opened={detailOpened} 
+        onClose={() => setDetailOpened(false)} 
+        task={selectedTask} 
+      />
     </>
   );
 }

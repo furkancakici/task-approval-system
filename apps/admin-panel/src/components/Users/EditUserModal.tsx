@@ -1,53 +1,71 @@
 import { Modal, TextInput, PasswordInput, Select, Button, Group } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { zodResolver } from '@/utils/form-resolver';
-import { CreateUserSchema, type CreateUserInput } from '@repo/schema';
-import { UserRole } from '@repo/types';
+import { UpdateUserSchema, type UpdateUserInput } from '@repo/schema';
+import { UserRole, type User } from '@repo/types';
 import { useAppDispatch } from '@/store/hooks';
-import { createUser } from '@/store/slices/usersSlice';
+import { updateUser } from '@/store/slices/usersSlice';
 import { notifications } from '@mantine/notifications';
 import { useTranslation } from 'react-i18next';
+import { useEffect } from 'react';
 
-interface CreateUserModalProps {
+interface EditUserModalProps {
   opened: boolean;
   onClose: () => void;
+  user: User | null;
 }
 
-export function CreateUserModal({ opened, onClose }: CreateUserModalProps) {
+export function EditUserModal({ opened, onClose, user }: EditUserModalProps) {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   
-  const form = useForm<CreateUserInput>({
+  const form = useForm<UpdateUserInput>({
     initialValues: {
       name: '',
       email: '',
       password: '',
       role: UserRole.VIEWER,
     },
-    validate: zodResolver(CreateUserSchema),
+    validate: zodResolver(UpdateUserSchema),
   });
 
-  const handleSubmit = async (values: CreateUserInput) => {
+  useEffect(() => {
+    if (user) {
+      form.setValues({
+        name: user.name,
+        email: user.email,
+        role: user.role as UserRole,
+        password: '', // Password stays empty unless changing
+      });
+    }
+  }, [user]);
+
+  const handleSubmit = async (values: UpdateUserInput) => {
+    if (!user) return;
+    
     try {
-      await dispatch(createUser(values)).unwrap();
+      // Only send password if it's not empty
+      const data = { ...values };
+      if (!data.password) delete data.password;
+
+      await dispatch(updateUser({ id: user.id, data })).unwrap();
       notifications.show({
         title: t('common.success'),
-        message: t('users.createUserSuccess'),
+        message: t('users.updateUserSuccess'),
         color: 'green',
       });
-      form.reset();
       onClose();
     } catch (error) {
       notifications.show({
         title: t('common.error'),
-        message: t('users.createUserError'),
+        message: t('users.updateUserError'),
         color: 'red',
       });
     }
   };
 
   return (
-    <Modal opened={opened} onClose={onClose} title={t('users.createUserTitle')} centered>
+    <Modal opened={opened} onClose={onClose} title={t('users.editUserTitle')} centered>
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <TextInput
           label={t('users.nameLabel')}
@@ -68,7 +86,7 @@ export function CreateUserModal({ opened, onClose }: CreateUserModalProps) {
         <PasswordInput
           label={t('auth.password')}
           placeholder={t('users.passwordPlaceholder')}
-          withAsterisk
+          description={t('users.passwordUpdateDescription')}
           mb="md"
           {...form.getInputProps('password')}
         />
@@ -88,7 +106,7 @@ export function CreateUserModal({ opened, onClose }: CreateUserModalProps) {
 
         <Group justify="flex-end">
           <Button variant="default" onClick={onClose}>{t('common.cancel')}</Button>
-          <Button type="submit">{t('common.create')}</Button>
+          <Button type="submit">{t('common.save')}</Button>
         </Group>
       </form>
     </Modal>

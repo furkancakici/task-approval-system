@@ -42,7 +42,8 @@ export function AdminLayout() {
       label: t('common.tasks'), 
       icon: IconListCheck, 
       active: location.pathname === '/tasks/all',
-      onClick: () => navigate('/tasks/all') 
+      onClick: () => navigate('/tasks/all'),
+      roles: ['Admin', 'Moderator']
     },
   ].filter(link => !link.roles || (user && link.roles.includes(user.role)));
 

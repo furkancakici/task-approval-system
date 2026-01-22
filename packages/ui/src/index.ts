@@ -6,3 +6,8 @@ export * from './components/ColorSchemeToggle';
 export * from './components/LanguagePicker';
 export * from './components/TablePagination';
 export * from './components/DataTable';
+export * from './columns/task';
+export * from './hooks/useTaskColumns';
+export * from './hooks/useUserColumns';
+export * from './components/TaskDetailModal';
+export * from './components/StatCard';

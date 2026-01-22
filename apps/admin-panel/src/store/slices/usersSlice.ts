@@ -32,6 +32,11 @@ export const deleteUser = createAsyncThunk('users/deleteUser', async (id: string
   return id;
 });
 
+export const updateUser = createAsyncThunk('users/updateUser', async ({ id, data }: { id: string; data: any }) => {
+  const response = await api.patch(`/users/${id}`, data);
+  return response.data;
+});
+
 const usersSlice = createSlice({
   name: 'users',
   initialState,
@@ -69,6 +74,15 @@ const usersSlice = createSlice({
         state.users = state.users.filter((user) => user.id !== action.payload);
         if (state.meta) {
             state.meta.total -= 1;
+        }
+      });
+
+    // Update User
+    builder
+      .addCase(updateUser.fulfilled, (state, action: PayloadAction<User>) => {
+        const index = state.users.findIndex((u) => u.id === action.payload.id);
+        if (index !== -1) {
+          state.users[index] = action.payload;
         }
       });
   },

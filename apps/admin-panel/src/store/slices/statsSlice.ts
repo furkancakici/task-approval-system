@@ -15,7 +15,9 @@ interface RecentActivity {
 interface AdminStats {
   totalUsers: number;
   pendingTasks: number;
-  completedTasks: number;
+  todayApproved: number;
+  todayRejected: number;
+  priorityStats: Record<string, number>;
   recentActivity: RecentActivity[];
 }
 

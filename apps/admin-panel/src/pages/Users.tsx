@@ -1,25 +1,30 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Title, Group, Button, ActionIcon, Badge, Paper, Text, Box, TextInput } from '@mantine/core';
+import { Title, Group, Button, ActionIcon, Paper, Text, Box, TextInput } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { useDisclosure, useDebouncedValue } from '@mantine/hooks';
 import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
-import { IconPlus, IconTrash, IconSearch, IconX } from '@tabler/icons-react';
+import { IconPlus, IconTrash, IconSearch, IconX, IconEdit } from '@tabler/icons-react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchUsers, deleteUser } from '@/store/slices/usersSlice';
 import { CreateUserModal } from '@/components/Users/CreateUserModal';
+import { EditUserModal } from '@/components/Users/EditUserModal';
 import { UserRole, type User } from '@repo/types';
-import { TablePagination, DataTable, type Column } from '@repo/ui';
+import { DataTable, useUserColumns, type Column } from '@repo/ui';
 
 export function Users() {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { users, loading, meta } = useAppSelector((state) => state.users);
   const [opened, { open, close }] = useDisclosure(false);
+  const [editOpened, { open: openEdit, close: closeEdit }] = useDisclosure(false);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const { user } = useAppSelector((state) => state.auth);
   const navigate = useNavigate();
+
+  const userColumns = useUserColumns();
 
   // Filters
   const [search, setSearch] = useState('');
@@ -55,6 +60,11 @@ export function Users() {
 
   const clearFilters = () => {
     setSearch('');
+  };
+
+  const handleEdit = (u: User) => {
+    setSelectedUser(u);
+    openEdit();
   };
 
   const handleDelete = (id: string) => {
@@ -103,29 +113,19 @@ export function Users() {
   };
 
   const columns: Column<User>[] = [
-    { key: 'name', header: t('tasks.creator') }, // Reusing translation or could use t('common.name') if exists
-    { key: 'email', header: t('auth.email') },
-    { 
-      key: 'role', 
-      header: t('common.status'), // Should ideally be common.role if available, using category for now or common.status
-      render: (u) => (
-        <Badge color={u.role === UserRole.ADMIN ? 'blue' : 'teal'}>
-          {t(`enums.role.${u.role}`)}
-        </Badge>
-      )
-    },
-    { 
-      key: 'createdAt', 
-      header: t('tasks.createdAt'),
-      render: (u) => new Date(u.createdAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })
-    },
+    ...userColumns,
     { 
       key: 'actions', 
       header: t('common.actions'),
       render: (u) => (
-        <ActionIcon color="red" variant="subtle" onClick={() => handleDelete(u.id)}>
-          <IconTrash size={16} />
-        </ActionIcon>
+        <Group gap="xs">
+          <ActionIcon color="blue" variant="subtle" onClick={() => handleEdit(u)}>
+            <IconEdit size={16} />
+          </ActionIcon>
+          <ActionIcon color="red" variant="subtle" onClick={() => handleDelete(u.id)}>
+            <IconTrash size={16} />
+          </ActionIcon>
+        </Group>
       )
     }
   ];
@@ -182,6 +182,14 @@ export function Users() {
             limit: meta?.limit || 10 
         }));
       }} />
+      <EditUserModal opened={editOpened} onClose={() => {
+        closeEdit();
+        dispatch(fetchUsers({ 
+            email: debouncedSearch || undefined,
+            page: meta?.page || 1, 
+            limit: meta?.limit || 10 
+        }));
+      }} user={selectedUser} />
     </>
   );
 }

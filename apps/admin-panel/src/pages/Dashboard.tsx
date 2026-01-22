@@ -1,100 +1,75 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { SimpleGrid, Paper, Text, Group, Box, Title, ThemeIcon, Badge, LoadingOverlay } from '@mantine/core';
-import { IconUser, IconListCheck, IconChecks } from '@tabler/icons-react';
+import { IconUser, IconListCheck, IconChecks, IconX } from '@tabler/icons-react';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { fetchAdminStats } from '@/store/slices/statsSlice';
 import { useTranslation } from 'react-i18next';
-import { DataTable, type Column } from '@repo/ui';
+import { DataTable, useTaskColumns, TaskDetailModal, StatCard } from '@repo/ui';
 
-interface StatProps {
-  label: string;
-  value: string;
-  icon: React.ElementType;
-  color: string;
-}
-
-function StatCard({ label, value, icon: Icon, color }: StatProps) {
-  return (
-    <Paper withBorder p="md" radius="md">
-      <Group justify="space-between">
-        <div>
-          <Text c="dimmed" tt="uppercase" fw={700} fz="xs">
-            {label}
-          </Text>
-          <Text fw={700} fz="xl">
-            {value}
-          </Text>
-        </div>
-        <ThemeIcon color={color} variant="light" size={38} radius="md">
-          <Icon style={{ width: '1.5rem', height: '1.5rem' }} stroke={1.5} />
-        </ThemeIcon>
-      </Group>
-    </Paper>
-  );
-}
 
 export function Dashboard() {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
   const { stats, loading } = useAppSelector((state) => state.stats);
+  const [selectedTask, setSelectedTask] = useState<any>(null);
+  const [detailOpened, setDetailOpened] = useState(false);
+
+  const columns = useTaskColumns({ 
+    excludeFields: ['category', 'priority', 'updatedAt'],
+    onView: (task) => {
+      setSelectedTask(task);
+      setDetailOpened(true);
+    }
+  });
 
   useEffect(() => {
     dispatch(fetchAdminStats());
   }, [dispatch]);
 
   const statsData = stats ? [
-    { label: t('dashboard.totalUsers'), value: stats.totalUsers.toString(), icon: IconUser, color: 'blue' },
     { label: t('dashboard.pendingTasks'), value: stats.pendingTasks.toString(), icon: IconListCheck, color: 'yellow' },
-    { label: t('dashboard.completedTasks'), value: stats.completedTasks.toString(), icon: IconChecks, color: 'teal' },
+    { label: t('dashboard.todayApproved'), value: stats.todayApproved.toString(), icon: IconChecks, color: 'green' },
+    { label: t('dashboard.todayRejected'), value: stats.todayRejected.toString(), icon: IconX, color: 'red' },
   ] : [];
-
-  const columns: Column<any>[] = [
-    { 
-      key: 'title', 
-      header: t('tasks.title'),
-      render: (activity) => <Text size="sm" fw={500}>{activity.title}</Text>
-    },
-    { 
-      key: 'user', 
-      header: t('common.users'),
-      render: (activity) => <Text size="sm">{activity.user.name}</Text>
-    },
-    { 
-      key: 'status', 
-      header: t('common.status'),
-      render: (activity) => (
-        <Badge 
-          variant="outline" 
-          color={
-            activity.status === 'pending' ? 'yellow' : 
-            activity.status === 'approved' ? 'green' : 'red'
-          }
-        >
-          {t(`enums.status.${activity.status}`)}
-        </Badge>
-      )
-    },
-    { 
-      key: 'createdAt', 
-      header: t('common.createdAt'),
-      render: (activity) => (
-        <Text size="sm" c="dimmed">
-          {new Date(activity.createdAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })}
-        </Text>
-      )
-    }
-  ];
 
   return (
     <Box pos="relative">
       <LoadingOverlay visible={loading} overlayProps={{ blur: 2 }} />
       <Title order={2} mb="xl">{t('dashboard.welcome', { name: user?.name || 'Admin' })}</Title>
       
-      <SimpleGrid cols={{ base: 1, sm: 3 }}>
+      <SimpleGrid cols={{ base: 1, sm: 4 }} mb="lg" style={{ alignItems: 'stretch' }}>
         {statsData.map((stat) => (
           <StatCard key={stat.label} {...stat} />
         ))}
+        {stats?.priorityStats && (
+          <Paper withBorder p="md" radius="md">
+            <Text c="dimmed" tt="uppercase" fw={700} fz="xs" mb="xs">
+              {t('dashboard.priorityDistribution')}
+            </Text>
+            <Group gap="xs">
+              {Object.entries(stats.priorityStats).map(([priority, count]) => (
+                <Box key={priority} style={{ textAlign: 'center' }}>
+                  <Text size="10px" c="dimmed" tt="uppercase" fw={700} mb={2}>
+                    {t(`enums.priority.${priority}`)}
+                  </Text>
+                  <Badge 
+                    size="sm" 
+                    variant="filled" 
+                    radius="xl"
+                    color={
+                      priority === 'urgent' ? 'red' : 
+                      priority === 'high' ? 'orange' : 
+                      priority === 'normal' ? 'blue' : 'teal'
+                    }
+                  >
+                    {count}
+                  </Badge>
+                </Box>
+              ))}
+            </Group>
+          </Paper>
+        )}
       </SimpleGrid>
 
       <Paper withBorder radius="md" mt="xl">
@@ -103,12 +78,18 @@ export function Dashboard() {
         </Box>
         <DataTable
           columns={columns}
-          data={stats?.recentActivity || []}
+          data={(stats?.recentActivity as any) || []}
           loading={loading}
           emptyMessage={t('tasks.noPendingTasks')}
           minHeight={150}
         />
       </Paper>
+
+      <TaskDetailModal 
+        opened={detailOpened} 
+        onClose={() => setDetailOpened(false)} 
+        task={selectedTask} 
+      />
     </Box>
   );
 }

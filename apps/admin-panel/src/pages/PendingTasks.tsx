@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Title, Badge, Paper, Button, Group, ActionIcon, Tooltip, Text, Box, TextInput, Select } from '@mantine/core';
 import { modals } from '@mantine/modals';
-import { IconCheck, IconSearch, IconX } from '@tabler/icons-react';
+import { IconCheck, IconSearch, IconX, IconEye } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchTasks, updateTaskStatus } from '@/store/slices/tasksSlice';
 import { TaskStatus, TaskPriority, TaskCategory, UserRole, type Task } from '@repo/types';
 import { RejectTaskModal } from '@/components/Tasks/RejectTaskModal';
 import { notifications } from '@mantine/notifications';
-import { TablePagination, DataTable, type Column } from '@repo/ui';
+import { DataTable, useTaskColumns, TaskDetailModal, type Column } from '@repo/ui';
 import { useDebouncedValue } from '@mantine/hooks';
 
 export function PendingTasks() {
@@ -18,6 +18,8 @@ export function PendingTasks() {
   const { user } = useAppSelector((state) => state.auth);
   const [rejectModalOpen, setRejectModalOpen] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [detailOpened, setDetailOpened] = useState(false);
 
   // Filters
   const [search, setSearch] = useState('');
@@ -113,56 +115,27 @@ export function PendingTasks() {
     setRejectModalOpen(true);
   };
 
-  const getCategoryColor = (category: string) => {
-    switch (category) {
-      case TaskCategory.TECHNICAL_SUPPORT: return 'blue';
-      case TaskCategory.LEAVE_REQUEST: return 'orange';
-      case TaskCategory.PURCHASE: return 'grape';
-      case TaskCategory.OTHER: return 'teal';
-      default: return 'teal';
-    }
-  };
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case TaskPriority.URGENT: return 'red';
-      case TaskPriority.HIGH: return 'orange';
-      case TaskPriority.NORMAL: return 'blue';
-      case TaskPriority.LOW: return 'teal';
-      default: return 'teal';
-    }
-  };
+  const taskColumns = useTaskColumns({ excludeFields: ['status', 'updatedAt'] });
 
   const columns: Column<Task>[] = [
-    { key: 'title', header: t('tasks.title') },
-    { 
-      key: 'category', 
-      header: t('tasks.category'),
-      render: (task) => (
-        <Badge color={getCategoryColor(task.category as TaskCategory)} variant="dot">
-          {t(`enums.category.${task.category}`)}
-        </Badge>
-      )
-    },
-    { 
-      key: 'priority', 
-      header: t('tasks.priority'),
-      render: (task) => (
-        <Badge color={getPriorityColor(task.priority)} variant="light">
-          {t(`enums.priority.${task.priority}`)}
-        </Badge>
-      )
-    },
-    { 
-      key: 'createdAt', 
-      header: t('tasks.createdAt'),
-      render: (task) => new Date(task.createdAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })
-    },
+    ...taskColumns,
     { 
       key: 'actions', 
       header: t('tasks.actions'),
       render: (task) => (
         <Group gap="xs">
+          <Tooltip label={t('common.view')}>
+            <ActionIcon 
+                color="blue" 
+                variant="light" 
+                onClick={() => {
+                  setSelectedTask(task);
+                  setDetailOpened(true);
+                }}
+            >
+              <IconEye size={18} />
+            </ActionIcon>
+          </Tooltip>
           <Tooltip label={user?.role === UserRole.VIEWER ? t('tasks.viewersCannotApprove') : t('tasks.approve')}>
             <ActionIcon 
                 color="green" 
@@ -259,6 +232,12 @@ export function PendingTasks() {
             }));
         }}
         taskId={selectedTaskId}
+      />
+
+      <TaskDetailModal 
+        opened={detailOpened} 
+        onClose={() => setDetailOpened(false)} 
+        task={selectedTask} 
       />
     </>
   );

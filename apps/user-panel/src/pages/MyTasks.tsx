@@ -1,17 +1,27 @@
 import { useEffect, useState } from 'react';
-import { Title, Badge, Paper, Tooltip, ActionIcon, Box, Text, Group, TextInput, Select, Button } from '@mantine/core';
+import { Title, Paper, TextInput, Select, Group, Button, Box } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
-import { IconInfoCircle, IconSearch, IconX } from '@tabler/icons-react';
+import { IconSearch, IconX } from '@tabler/icons-react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchMyTasks } from '@/store/slices/tasksSlice';
-import { TaskStatus, TaskPriority, TaskCategory, type Task } from '@repo/types';
-import { TablePagination, DataTable, type Column } from '@repo/ui';
+import { TaskStatus, TaskPriority, TaskCategory } from '@repo/types';
+import { DataTable, useTaskColumns, TaskDetailModal } from '@repo/ui';
 import { useDebouncedValue } from '@mantine/hooks';
 
 export function MyTasks() {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { tasks, loading, meta } = useAppSelector((state) => state.tasks);
+  const [selectedTask, setSelectedTask] = useState<any>(null);
+  const [detailOpened, setDetailOpened] = useState(false);
+
+  const columns = useTaskColumns({ 
+    excludeFields: ['user'],
+    onView: (task) => {
+      setSelectedTask(task);
+      setDetailOpened(true);
+    }
+  });
 
   // Filters
   const [search, setSearch] = useState('');
@@ -61,88 +71,8 @@ export function MyTasks() {
     setCategory(null);
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case TaskStatus.APPROVED: return 'green';
-      case TaskStatus.REJECTED: return 'red';
-      case TaskStatus.PENDING: return 'yellow';
-      default: return 'teal';
-    }
-  };
-
-  const getCategoryColor = (category: string) => {
-    switch (category) {
-      case TaskCategory.TECHNICAL_SUPPORT: return 'blue';
-      case TaskCategory.LEAVE_REQUEST: return 'orange';
-      case TaskCategory.PURCHASE: return 'grape';
-      case TaskCategory.OTHER: return 'teal';
-      default: return 'teal';
-    }
-  };
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case TaskPriority.URGENT: return 'red';
-      case TaskPriority.HIGH: return 'orange';
-      case TaskPriority.NORMAL: return 'blue';
-      case TaskPriority.LOW: return 'teal';
-      default: return 'teal';
-    }
-  };
-
-  const columns: Column<Task>[] = [
-    { key: 'title', header: t('tasks.title') },
-    { 
-      key: 'category', 
-      header: t('tasks.category'),
-      render: (task) => (
-        <Badge color={getCategoryColor(task.category as TaskCategory)} variant="dot">
-          {t(`enums.category.${task.category}`)}
-        </Badge>
-      )
-    },
-    { 
-      key: 'priority', 
-      header: t('tasks.priority'),
-      render: (task) => (
-        <Badge color={getPriorityColor(task.priority)} variant="light">
-          {t(`enums.priority.${task.priority}`)}
-        </Badge>
-      )
-    },
-    { 
-      key: 'status', 
-      header: t('common.status'),
-      render: (task) => (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Badge color={getStatusColor(task.status)} variant="outline">
-            {t(`enums.status.${task.status}`)}
-          </Badge>
-          {task.status === TaskStatus.REJECTED && task.rejectionReason && (
-            <Tooltip label={`${t('tasks.rejectionReasonLabel')}: ${task.rejectionReason}`} multiline w={220}>
-              <ActionIcon variant="subtle" color="red" size="sm">
-                <IconInfoCircle size={16} />
-              </ActionIcon>
-            </Tooltip>
-          )}
-        </div>
-      )
-    },
-    { 
-      key: 'createdAt', 
-      header: t('tasks.createdAt'),
-      render: (task) => new Date(task.createdAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })
-    },
-    { 
-      key: 'updatedAt', 
-      header: t('tasks.updatedAt'),
-      render: (task) => task.status !== TaskStatus.PENDING 
-        ? new Date(task.updatedAt).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })
-        : '-'
-    }
-  ];
-
   return (
+    <>
       <Paper withBorder radius="md">
         <Box p="md" style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}>
           <Title order={3} size="h4">{t('common.myTasks')}</Title>
@@ -203,5 +133,11 @@ export function MyTasks() {
           } : undefined}
         />
       </Paper>
+      <TaskDetailModal 
+        opened={detailOpened} 
+        onClose={() => setDetailOpened(false)} 
+        task={selectedTask} 
+      />
+    </>
   );
 }
