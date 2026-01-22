@@ -43,6 +43,10 @@ const resources = {
         userLoginSubtitle: 'Access your tasks and dashboard',
         emailPlaceholder: 'your@email.com',
         passwordPlaceholder: 'Your password',
+        unauthorizedAdminAccessTitle: 'Unauthorized Access',
+        unauthorizedAdminAccessMessage: 'You do not have permission to access the Admin Panel. You will be redirected to the User Panel.',
+        redirectToUserPanel: 'Go to User Panel',
+        loggingOutIn: 'Logging out in {{seconds}} seconds...',
       },
       dashboard: {
         welcome: 'Welcome back, {{name}}!',
@@ -184,6 +188,10 @@ const resources = {
         userLoginSubtitle: 'Görevlerinize ve panelinize erişin',
         emailPlaceholder: 'ornek@eposta.com',
         passwordPlaceholder: 'Şifreniz',
+        unauthorizedAdminAccessTitle: 'Yetkisiz Erişim',
+        unauthorizedAdminAccessMessage: 'Admin Paneline erişim yetkiniz bulunmamaktadır. Kullanıcı Paneline yönlendiriliyorsunuz.',
+        redirectToUserPanel: 'Kullanıcı Paneline Git',
+        loggingOutIn: '{{seconds}} saniye içinde çıkış yapılıyor...',
       },
       dashboard: {
         welcome: 'Tekrar hoş geldin, {{name}}!',

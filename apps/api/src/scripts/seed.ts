@@ -95,7 +95,7 @@ async function main() {
         category: category,
         status: status,
         userId: user.id,
-        rejectionReason: status === TaskStatus.REJECTED ? 'Insufficient details provided.' : null,
+        rejectionReason: status === TaskStatus.REJECTED ? 'Bu bir reddedilmiş görevdir.' : null,
         createdAt,
         updatedAt,
       },
