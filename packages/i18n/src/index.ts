@@ -30,6 +30,7 @@ const resources = {
         required: 'This field is required',
         tr: 'Turkish',
         en: 'English',
+        view: 'View',
       },
       auth: {
         email: 'Email',
@@ -170,6 +171,7 @@ const resources = {
         required: 'Bu alan zorunludur',
         tr: 'Türkçe',
         en: 'İngilizce',
+        view: 'Görüntüle',
       },
       auth: {
         email: 'E-posta',
