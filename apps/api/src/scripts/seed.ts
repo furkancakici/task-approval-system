@@ -89,13 +89,13 @@ async function main() {
 
     await prisma.task.create({
       data: {
-        title: `Test Task ${i + 1}`,
-        description: `This is a description for test task ${i + 1}. It is important.`,
+        title: `Test Görevi ${i + 1}`,
+        description: `Bu, ${i + 1}. test görevi için bir açıklamadır. Bu içerik oldukça önemlidir.`,
         priority: priority,
         category: category,
         status: status,
         userId: user.id,
-        rejectionReason: status === TaskStatus.REJECTED ? 'Bu bir reddedilmiş görevdir.' : null,
+        rejectionReason: status === TaskStatus.REJECTED ? 'Yetersiz detay paylaşıldı.' : null,
         createdAt,
         updatedAt,
       },
