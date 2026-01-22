@@ -1,6 +1,10 @@
 import { Table, LoadingOverlay, Box, type TableProps } from '@repo/mantine';
+import { motion, AnimatePresence } from '@repo/shared';
 import type { ReactNode } from 'react';
 import { TablePagination } from './TablePagination';
+
+const MotionTr = motion.create(Table.Tr);
+
 
 export interface Column<T> {
   key: string;
@@ -54,23 +58,31 @@ export function DataTable<T>({
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
-            {data.length > 0 ? (
-              data.map((item) => (
-                <Table.Tr key={rowKey(item)}>
-                  {columns.map((column) => (
-                    <Table.Td key={`${rowKey(item)}-${column.key}`} style={{ textAlign: column.textAlign }}>
-                      {column.render ? column.render(item) : (item as any)[column.key]}
-                    </Table.Td>
-                  ))}
+            <AnimatePresence mode="popLayout">
+              {data.length > 0 ? (
+                data.map((item, index) => (
+                  <MotionTr
+                    key={rowKey(item)}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 10 }}
+                    transition={{ duration: 0.2, delay: index * 0.05 }}
+                  >
+                    {columns.map((column) => (
+                      <Table.Td key={`${rowKey(item)}-${column.key}`} style={{ textAlign: column.textAlign }}>
+                        {column.render ? column.render(item) : (item as any)[column.key]}
+                      </Table.Td>
+                    ))}
+                  </MotionTr>
+                ))
+              ) : (
+                <Table.Tr>
+                  <Table.Td colSpan={columns.length} style={{ textAlign: 'center', color: 'gray', padding: 40 }}>
+                    {!loading && emptyMessage}
+                  </Table.Td>
                 </Table.Tr>
-              ))
-            ) : (
-              <Table.Tr>
-                <Table.Td colSpan={columns.length} style={{ textAlign: 'center', color: 'gray', padding: 40 }}>
-                  {!loading && emptyMessage}
-                </Table.Td>
-              </Table.Tr>
-            )}
+              )}
+            </AnimatePresence>
           </Table.Tbody>
         </Table>
       </Box>

@@ -5,6 +5,8 @@ import { useDisclosure } from '@repo/mantine';
 import { IconLogout, IconChevronDown } from '@repo/mantine';
 import { ColorSchemeToggle } from '../components/ColorSchemeToggle';
 import { LanguagePicker } from '../components/LanguagePicker';
+import { motion, AnimatePresence } from '@repo/shared';
+
 
 export interface NavLinkItem {
   label: string;
@@ -28,11 +30,11 @@ interface DashboardLayoutProps {
   onLanguageChange?: (lang: string) => void;
 }
 
-export function DashboardLayout({ 
-  children, 
-  navLinks, 
-  logo, 
-  user, 
+export function DashboardLayout({
+  children,
+  navLinks,
+  logo,
+  user,
   onLogout,
   currentLanguage,
   onLanguageChange
@@ -73,38 +75,38 @@ export function DashboardLayout({
 
           <Group>
             {currentLanguage && onLanguageChange && (
-                <LanguagePicker 
-                    currentLanguage={currentLanguage} 
-                    onLanguageChange={onLanguageChange} 
-                />
+              <LanguagePicker
+                currentLanguage={currentLanguage}
+                onLanguageChange={onLanguageChange}
+              />
             )}
             <ColorSchemeToggle />
 
             {user && (
-                <Menu shadow="md" width={200} position="bottom-end">
+              <Menu shadow="md" width={200} position="bottom-end">
                 <Menu.Target>
-                    <UnstyledButton>
+                  <UnstyledButton>
                     <Group gap={7}>
-                        <Avatar src={user.image} alt={user.name} radius="xl" size={30} />
-                        <div style={{ flex: 1 }} className="hidden-mobile">
+                      <Avatar src={user.image} alt={user.name} radius="xl" size={30} />
+                      <div style={{ flex: 1 }} className="hidden-mobile">
                         <Text size="sm" fw={500}>{user.name}</Text>
                         <Text c="dimmed" size="xs">{user.email}</Text>
-                        </div>
-                        <IconChevronDown style={{ width: rem(12), height: rem(12) }} stroke={1.5} />
+                      </div>
+                      <IconChevronDown style={{ width: rem(12), height: rem(12) }} stroke={1.5} />
                     </Group>
-                    </UnstyledButton>
+                  </UnstyledButton>
                 </Menu.Target>
 
                 <Menu.Dropdown>
-                    <Menu.Item
+                  <Menu.Item
                     color="red"
                     leftSection={<IconLogout style={{ width: rem(14), height: rem(14) }} />}
                     onClick={onLogout}
-                    >
+                  >
                     {t('common.logout')}
-                    </Menu.Item>
+                  </Menu.Item>
                 </Menu.Dropdown>
-                </Menu>
+              </Menu>
             )}
           </Group>
         </Group>
@@ -117,7 +119,13 @@ export function DashboardLayout({
       </AppShell.Navbar>
 
       <AppShell.Main>
-        {children}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+        >
+          {children}
+        </motion.div>
       </AppShell.Main>
     </AppShell>
   );

@@ -1,5 +1,6 @@
-import React from 'react';
 import { Paper, Text, Group, ThemeIcon } from '@repo/mantine';
+import { motion } from '@repo/shared';
+
 
 export interface StatCardProps {
   label: string;
@@ -10,20 +11,27 @@ export interface StatCardProps {
 
 export function StatCard({ label, value, icon: Icon, color }: StatCardProps) {
   return (
-    <Paper withBorder p="md" radius="md">
-      <Group justify="space-between">
-        <div>
-          <Text c="dimmed" tt="uppercase" fw={700} fz="xs">
-            {label}
-          </Text>
-          <Text fw={700} fz="xl">
-            {value}
-          </Text>
-        </div>
-        <ThemeIcon color={color} variant="light" size={38} radius="md">
-          <Icon style={{ width: '1.5rem', height: '1.5rem' }} stroke={1.5} />
-        </ThemeIcon>
-      </Group>
-    </Paper>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ scale: 1.02, translateY: -5 }}
+      transition={{ duration: 0.3 }}
+    >
+      <Paper withBorder p="md" radius="md">
+        <Group justify="space-between">
+          <div>
+            <Text c="dimmed" tt="uppercase" fw={700} fz="xs">
+              {label}
+            </Text>
+            <Text fw={700} fz="xl">
+              {value}
+            </Text>
+          </div>
+          <ThemeIcon color={color} variant="light" size={38} radius="md">
+            <Icon style={{ width: '1.5rem', height: '1.5rem' }} stroke={1.5} />
+          </ThemeIcon>
+        </Group>
+      </Paper>
+    </motion.div>
   );
 }
