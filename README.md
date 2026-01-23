@@ -12,7 +12,11 @@ Profesyonel, rol tabanlı ve modern bir Talep Onay Sistemi. Bu proje, monorepo m
 Projeyi ayağa kaldırmak için tek ihtiyacınız **Docker**. Herhangi bir `.env` ayarı yapmanıza gerek yoktur, gerekli tüm ayarlar repoya dahildir.
 
 ```bash
-# Projeyi başlatın
+# Projeyi bilgisayarınıza indirin
+git clone https://github.com/furkancakici/task-approval-system.git
+cd task-approval-system
+
+# Projeyi Docker ile başlatın
 docker compose up
 
 # Sistem hazır!
