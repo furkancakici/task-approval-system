@@ -89,5 +89,3 @@ Bu projede, modern web standartlarında "Client-Server" ayrımına dayalı, asen
 | **User**      | user1@test.com     | 123456    |
 
 ---
-
-_Bu proje, teknik gereksinimlerin tamamını karşılayacak şekilde profesyonel standartlarda geliştirilmiştir._
